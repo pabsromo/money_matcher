@@ -4,6 +4,8 @@ import 'package:money_matcher/features/presentation/edit/widgets/edit_gradient_b
 
 import '../../edit/pages/item_page.dart';
 import '../../edit/pages/person_page.dart';
+import '../widgets/boxes.dart';
+import '../widgets/lines.dart';
 import '../widgets/summary_card.dart';
 
 class SummaryPage extends StatefulWidget {
@@ -22,81 +24,75 @@ class _SummaryPageState extends State<SummaryPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Padding(
-        padding: const EdgeInsets.all(15.0),
+      body: SingleChildScrollView(
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            const Text('Responsibility Graph', style: TextStyle(
-              fontSize: 35,
-              fontWeight: FontWeight.bold,
-            ),),
-            const SizedBox(height: 40,),
-            const Row(
-              children: [
-                // First Column
-                Expanded(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.start, // Adjust alignment as needed
-                    children: [
-                      Text("Column 1, Item 1"),
-                      Text("Column 1, Item 2"),
-                      Text("Column 1, Item 3"),
-                    ],
-                  ),
-                ),
-
-                // Second Column
-                Expanded(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      Text("Column 2, Item 1"),
-                      Text("Column 2, Item 2"),
-                      Text("Column 2, Item 3"),
-                    ],
-                  ),
-                ),
-              ],
+            const SizedBox(height: 40),
+            const Text(
+              'Responsibility Graph',
+              style: TextStyle(
+                fontSize: 35,
+                fontWeight: FontWeight.bold,
+              ),
             ),
-            const SizedBox(height: 40,),
+            const SizedBox(height: 40),
+
+            // Ensures Boxes and Lines take full screen height
             Container(
-              width: double.infinity, // Full width
+              height: MediaQuery.of(context).size.height * 0.5, // Adjust this based on needs
+              child: Stack(
+                children: const <Widget>[
+                  Lines(),
+                  IgnorePointer(
+                    child: Boxes(left: 2, right: 2),
+                  ),
+                ],
+              ),
+            ),
+            Container(
+              width: double.infinity,
               child: const Divider(
                 color: Colors.grey,
                 thickness: 2,
               ),
             ),
-            const Text('Totals...', style: TextStyle(
-              fontSize: 20,
-              fontWeight: FontWeight.bold,
-            )),
+            const Text(
+              'Totals...',
+              style: TextStyle(
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
             const SizedBox(height: 20),
-            Expanded(
+
+            // ListView inside SingleChildScrollView needs a constrained height
+            Container(
+              constraints: const BoxConstraints(
+                minHeight: 100, // Ensures it has space but doesn't expand infinitely
+              ),
               child: ListView.builder(
-                shrinkWrap: true, // Prevents unnecessary space usage
+                shrinkWrap: true,
+                physics: const NeverScrollableScrollPhysics(), // Prevents nested scroll conflict
                 itemCount: nums.length,
                 itemBuilder: (context, index) {
                   final p = nums[index];
                   return Padding(
                     padding: const EdgeInsets.all(8.0),
-                    child: SizedBox(
-                      child: SummaryCard(
-                        title: 'Person $p',
-                        color: AppPallete.gradient1,
-                      ),
+                    child: SummaryCard(
+                      title: 'Person $p',
+                      color: AppPallete.gradient1,
                     ),
                   );
                 },
               ),
             ),
-            const SizedBox(height: 20,),
+            const SizedBox(height: 20),
             EditGradientButton(
               buttonText: 'Edit Items',
               onPressed: () {
                 Navigator.push(
                   context,
-                  ItemPage.route()
+                  ItemPage.route(),
                 );
               },
             ),
@@ -105,11 +101,12 @@ class _SummaryPageState extends State<SummaryPage> {
               buttonText: 'Edit Persons',
               onPressed: () {
                 Navigator.push(
-                    context,
-                    PersonPage.route()
+                  context,
+                  PersonPage.route(),
                 );
               },
             ),
+            const SizedBox(height: 40),
           ],
         ),
       ),

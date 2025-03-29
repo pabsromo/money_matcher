@@ -20,6 +20,31 @@ class SummaryPage extends StatefulWidget {
 
 class _SummaryPageState extends State<SummaryPage> {
   List<String> nums = ['1', '2', '3'];
+  Map<String, Offset> boxPositions = {}; // Store box positions
+  List<Map<String, String>> connections = []; // Store box connections
+  String? startBox;
+
+  void _registerBoxPosition(String id, Offset position) {
+    setState(() {
+      boxPositions[id] = position;
+    });
+  }
+
+  void _addConnection(int col, int index) {
+    String boxId = "Box $col-$index";
+
+    setState(() {
+      if (startBox == null) {
+        startBox = boxId;
+      } else {
+        if (startBox != boxId) {
+          connections.add({"start": startBox!, "end": boxId});
+          print("New Connection: $startBox -> $boxId");
+        }
+        startBox = null;
+      }
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -39,16 +64,24 @@ class _SummaryPageState extends State<SummaryPage> {
 
             // Ensures Boxes and Lines take full screen height
             Container(
+              color: Colors.amber,
               height: MediaQuery.of(context).size.height * 0.5, // Adjust this based on needs
               child: Stack(
-                children: const <Widget>[
-                  Lines(),
-                  IgnorePointer(
-                    child: Boxes(left: 2, right: 2),
+                // children: const <Widget>[
+                //   Lines(),
+                //   IgnorePointer(
+                //     child: Boxes(left: 2, right: 2),
+                    children: [
+                        Lines(boxPositions: boxPositions, connections: connections),
+                        Boxes(
+                        left: 2,
+                        right: 2,
+                        onBoxTap: _addConnection,
+                        boxPositions: boxPositions, // Store positions
+                      ),
+                    ],
                   ),
-                ],
               ),
-            ),
             Container(
               width: double.infinity,
               child: const Divider(

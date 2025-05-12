@@ -1,15 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:money_matcher/core/theme/app_pallete.dart';
 import 'package:money_matcher/features/presentation/edit/widgets/edit_gradient_button.dart';
-import 'package:money_matcher/features/presentation/summary/widgets/res_card.dart';
 
 import '../../../domain/entities/Item.dart';
 import '../../../domain/entities/Person.dart';
 import '../../edit/pages/item_page.dart';
 import '../../edit/pages/person_page.dart';
-import '../widgets/boxes.dart';
-import '../widgets/lines.dart';
-import '../widgets/summary_card.dart';
 
 class SummaryPage extends StatefulWidget {
   static route() => MaterialPageRoute(
@@ -32,34 +27,6 @@ class _SummaryPageState extends State<SummaryPage> {
     Person(name: 'Joe'),
     Person(name: 'Doe'),
   ];
-
-  // List<String> nums = ['1', '2', '3'];
-  List<String> nums = [];
-  Map<String, Offset> boxPositions = {}; // Store box positions
-  List<Map<String, String>> connections = []; // Store box connections
-  String? startBox;
-
-  void _registerBoxPosition(String id, Offset position) {
-    setState(() {
-      boxPositions[id] = position;
-    });
-  }
-
-  void _addConnection(int col, int index) {
-    String boxId = "Box $col-$index";
-
-    setState(() {
-      if (startBox == null) {
-        startBox = boxId;
-      } else {
-        if (startBox != boxId) {
-          connections.add({"start": startBox!, "end": boxId});
-          print("New Connection: $startBox -> $boxId");
-        }
-        startBox = null;
-      }
-    });
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -136,32 +103,6 @@ class _SummaryPageState extends State<SummaryPage> {
               ),
             ),
             const SizedBox(height: 20),
-
-            // REPLACE AFTER THIS
-            // ListView inside SingleChildScrollView needs a constrained height
-            // Container(
-            //   constraints: const BoxConstraints(
-            //     minHeight:
-            //         100, // Ensures it has space but doesn't expand infinitely
-            //   ),
-            //   child: ListView.builder(
-            //     shrinkWrap: true,
-            //     physics:
-            //         const NeverScrollableScrollPhysics(), // Prevents nested scroll conflict
-            //     itemCount: nums.length,
-            //     itemBuilder: (context, index) {
-            //       final p = nums[index];
-            //       return Padding(
-            //         padding: const EdgeInsets.all(8.0),
-            //         child: SummaryCard(
-            //           title: 'Person $p',
-            //           color: AppPallete.gradient1,
-            //         ),
-            //       );
-            //     },
-            //   ),
-            // ),
-            // REPLACE BEFORE THIS
 
             Padding(
               padding:

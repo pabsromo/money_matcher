@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:money_matcher/features/presentation/edit/widgets/edit_gradient_button.dart';
 import 'package:money_matcher/features/presentation/edit/widgets/edit_field.dart';
-import 'package:money_matcher/features/presentation/summary/pages/summary_page.dart';
 
 import '../../../../core/theme/app_pallete.dart';
 
@@ -11,9 +10,6 @@ class PersonPage extends StatefulWidget {
   static Route<List<Person>> route({required List<Person> persons}) =>
       MaterialPageRoute(builder: (_) => PersonPage(persons: persons));
 
-  // static route() => MaterialPageRoute(
-  //     builder: (context) => const PersonPage()
-  // );
   final List<Person> persons;
   const PersonPage({super.key, required this.persons});
 

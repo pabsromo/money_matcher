@@ -5,6 +5,7 @@ import '../../../domain/entities/Item.dart';
 import '../../../domain/entities/Person.dart';
 import '../../edit/pages/item_page.dart';
 import '../../edit/pages/person_page.dart';
+import '../widgets/EditItemAssociationsDialog.dart';
 
 class SummaryPage extends StatefulWidget {
   static route() => MaterialPageRoute(
@@ -24,9 +25,25 @@ class _SummaryPageState extends State<SummaryPage> {
   ];
 
   List<Person> persons = [
-    Person(name: 'Joe'),
-    Person(name: 'Doe'),
+    Person(name: 'Joe', color: Colors.blue),
+    Person(name: 'Doe', color: Colors.red),
   ];
+
+  void _showEditAssociationsDialog(Item item) async {
+    final result = await showDialog<Set<String>>(
+      context: context,
+      builder: (context) => EditItemAssociationsDialog(
+        item: item,
+        allPersons: persons,
+      ),
+    );
+
+    if (result != null) {
+      setState(() {
+        item.associatedPersonNames = result;
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -75,8 +92,16 @@ class _SummaryPageState extends State<SummaryPage> {
                           margin: const EdgeInsets.symmetric(vertical: 6),
                           child: ListTile(
                             title: Text(item.name),
-                            subtitle: Text('Price: \$${item.price}'),
+                            subtitle: Text(
+                              'Price: \$${item.price}\nShared with: ${item.associatedPersonNames.join(', ')}',
+                            ),
                             leading: const Icon(Icons.shopping_cart),
+                            trailing: IconButton(
+                              icon: const Icon(Icons.edit),
+                              onPressed: () {
+                                _showEditAssociationsDialog(item);
+                              },
+                            ),
                           ),
                         );
                       },

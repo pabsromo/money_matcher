@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:money_matcher/features/presentation/edit/widgets/edit_gradient_button.dart';
 import 'package:money_matcher/features/presentation/edit/widgets/edit_field.dart';
-
 import '../../../../core/theme/app_pallete.dart';
-
 import '../../../domain/entities/Person.dart';
 
 class PersonPage extends StatefulWidget {
@@ -20,13 +18,35 @@ class PersonPage extends StatefulWidget {
 class _PersonPageState extends State<PersonPage> {
   final formKey = GlobalKey<FormState>();
   late List<TextEditingController> nameControllers;
+  late List<Color> personColors;
+
+  final List<Color> availableColors = [
+    Colors.red,
+    Colors.blue,
+    Colors.green,
+    Colors.orange,
+    Colors.purple,
+    Colors.teal,
+    Colors.brown,
+    Colors.indigo,
+    Colors.pink,
+    Colors.cyan,
+  ];
 
   @override
   void initState() {
     super.initState();
+
     nameControllers = widget.persons
         .map((person) => TextEditingController(text: person.name))
         .toList();
+
+    personColors = widget.persons.map((p) => p.color).toList();
+
+    // Assign default color if any are missing
+    for (int i = personColors.length; i < nameControllers.length; i++) {
+      personColors.add(_getNextColor());
+    }
   }
 
   @override
@@ -37,11 +57,18 @@ class _PersonPageState extends State<PersonPage> {
     super.dispose();
   }
 
+  Color _getNextColor() {
+    return availableColors[personColors.length % availableColors.length];
+  }
+
   void _savePersons() {
     if (formKey.currentState?.validate() ?? false) {
       final updatedPersons = List.generate(
         nameControllers.length,
-        (i) => Person(name: nameControllers[i].text),
+        (i) => Person(
+          name: nameControllers[i].text,
+          color: personColors[i],
+        ),
       );
       Navigator.pop(context, updatedPersons);
     }
@@ -50,6 +77,7 @@ class _PersonPageState extends State<PersonPage> {
   void _addPerson() {
     setState(() {
       nameControllers.add(TextEditingController());
+      personColors.add(_getNextColor());
     });
   }
 
@@ -57,13 +85,14 @@ class _PersonPageState extends State<PersonPage> {
     setState(() {
       nameControllers[index].dispose();
       nameControllers.removeAt(index);
+      personColors.removeAt(index);
     });
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text("Edit Items")),
+      appBar: AppBar(title: const Text("Edit People")),
       body: Padding(
         padding: const EdgeInsets.all(15.0),
         child: Form(
@@ -71,12 +100,10 @@ class _PersonPageState extends State<PersonPage> {
           child: Column(
             children: [
               const Text(
-                'Edit Items',
+                'Edit People',
                 style: TextStyle(fontSize: 35, fontWeight: FontWeight.bold),
               ),
               const SizedBox(height: 20),
-
-              // Scrollable list of item fields
               Expanded(
                 child: SingleChildScrollView(
                   child: Column(
@@ -91,6 +118,20 @@ class _PersonPageState extends State<PersonPage> {
                             children: [
                               Row(
                                 children: [
+                                  CircleAvatar(
+                                    backgroundColor: personColors[index],
+                                    child: Text(
+                                      nameControllers[index]
+                                              .text
+                                              .characters
+                                              .firstOrNull
+                                              ?.toUpperCase() ??
+                                          '?',
+                                      style:
+                                          const TextStyle(color: Colors.white),
+                                    ),
+                                  ),
+                                  const SizedBox(width: 10),
                                   Text("Person ${index + 1}",
                                       style: const TextStyle(
                                           fontWeight: FontWeight.bold)),
@@ -102,8 +143,9 @@ class _PersonPageState extends State<PersonPage> {
                                   ),
                                 ],
                               ),
+                              const SizedBox(height: 8),
                               EditField(
-                                hintText: 'Item ${index + 1} Name',
+                                hintText: 'Name',
                                 controller: nameControllers[index],
                               ),
                             ],
@@ -114,8 +156,6 @@ class _PersonPageState extends State<PersonPage> {
                   ),
                 ),
               ),
-
-              // Buttons: Add + Save
               Row(
                 children: [
                   Expanded(
@@ -127,13 +167,12 @@ class _PersonPageState extends State<PersonPage> {
                   const SizedBox(width: 10),
                   Expanded(
                     child: EditGradientButton(
-                      buttonText: 'SAVE PERSONS',
+                      buttonText: 'SAVE PEOPLE',
                       onPressed: _savePersons,
                     ),
                   ),
                 ],
               ),
-
               const SizedBox(height: 20),
               GestureDetector(
                 onTap: () => Navigator.pop(context),

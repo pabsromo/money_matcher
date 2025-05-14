@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:money_matcher/core/theme/app_pallete.dart';
 import '../../../domain/entities/item.dart';
 import '../../../domain/entities/person.dart';
-import '../widgets/EditItemAssociationsDialog.dart';
+import '../widgets/edit_item_associations_dialog.dart';
 
 class ItemPage extends StatefulWidget {
   static Route<List<Item>> route({
@@ -114,16 +114,6 @@ class _ItemPageState extends State<ItemPage> {
                 style: TextStyle(fontSize: 35, fontWeight: FontWeight.bold),
               ),
               const SizedBox(height: 20),
-
-              // You can access persons here and display them if needed
-              if (widget.persons.isNotEmpty) ...[
-                const Text(
-                  'Persons:',
-                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-                ),
-                ...widget.persons.map((person) => Text(person.name)).toList(),
-                const SizedBox(height: 20),
-              ],
 
               // Scrollable list of item fields
               Expanded(
@@ -238,7 +228,9 @@ class _ItemPageState extends State<ItemPage> {
                                     final person = widget.persons.firstWhere(
                                       (p) => p.name == personName,
                                       orElse: () => Person(
-                                          name: personName, color: Colors.grey),
+                                          name: personName,
+                                          color: Colors.grey,
+                                          payingParty: false),
                                     );
 
                                     return Padding(

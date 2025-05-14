@@ -58,15 +58,32 @@ class _EditItemAssociationsDialogState
             const Divider(),
             ...widget.allPersons.map((person) {
               final isSelected = selectedNames.contains(person.name);
+              final splitCount =
+                  selectedNames.isEmpty ? 1 : selectedNames.length;
+              final fraction = isSelected ? '1/$splitCount' : '-';
+
               return CheckboxListTile(
                 value: isSelected,
                 title: Text(person.name),
-                secondary: CircleAvatar(
-                  backgroundColor: person.color,
-                  child: Text(
-                    person.name[0].toUpperCase(),
-                    style: const TextStyle(color: Colors.white),
-                  ),
+                secondary: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text(
+                      fraction,
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        color: isSelected ? Colors.white : Colors.grey,
+                      ),
+                    ),
+                    const SizedBox(width: 8),
+                    CircleAvatar(
+                      backgroundColor: person.color,
+                      child: Text(
+                        person.name[0].toUpperCase(),
+                        style: const TextStyle(color: Colors.white),
+                      ),
+                    ),
+                  ],
                 ),
                 onChanged: (bool? selected) {
                   setState(() {

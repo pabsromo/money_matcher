@@ -18,6 +18,7 @@ class _PersonPageState extends State<PersonPage> {
   final formKey = GlobalKey<FormState>();
   late List<TextEditingController> nameControllers;
   late List<Color> personColors;
+  int? payingPartyIndex;
 
   final List<Color> availableColors = [
     Colors.red,
@@ -42,7 +43,13 @@ class _PersonPageState extends State<PersonPage> {
 
     personColors = widget.persons.map((p) => p.color).toList();
 
-    // Assign default color if any are missing
+    // Initialize paying party index
+    payingPartyIndex = widget.persons.indexWhere((p) => p.payingParty == true);
+    if (payingPartyIndex == -1 && nameControllers.isNotEmpty) {
+      payingPartyIndex = 0; // fallback to first person
+    }
+
+    // Fill defaults if missing
     for (int i = personColors.length; i < nameControllers.length; i++) {
       personColors.add(_getNextColor());
     }
@@ -67,6 +74,7 @@ class _PersonPageState extends State<PersonPage> {
         (i) => Person(
           name: nameControllers[i].text,
           color: personColors[i],
+          payingParty: i == payingPartyIndex,
         ),
       );
       Navigator.pop(context, updatedPersons);
@@ -77,6 +85,9 @@ class _PersonPageState extends State<PersonPage> {
     setState(() {
       nameControllers.add(TextEditingController());
       personColors.add(_getNextColor());
+      if (payingPartyIndex == null) {
+        payingPartyIndex = nameControllers.length - 1;
+      }
     });
   }
 
@@ -85,13 +96,20 @@ class _PersonPageState extends State<PersonPage> {
       nameControllers[index].dispose();
       nameControllers.removeAt(index);
       personColors.removeAt(index);
+
+      if (payingPartyIndex != null) {
+        if (payingPartyIndex == index) {
+          payingPartyIndex = nameControllers.isNotEmpty ? 0 : null;
+        } else if (payingPartyIndex! > index) {
+          payingPartyIndex = payingPartyIndex! - 1;
+        }
+      }
     });
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // appBar: AppBar(title: const Text("Edit People")),
       body: Padding(
         padding: const EdgeInsets.all(15.0),
         child: Form(
@@ -107,6 +125,8 @@ class _PersonPageState extends State<PersonPage> {
                 child: SingleChildScrollView(
                   child: Column(
                     children: List.generate(nameControllers.length, (index) {
+                      final isPaying = payingPartyIndex == index;
+
                       return Card(
                         elevation: 2,
                         margin: const EdgeInsets.only(bottom: 20),
@@ -117,18 +137,30 @@ class _PersonPageState extends State<PersonPage> {
                             children: [
                               Row(
                                 children: [
-                                  CircleAvatar(
-                                    backgroundColor: personColors[index],
-                                    child: Text(
-                                      nameControllers[index]
-                                              .text
-                                              .characters
-                                              .firstOrNull
-                                              ?.toUpperCase() ??
-                                          '?',
-                                      style:
-                                          const TextStyle(color: Colors.white),
-                                    ),
+                                  Stack(
+                                    alignment: Alignment.topRight,
+                                    children: [
+                                      CircleAvatar(
+                                        backgroundColor: personColors[index],
+                                        child: Text(
+                                          nameControllers[index]
+                                                  .text
+                                                  .characters
+                                                  .firstOrNull
+                                                  ?.toUpperCase() ??
+                                              '?',
+                                          style: const TextStyle(
+                                              color: Colors.white),
+                                        ),
+                                      ),
+                                      if (isPaying)
+                                        const Positioned(
+                                          top: -2,
+                                          right: -2,
+                                          child: Icon(Icons.star,
+                                              color: Colors.teal, size: 20),
+                                        ),
+                                    ],
                                   ),
                                   const SizedBox(width: 10),
                                   Text("Person ${index + 1}",
@@ -147,6 +179,21 @@ class _PersonPageState extends State<PersonPage> {
                                 hintText: 'Name',
                                 controller: nameControllers[index],
                               ),
+                              const SizedBox(height: 8),
+                              Row(
+                                children: [
+                                  const Text('Paying Party'),
+                                  Radio<int>(
+                                    value: index,
+                                    groupValue: payingPartyIndex,
+                                    onChanged: (value) {
+                                      setState(() {
+                                        payingPartyIndex = value;
+                                      });
+                                    },
+                                  ),
+                                ],
+                              ),
                             ],
                           ),
                         ),
@@ -161,7 +208,7 @@ class _PersonPageState extends State<PersonPage> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: _addPerson,
-        backgroundColor: AppPallete.gradient2, // or any preferred color
+        backgroundColor: AppPallete.gradient2,
         child: const Icon(Icons.person_add),
         tooltip: 'Add Person',
       ),

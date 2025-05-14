@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:money_matcher/core/theme/app_pallete.dart';
 import 'package:money_matcher/features/presentation/edit/widgets/edit_field.dart';
-import 'package:money_matcher/features/presentation/edit/widgets/edit_gradient_button.dart';
 import '../../../domain/entities/item.dart';
 import '../../../domain/entities/person.dart'; // Assuming you have a Person entity
 

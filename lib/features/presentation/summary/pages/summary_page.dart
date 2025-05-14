@@ -24,109 +24,62 @@ class _SummaryPageState extends State<SummaryPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: SingleChildScrollView(
+        padding: const EdgeInsets.all(16.0),
         child: Column(
-          children: [
-            // RESPONSIBILITIES SECTION
-            // ITEM CARDS SECTION
-            Padding(
-              padding:
-                  const EdgeInsets.symmetric(horizontal: 16.0, vertical: 10),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const Text(
-                    'Items',
-                    style: TextStyle(
-                      fontSize: 24,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  const SizedBox(height: 10),
-                  Container(
-                    constraints: const BoxConstraints(
-                      minHeight: 100,
-                    ),
-                    child: ListView.builder(
-                      shrinkWrap: true,
-                      physics: const NeverScrollableScrollPhysics(),
-                      itemCount: widget.items.length,
-                      itemBuilder: (context, index) {
-                        final item = widget.items[index];
-                        return Card(
-                          elevation: 2,
-                          margin: const EdgeInsets.symmetric(vertical: 6),
-                          child: ListTile(
-                            title: Text(item.name),
-                            subtitle: Text(
-                              'Price: \$${item.price}\nShared with: ${item.associatedPersonNames.join(', ')}',
-                            ),
-                            leading: const Icon(Icons.shopping_cart),
-                          ),
-                        );
-                      },
-                    ),
-                  ),
-                ],
-              ),
-            ),
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: widget.persons.map((person) {
+            // Filter items associated with this person by name
+            final personItems = widget.items
+                .where(
+                  (item) => item.associatedPersonNames.contains(person.name),
+                )
+                .toList();
 
-            Container(
-              width: double.infinity,
-              child: const Divider(
-                color: Colors.grey,
-                thickness: 2,
-              ),
-            ),
-
-            // TOTALS SECTION
-            const Text(
-              'Totals...',
-              style: TextStyle(
-                fontSize: 20,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            const SizedBox(height: 20),
-
-            Padding(
-              padding:
-                  const EdgeInsets.symmetric(horizontal: 16.0, vertical: 10),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const Text(
-                    'Persons',
-                    style: TextStyle(
-                      fontSize: 24,
-                      fontWeight: FontWeight.bold,
+            return Card(
+              margin: const EdgeInsets.only(bottom: 16.0),
+              elevation: 4,
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12)),
+              child: Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      children: [
+                        CircleAvatar(
+                          backgroundColor: person.color,
+                          radius: 8,
+                        ),
+                        const SizedBox(width: 8),
+                        Text(
+                          person.name,
+                          style: const TextStyle(
+                              fontSize: 20, fontWeight: FontWeight.bold),
+                        ),
+                      ],
                     ),
-                  ),
-                  const SizedBox(height: 10),
-                  Container(
-                    constraints: const BoxConstraints(
-                      minHeight: 100,
+                    const SizedBox(height: 12),
+                    if (personItems.isEmpty)
+                      const Text('No items',
+                          style: TextStyle(color: Colors.grey)),
+                    ...personItems.map(
+                      (item) => Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 4.0),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Expanded(child: Text(item.name)),
+                            Text('\$${item.price}'),
+                          ],
+                        ),
+                      ),
                     ),
-                    child: ListView.builder(
-                      shrinkWrap: true,
-                      physics: const NeverScrollableScrollPhysics(),
-                      itemCount: widget.persons.length,
-                      itemBuilder: (context, index) {
-                        final person = widget.persons[index];
-                        return Card(
-                          elevation: 2,
-                          margin: const EdgeInsets.symmetric(vertical: 6),
-                          child: ListTile(
-                            title: Text(person.name),
-                            leading: const Icon(Icons.shopping_cart),
-                          ),
-                        );
-                      },
-                    ),
-                  ),
-                ],
+                  ],
+                ),
               ),
-            ),
-          ],
+            );
+          }).toList(),
         ),
       ),
       bottomNavigationBar: BottomNavigationBar(

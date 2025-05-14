@@ -4,7 +4,6 @@ import '../../../domain/entities/item.dart';
 import '../../../domain/entities/person.dart';
 import '../../edit/pages/item_page.dart';
 import '../../edit/pages/person_page.dart';
-import '../widgets/EditItemAssociationsDialog.dart';
 
 class SummaryPage extends StatefulWidget {
   static route({required List<Item> items, required List<Person> persons}) =>
@@ -21,22 +20,6 @@ class SummaryPage extends StatefulWidget {
 }
 
 class _SummaryPageState extends State<SummaryPage> {
-  void _showEditAssociationsDialog(Item item) async {
-    final result = await showDialog<Set<String>>(
-      context: context,
-      builder: (context) => EditItemAssociationsDialog(
-        item: item,
-        allPersons: widget.persons,
-      ),
-    );
-
-    if (result != null) {
-      setState(() {
-        item.associatedPersonNames = result;
-      });
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -78,12 +61,6 @@ class _SummaryPageState extends State<SummaryPage> {
                               'Price: \$${item.price}\nShared with: ${item.associatedPersonNames.join(', ')}',
                             ),
                             leading: const Icon(Icons.shopping_cart),
-                            trailing: IconButton(
-                              icon: const Icon(Icons.edit),
-                              onPressed: () {
-                                _showEditAssociationsDialog(item);
-                              },
-                            ),
                           ),
                         );
                       },

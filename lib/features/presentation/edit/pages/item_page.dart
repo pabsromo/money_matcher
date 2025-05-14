@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:money_matcher/core/theme/app_pallete.dart';
 import 'package:money_matcher/features/presentation/edit/widgets/edit_field.dart';
 import '../../../domain/entities/item.dart';
-import '../../../domain/entities/person.dart'; // Assuming you have a Person entity
+import '../../../domain/entities/person.dart';
+import '../widgets/EditItemAssociationsDialog.dart';
 
 class ItemPage extends StatefulWidget {
   static Route<List<Item>> route({
@@ -59,6 +60,7 @@ class _ItemPageState extends State<ItemPage> {
         (i) => Item(
           name: nameControllers[i].text,
           price: priceControllers[i].text,
+          associatedPersonNames: widget.items[i].associatedPersonNames,
         ),
       );
       Navigator.pop(context, updatedItems);
@@ -69,6 +71,7 @@ class _ItemPageState extends State<ItemPage> {
     setState(() {
       nameControllers.add(TextEditingController());
       priceControllers.add(TextEditingController());
+      widget.items.add(Item(name: '', price: ''));
     });
   }
 
@@ -79,6 +82,22 @@ class _ItemPageState extends State<ItemPage> {
       nameControllers.removeAt(index);
       priceControllers.removeAt(index);
     });
+  }
+
+  void _showEditAssociationsDialog(Item item) async {
+    final result = await showDialog<Set<String>>(
+      context: context,
+      builder: (context) => EditItemAssociationsDialog(
+        item: item,
+        allPersons: widget.persons,
+      ),
+    );
+
+    if (result != null) {
+      setState(() {
+        item.associatedPersonNames = result;
+      });
+    }
   }
 
   @override
@@ -126,6 +145,12 @@ class _ItemPageState extends State<ItemPage> {
                                       style: const TextStyle(
                                           fontWeight: FontWeight.bold)),
                                   const Spacer(),
+                                  IconButton(
+                                      icon: const Icon(Icons.group,
+                                          color: Colors.blue),
+                                      onPressed: () =>
+                                          _showEditAssociationsDialog(
+                                              widget.items[index])),
                                   IconButton(
                                     icon: const Icon(Icons.delete,
                                         color: Colors.red),

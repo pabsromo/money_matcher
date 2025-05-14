@@ -167,6 +167,45 @@ class _ItemPageState extends State<ItemPage> {
                                 hintText: 'Item ${index + 1} Price',
                                 controller: priceControllers[index],
                               ),
+                              const SizedBox(height: 10),
+                              SingleChildScrollView(
+                                scrollDirection: Axis.horizontal,
+                                child: Row(
+                                  children: widget
+                                      .items[index].associatedPersonNames
+                                      .map((personName) {
+                                    final person = widget.persons.firstWhere(
+                                      (p) => p.name == personName,
+                                      orElse: () => Person(
+                                          name: personName, color: Colors.grey),
+                                    );
+
+                                    return Padding(
+                                      padding:
+                                          const EdgeInsets.only(right: 8.0),
+                                      child: Column(
+                                        children: [
+                                          CircleAvatar(
+                                            radius: 20,
+                                            backgroundColor: person.color,
+                                            child: Text(
+                                              person.name[0].toUpperCase(),
+                                              style: const TextStyle(
+                                                  color: Colors.white),
+                                            ),
+                                          ),
+                                          const SizedBox(height: 4),
+                                          Text(
+                                            person.name,
+                                            style:
+                                                const TextStyle(fontSize: 12),
+                                          ),
+                                        ],
+                                      ),
+                                    );
+                                  }).toList(),
+                                ),
+                              ),
                             ],
                           ),
                         ),

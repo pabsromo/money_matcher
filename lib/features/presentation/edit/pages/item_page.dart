@@ -103,7 +103,7 @@ class _ItemPageState extends State<ItemPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text("Edit Items")),
+      // appBar: AppBar(title: const Text("Edit Items")),
       body: Padding(
         padding: const EdgeInsets.all(15.0),
         child: Form(
@@ -141,16 +141,39 @@ class _ItemPageState extends State<ItemPage> {
                             children: [
                               Row(
                                 children: [
-                                  Text("Item ${index + 1}",
+                                  Expanded(
+                                    child: TextFormField(
+                                      controller: nameControllers[index],
+                                      decoration: const InputDecoration(
+                                        hintText: 'Item name',
+                                        hintStyle: TextStyle(
+                                            fontWeight: FontWeight.bold),
+                                        border: UnderlineInputBorder(
+                                          borderSide:
+                                              BorderSide(color: Colors.grey),
+                                        ),
+                                        enabledBorder: UnderlineInputBorder(
+                                          borderSide:
+                                              BorderSide(color: Colors.grey),
+                                        ),
+                                        focusedBorder: UnderlineInputBorder(
+                                          borderSide: BorderSide(
+                                              color: Colors.blue, width: 2.0),
+                                        ),
+                                      ),
                                       style: const TextStyle(
-                                          fontWeight: FontWeight.bold)),
-                                  const Spacer(),
+                                        fontSize: 18,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                  ),
                                   IconButton(
-                                      icon: const Icon(Icons.group,
-                                          color: Colors.blue),
-                                      onPressed: () =>
-                                          _showEditAssociationsDialog(
-                                              widget.items[index])),
+                                    icon: const Icon(Icons.group,
+                                        color: Colors.blue),
+                                    onPressed: () =>
+                                        _showEditAssociationsDialog(
+                                            widget.items[index]),
+                                  ),
                                   IconButton(
                                     icon: const Icon(Icons.delete,
                                         color: Colors.red),
@@ -158,14 +181,53 @@ class _ItemPageState extends State<ItemPage> {
                                   ),
                                 ],
                               ),
-                              EditField(
-                                hintText: 'Item ${index + 1} Name',
-                                controller: nameControllers[index],
-                              ),
                               const SizedBox(height: 10),
-                              EditField(
-                                hintText: 'Item ${index + 1} Price',
-                                controller: priceControllers[index],
+                              Row(
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  const Text(
+                                    'Price:',
+                                    style: TextStyle(
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.bold),
+                                  ),
+                                  const SizedBox(width: 10),
+                                  Expanded(
+                                    child: TextFormField(
+                                      controller: priceControllers[index],
+                                      keyboardType: TextInputType.number,
+                                      decoration: const InputDecoration(
+                                        isDense: true,
+                                        hintText: 'Enter price',
+                                        prefixText: '\$',
+                                        prefixStyle: TextStyle(
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.bold,
+                                          // color: Colors.black,
+                                        ),
+                                        border: UnderlineInputBorder(),
+                                        enabledBorder: UnderlineInputBorder(
+                                          borderSide:
+                                              BorderSide(color: Colors.grey),
+                                        ),
+                                        focusedBorder: UnderlineInputBorder(
+                                          borderSide:
+                                              BorderSide(color: Colors.blue),
+                                        ),
+                                        contentPadding:
+                                            EdgeInsets.symmetric(vertical: 8),
+                                      ),
+                                      style: const TextStyle(fontSize: 16),
+                                      validator: (value) {
+                                        if (value == null ||
+                                            value.trim().isEmpty) {
+                                          return 'Price is required';
+                                        }
+                                        return null;
+                                      },
+                                    ),
+                                  ),
+                                ],
                               ),
                               const SizedBox(height: 10),
                               SingleChildScrollView(

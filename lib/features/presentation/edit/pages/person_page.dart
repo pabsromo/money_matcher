@@ -91,7 +91,7 @@ class _PersonPageState extends State<PersonPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text("Edit People")),
+      // appBar: AppBar(title: const Text("Edit People")),
       body: Padding(
         padding: const EdgeInsets.all(15.0),
         child: Form(

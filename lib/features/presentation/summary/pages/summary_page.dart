@@ -1,40 +1,33 @@
 import 'package:flutter/material.dart';
 import 'package:money_matcher/features/presentation/edit/widgets/edit_gradient_button.dart';
 
-import '../../../domain/entities/Item.dart';
-import '../../../domain/entities/Person.dart';
+import '../../../domain/entities/item.dart';
+import '../../../domain/entities/person.dart';
 import '../../edit/pages/item_page.dart';
 import '../../edit/pages/person_page.dart';
 import '../widgets/EditItemAssociationsDialog.dart';
 
 class SummaryPage extends StatefulWidget {
-  static route() => MaterialPageRoute(
-        builder: (context) => const SummaryPage(),
+  static route({required List<Item> items, required List<Person> persons}) =>
+      MaterialPageRoute(
+        builder: (context) => SummaryPage(items: items, persons: persons),
       );
-  const SummaryPage({super.key});
+
+  List<Item> items;
+  List<Person> persons;
+  SummaryPage({super.key, required this.items, required this.persons});
 
   @override
   State<SummaryPage> createState() => _SummaryPageState();
 }
 
 class _SummaryPageState extends State<SummaryPage> {
-  List<Item> items = [
-    Item(name: 'Apple', price: '2.50'),
-    Item(name: 'Banana', price: '1.00'),
-    Item(name: 'Orange', price: '1.75'),
-  ];
-
-  List<Person> persons = [
-    Person(name: 'Joe', color: Colors.blue),
-    Person(name: 'Doe', color: Colors.red),
-  ];
-
   void _showEditAssociationsDialog(Item item) async {
     final result = await showDialog<Set<String>>(
       context: context,
       builder: (context) => EditItemAssociationsDialog(
         item: item,
-        allPersons: persons,
+        allPersons: widget.persons,
       ),
     );
 
@@ -51,16 +44,6 @@ class _SummaryPageState extends State<SummaryPage> {
       body: SingleChildScrollView(
         child: Column(
           children: [
-            const SizedBox(height: 40),
-            const Text(
-              'Responsibility Graph',
-              style: TextStyle(
-                fontSize: 35,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            const SizedBox(height: 40),
-
             // RESPONSIBILITIES SECTION
             // ITEM CARDS SECTION
             Padding(
@@ -84,9 +67,9 @@ class _SummaryPageState extends State<SummaryPage> {
                     child: ListView.builder(
                       shrinkWrap: true,
                       physics: const NeverScrollableScrollPhysics(),
-                      itemCount: items.length,
+                      itemCount: widget.items.length,
                       itemBuilder: (context, index) {
-                        final item = items[index];
+                        final item = widget.items[index];
                         return Card(
                           elevation: 2,
                           margin: const EdgeInsets.symmetric(vertical: 6),
@@ -150,9 +133,9 @@ class _SummaryPageState extends State<SummaryPage> {
                     child: ListView.builder(
                       shrinkWrap: true,
                       physics: const NeverScrollableScrollPhysics(),
-                      itemCount: persons.length,
+                      itemCount: widget.persons.length,
                       itemBuilder: (context, index) {
-                        final person = persons[index];
+                        final person = widget.persons[index];
                         return Card(
                           elevation: 2,
                           margin: const EdgeInsets.symmetric(vertical: 6),
@@ -174,12 +157,12 @@ class _SummaryPageState extends State<SummaryPage> {
               onPressed: () async {
                 final updatedItems = await Navigator.push<List<Item>>(
                   context,
-                  ItemPage.route(items: items),
+                  ItemPage.route(items: widget.items, persons: widget.persons),
                 );
 
                 if (updatedItems != null) {
                   setState(() {
-                    items = updatedItems;
+                    widget.items = updatedItems;
                   });
                 }
               },
@@ -190,12 +173,12 @@ class _SummaryPageState extends State<SummaryPage> {
               onPressed: () async {
                 final updatedPersons = await Navigator.push<List<Person>>(
                   context,
-                  PersonPage.route(persons: persons),
+                  PersonPage.route(persons: widget.persons),
                 );
 
                 if (updatedPersons != null) {
                   setState(() {
-                    persons = updatedPersons;
+                    widget.persons = updatedPersons;
                   });
                 }
               },
@@ -203,6 +186,45 @@ class _SummaryPageState extends State<SummaryPage> {
             const SizedBox(height: 40),
           ],
         ),
+      ),
+      bottomNavigationBar: BottomNavigationBar(
+        items: const [
+          BottomNavigationBarItem(
+            icon: Icon(Icons.list),
+            label: 'Summary',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.edit),
+            label: 'Items',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.person),
+            label: 'Persons',
+          ),
+        ],
+        onTap: (index) async {
+          if (index == 1) {
+            final updatedItems = await Navigator.push<List<Item>>(
+              context,
+              ItemPage.route(items: widget.items, persons: widget.persons),
+            );
+            if (updatedItems != null) {
+              setState(() {
+                widget.items = updatedItems;
+              });
+            }
+          } else if (index == 2) {
+            final updatedPersons = await Navigator.push<List<Person>>(
+              context,
+              PersonPage.route(persons: widget.persons),
+            );
+            if (updatedPersons != null) {
+              setState(() {
+                widget.persons = updatedPersons;
+              });
+            }
+          }
+        },
       ),
     );
   }

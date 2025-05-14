@@ -2,14 +2,25 @@ import 'package:flutter/material.dart';
 import 'package:money_matcher/core/theme/app_pallete.dart';
 import 'package:money_matcher/features/presentation/edit/widgets/edit_field.dart';
 import 'package:money_matcher/features/presentation/edit/widgets/edit_gradient_button.dart';
-import '../../../domain/entities/Item.dart';
+import '../../../domain/entities/item.dart';
+import '../../../domain/entities/person.dart'; // Assuming you have a Person entity
 
 class ItemPage extends StatefulWidget {
-  static Route<List<Item>> route({required List<Item> items}) =>
-      MaterialPageRoute(builder: (_) => ItemPage(items: items));
+  static Route<List<Item>> route({
+    required List<Item> items,
+    required List<Person> persons, // Add persons to route
+  }) =>
+      MaterialPageRoute(
+        builder: (_) => ItemPage(items: items, persons: persons),
+      );
 
   final List<Item> items;
-  const ItemPage({super.key, required this.items});
+  final List<Person> persons; // Add persons parameter
+  const ItemPage({
+    super.key,
+    required this.items,
+    required this.persons, // Receive persons in the constructor
+  });
 
   @override
   State<ItemPage> createState() => _ItemPageState();
@@ -86,6 +97,16 @@ class _ItemPageState extends State<ItemPage> {
                 style: TextStyle(fontSize: 35, fontWeight: FontWeight.bold),
               ),
               const SizedBox(height: 20),
+
+              // You can access persons here and display them if needed
+              if (widget.persons.isNotEmpty) ...[
+                const Text(
+                  'Persons:',
+                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                ),
+                ...widget.persons.map((person) => Text(person.name)).toList(),
+                const SizedBox(height: 20),
+              ],
 
               // Scrollable list of item fields
               Expanded(
@@ -173,6 +194,25 @@ class _ItemPageState extends State<ItemPage> {
             ],
           ),
         ),
+      ),
+      bottomNavigationBar: BottomNavigationBar(
+        items: const [
+          BottomNavigationBarItem(
+            icon: Icon(Icons.arrow_back),
+            label: 'Back',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.save),
+            label: 'Save',
+          ),
+        ],
+        onTap: (index) {
+          if (index == 0) {
+            Navigator.pop(context);
+          } else if (index == 1) {
+            _saveItems();
+          }
+        },
       ),
     );
   }

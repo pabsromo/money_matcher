@@ -42,7 +42,7 @@ class _EditItemAssociationsDialogState
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: Text('Edit Associations for ${widget.item.name}'),
+      title: Text('Edit Item Responsibilities for ${widget.item.name}'),
       content: SingleChildScrollView(
         child: Column(
           mainAxisSize: MainAxisSize.min,

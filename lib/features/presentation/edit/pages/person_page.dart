@@ -156,46 +156,34 @@ class _PersonPageState extends State<PersonPage> {
                   ),
                 ),
               ),
-              Row(
-                children: [
-                  Expanded(
-                    child: EditGradientButton(
-                      buttonText: 'ADD PERSON',
-                      onPressed: _addPerson,
-                    ),
-                  ),
-                  const SizedBox(width: 10),
-                  Expanded(
-                    child: EditGradientButton(
-                      buttonText: 'SAVE PEOPLE',
-                      onPressed: _savePersons,
-                    ),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 20),
-              GestureDetector(
-                onTap: () => Navigator.pop(context),
-                child: RichText(
-                  text: TextSpan(
-                    text: 'Go back?',
-                    style: Theme.of(context).textTheme.titleMedium,
-                    children: [
-                      TextSpan(
-                        text: ' Click Here',
-                        style:
-                            Theme.of(context).textTheme.titleMedium?.copyWith(
-                                  color: AppPallete.gradient2,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
             ],
           ),
         ),
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: _addPerson,
+        backgroundColor: AppPallete.gradient2, // or any preferred color
+        child: const Icon(Icons.person_add),
+        tooltip: 'Add Person',
+      ),
+      bottomNavigationBar: BottomNavigationBar(
+        items: const [
+          BottomNavigationBarItem(
+            icon: Icon(Icons.arrow_back),
+            label: 'Back',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.save),
+            label: 'Save',
+          ),
+        ],
+        onTap: (index) {
+          if (index == 0) {
+            Navigator.pop(context);
+          } else if (index == 1) {
+            _savePersons();
+          }
+        },
       ),
     );
   }

@@ -150,49 +150,11 @@ class _SummaryPageState extends State<SummaryPage> {
                 ],
               ),
             ),
-
-            const SizedBox(height: 20),
-            EditGradientButton(
-              buttonText: 'Edit Items',
-              onPressed: () async {
-                final updatedItems = await Navigator.push<List<Item>>(
-                  context,
-                  ItemPage.route(items: widget.items, persons: widget.persons),
-                );
-
-                if (updatedItems != null) {
-                  setState(() {
-                    widget.items = updatedItems;
-                  });
-                }
-              },
-            ),
-            const SizedBox(height: 20),
-            EditGradientButton(
-              buttonText: 'Edit Persons',
-              onPressed: () async {
-                final updatedPersons = await Navigator.push<List<Person>>(
-                  context,
-                  PersonPage.route(persons: widget.persons),
-                );
-
-                if (updatedPersons != null) {
-                  setState(() {
-                    widget.persons = updatedPersons;
-                  });
-                }
-              },
-            ),
-            const SizedBox(height: 40),
           ],
         ),
       ),
       bottomNavigationBar: BottomNavigationBar(
         items: const [
-          BottomNavigationBarItem(
-            icon: Icon(Icons.list),
-            label: 'Summary',
-          ),
           BottomNavigationBarItem(
             icon: Icon(Icons.edit),
             label: 'Items',
@@ -203,7 +165,7 @@ class _SummaryPageState extends State<SummaryPage> {
           ),
         ],
         onTap: (index) async {
-          if (index == 1) {
+          if (index == 0) {
             final updatedItems = await Navigator.push<List<Item>>(
               context,
               ItemPage.route(items: widget.items, persons: widget.persons),
@@ -213,7 +175,7 @@ class _SummaryPageState extends State<SummaryPage> {
                 widget.items = updatedItems;
               });
             }
-          } else if (index == 2) {
+          } else if (index == 1) {
             final updatedPersons = await Navigator.push<List<Person>>(
               context,
               PersonPage.route(persons: widget.persons),

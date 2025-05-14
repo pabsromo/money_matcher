@@ -151,49 +151,15 @@ class _ItemPageState extends State<ItemPage> {
                   ),
                 ),
               ),
-
-              // Buttons: Add + Save
-              Row(
-                children: [
-                  Expanded(
-                    child: EditGradientButton(
-                      buttonText: 'ADD ITEM',
-                      onPressed: _addItem,
-                    ),
-                  ),
-                  const SizedBox(width: 10),
-                  Expanded(
-                    child: EditGradientButton(
-                      buttonText: 'SAVE ITEMS',
-                      onPressed: _saveItems,
-                    ),
-                  ),
-                ],
-              ),
-
-              const SizedBox(height: 20),
-              GestureDetector(
-                onTap: () => Navigator.pop(context),
-                child: RichText(
-                  text: TextSpan(
-                    text: 'Go back?',
-                    style: Theme.of(context).textTheme.titleMedium,
-                    children: [
-                      TextSpan(
-                        text: ' Click Here',
-                        style:
-                            Theme.of(context).textTheme.titleMedium?.copyWith(
-                                  color: AppPallete.gradient2,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
             ],
           ),
         ),
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: _addItem,
+        backgroundColor: AppPallete.gradient2, // or any preferred color
+        child: const Icon(Icons.add),
+        tooltip: 'Add Person',
       ),
       bottomNavigationBar: BottomNavigationBar(
         items: const [

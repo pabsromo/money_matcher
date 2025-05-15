@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:money_matcher/features/presentation/edit/widgets/edit_field.dart';
 import '../../../../core/theme/app_pallete.dart';
-import '../../../domain/entities/person.dart';
+import '../../../../shared/domain/entities/person.dart';
 
 class PersonPage extends StatefulWidget {
   static Route<List<Person>> route({required List<Person> persons}) =>

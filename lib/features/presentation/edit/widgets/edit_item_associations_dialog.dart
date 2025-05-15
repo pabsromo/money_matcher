@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import '../../../domain/entities/item.dart';
-import '../../../domain/entities/person.dart';
+import '../../../../shared/domain/entities/item.dart';
+import '../../../../shared/domain/entities/person.dart';
 
 class EditItemAssociationsDialog extends StatefulWidget {
   final Item item;

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:money_matcher/core/theme/app_pallete.dart';
-import '../../../domain/entities/item.dart';
-import '../../../domain/entities/person.dart';
+import '../../../../shared/domain/entities/item.dart';
+import '../../../../shared/domain/entities/person.dart';
 import '../widgets/edit_item_associations_dialog.dart';
 
 class ItemPage extends StatefulWidget {

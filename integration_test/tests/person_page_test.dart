@@ -1,12 +1,10 @@
-import 'dart:math';
-
 import 'package:flutter_test/flutter_test.dart';
 import 'package:money_matcher/main.dart' as money_matcher;
 import '../screen/person_screen.dart';
 import '../screen/summary_screen.dart';
 
 void main() {
-  group('Adding Persons (Widget Test):', () {
+  group('Adding Persons:', () {
     testWidgets(
       'Validate Initial Empty Person Card',
       (WidgetTester tester) async {

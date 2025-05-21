@@ -1,0 +1,20 @@
+{
+  "buildFiles": [
+    "/Users/pabromo/development/flutter/packages/flutter_tools/gradle/src/main/groovy/CMakeLists.txt"
+  ],
+  "cleanCommandsComponents": [
+    [
+      "/Users/pabromo/Library/Android/sdk/cmake/3.22.1/bin/ninja",
+      "-C",
+      "/Users/pabromo/StudioProjects/money_matcher/android/app/.cxx/RelWithDebInfo/6v3z5b6b/arm64-v8a",
+      "clean"
+    ]
+  ],
+  "buildTargetsCommandComponents": [
+    "/Users/pabromo/Library/Android/sdk/cmake/3.22.1/bin/ninja",
+    "-C",
+    "/Users/pabromo/StudioProjects/money_matcher/android/app/.cxx/RelWithDebInfo/6v3z5b6b/arm64-v8a",
+    "{LIST_OF_TARGETS_TO_BUILD}"
+  ],
+  "libraries": {}
+}

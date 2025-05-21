@@ -19,7 +19,7 @@ class EditField extends StatelessWidget {
         hintText: hintText,
       ),
       validator: (value) {
-        if(value!.isEmpty) {
+        if (value!.isEmpty) {
           return "$hintText is missing!";
         }
         return null;

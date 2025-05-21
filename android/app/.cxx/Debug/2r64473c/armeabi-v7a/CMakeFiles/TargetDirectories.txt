@@ -1,0 +1,2 @@
+/Users/pabromo/StudioProjects/money_matcher/android/app/.cxx/Debug/2r64473c/armeabi-v7a/CMakeFiles/edit_cache.dir
+/Users/pabromo/StudioProjects/money_matcher/android/app/.cxx/Debug/2r64473c/armeabi-v7a/CMakeFiles/rebuild_cache.dir

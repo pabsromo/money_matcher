@@ -274,8 +274,8 @@ class _ItemPageState extends State<ItemPage> {
       floatingActionButton: FloatingActionButton(
         onPressed: _addItem,
         backgroundColor: AppPallete.gradient2, // or any preferred color
-        child: const Icon(Icons.add),
         tooltip: 'Add Person',
+        child: const Icon(Icons.add),
       ),
       bottomNavigationBar: BottomNavigationBar(
         items: const [

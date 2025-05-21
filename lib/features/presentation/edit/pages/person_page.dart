@@ -85,9 +85,7 @@ class _PersonPageState extends State<PersonPage> {
     setState(() {
       nameControllers.add(TextEditingController());
       personColors.add(_getNextColor());
-      if (payingPartyIndex == null) {
-        payingPartyIndex = nameControllers.length - 1;
-      }
+      payingPartyIndex ??= nameControllers.length - 1;
     });
   }
 
@@ -209,8 +207,8 @@ class _PersonPageState extends State<PersonPage> {
       floatingActionButton: FloatingActionButton(
         onPressed: _addPerson,
         backgroundColor: AppPallete.gradient2,
-        child: const Icon(Icons.person_add),
         tooltip: 'Add Person',
+        child: const Icon(Icons.person_add),
       ),
       bottomNavigationBar: BottomNavigationBar(
         items: const [

@@ -7,10 +7,10 @@ class EditItemAssociationsDialog extends StatefulWidget {
   final List<Person> allPersons;
 
   const EditItemAssociationsDialog({
-    Key? key,
+    super.key,
     required this.item,
     required this.allPersons,
-  }) : super(key: key);
+  });
 
   @override
   State<EditItemAssociationsDialog> createState() =>
@@ -95,7 +95,7 @@ class _EditItemAssociationsDialogState
                   });
                 },
               );
-            }).toList(),
+            }),
           ],
         ),
       ),

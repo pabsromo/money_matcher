@@ -2,7 +2,6 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:money_matcher/main.dart' as money_matcher;
 import '../screen/person_screen.dart';
 import '../screen/summary_screen.dart';
-import 'package:flutter/material.dart';
 
 void main() {
   group('Adding Persons (Widget Test):', () {
@@ -24,8 +23,7 @@ void main() {
 
         //// VALIDATIONS ////
         final newCard = await personScreen.getFirstPerson();
-        final personName =
-            await (await personScreen.getPersonCardName(newCard));
+        final personName = await personScreen.getPersonCardName(newCard);
 
         expect(personName, equals(""),
             reason: "Person Name should be empty by default");

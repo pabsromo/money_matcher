@@ -121,7 +121,7 @@ class PersonSummaryCard extends StatelessWidget {
                     ],
                   ),
                 );
-              }).toList(),
+              }),
               const Divider(thickness: 1.2),
               Padding(
                 padding: const EdgeInsets.only(top: 4.0),

@@ -42,6 +42,7 @@ class PersonSummaryCard extends StatelessWidget {
                 const SizedBox(width: 8),
                 Text(
                   person.name,
+                  key: Key('personName_${person.name}'),
                   style: const TextStyle(
                     fontSize: 20,
                     fontWeight: FontWeight.bold,
@@ -102,20 +103,23 @@ class PersonSummaryCard extends StatelessWidget {
                 return Padding(
                   padding: const EdgeInsets.symmetric(vertical: 4.0),
                   child: Row(
+                    key: Key(item.name),
                     children: [
                       Expanded(
                         flex: 4,
-                        child: Text(item.name),
+                        child: Text(item.name, key: Key(item.name)),
                       ),
                       Expanded(
                         flex: 2,
-                        child: Center(child: Text('x1/$splitCount')),
+                        child: Center(
+                            child: Text('x1/$splitCount', key: Key(item.name))),
                       ),
                       Expanded(
                         flex: 2,
                         child: Align(
                           alignment: Alignment.centerRight,
-                          child: Text('\$${personShare.toStringAsFixed(2)}'),
+                          child: Text('\$${personShare.toStringAsFixed(2)}',
+                              key: Key(item.name)),
                         ),
                       ),
                     ],
@@ -139,6 +143,7 @@ class PersonSummaryCard extends StatelessWidget {
                         alignment: Alignment.centerRight,
                         child: Text(
                           '\$${totalOwed.toStringAsFixed(2)}',
+                          key: const Key('totalOwed'),
                           style: const TextStyle(fontWeight: FontWeight.bold),
                         ),
                       ),

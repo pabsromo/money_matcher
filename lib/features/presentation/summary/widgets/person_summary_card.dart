@@ -20,7 +20,7 @@ class PersonSummaryCard extends StatelessWidget {
     return Card(
       margin: const EdgeInsets.only(bottom: 16.0),
       elevation: 4,
-      shape: RoundedRectangleBorder(
+      shape: RoundedRectangleBorder( 
         borderRadius: BorderRadius.circular(12),
       ),
       child: Padding(

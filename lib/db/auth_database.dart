@@ -20,7 +20,7 @@ part 'auth_database.g.dart';
 class AuthDatabase extends _$AuthDatabase {
   AuthDatabase() : super(_openConnection());
 
-  AuthDatabase.custom(QueryExecutor e) : super(e);
+  AuthDatabase.custom(super.e);
 
   @override
   int get schemaVersion => 1;

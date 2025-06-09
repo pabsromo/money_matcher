@@ -18,12 +18,6 @@ void main() {
         usersDao.deleteAll();
         usersDao.createUser("pabromo", "pabsromo@gmail.com", "password");
 
-        final usersDao2 = UsersDao(db);
-
-        User? u = await usersDao2.getUserByUsername("pabromo");
-
-        print(u);
-
         // Launch the app
         await tester.pumpWidget(money_matcher.MyApp(db: db));
 

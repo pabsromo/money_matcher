@@ -25,6 +25,9 @@ class _LoginScreenState extends State<LoginScreen> {
       final password = _passwordCtrl.text;
       final success =
           await widget.usersDao.checkUserCredentials(username, password);
+
+      if (!mounted) return;
+
       if (success) {
         Navigator.pushReplacement(
           context,

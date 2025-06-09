@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import '../../../../db/auth_database.dart';
 import '../../../../db/users_dao.dart';
 import 'home_screen.dart';
 
@@ -37,17 +36,17 @@ class _SignupScreenState extends State<SignupScreen> {
 
       await widget.usersDao.createUser(username, email, password);
 
+      if (!mounted) return;
+
       // Navigate to home after successful signup
-      if (context.mounted) {
-        Navigator.pushAndRemoveUntil(
-          context,
-          MaterialPageRoute(
-            builder: (_) =>
-                HomeScreen(usersDao: widget.usersDao, username: username),
-          ),
-          (route) => false,
-        );
-      }
+      Navigator.pushAndRemoveUntil(
+        context,
+        MaterialPageRoute(
+          builder: (_) =>
+              HomeScreen(usersDao: widget.usersDao, username: username),
+        ),
+        (route) => false,
+      );
     }
   }
 
@@ -105,10 +104,12 @@ class _SignupScreenState extends State<SignupScreen> {
                     const InputDecoration(labelText: 'Confirm Password'),
                 obscureText: true,
                 validator: (val) {
-                  if (val == null || val.isEmpty)
+                  if (val == null || val.isEmpty) {
                     return 'Confirm your password';
-                  if (val != _passwordCtrl.text)
+                  }
+                  if (val != _passwordCtrl.text) {
                     return 'Passwords do not match';
+                  }
                   return null;
                 },
               ),

@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
-import '../../../../db/auth_database.dart';
+import '../../../../db/users_dao.dart';
 import 'signup_screen.dart';
 import 'home_screen.dart';
 
 class LoginScreen extends StatefulWidget {
-  final AuthDatabase db;
-  const LoginScreen({super.key, required this.db});
+  // final AuthDatabase db;
+  final UsersDao usersDao;
+  const LoginScreen({super.key, required this.usersDao});
 
   @override
   State<LoginScreen> createState() => _LoginScreenState();
@@ -22,12 +23,14 @@ class _LoginScreenState extends State<LoginScreen> {
     if (_formKey.currentState?.validate() ?? false) {
       final username = _usernameCtrl.text.trim();
       final password = _passwordCtrl.text;
-      final success = await widget.db.checkUserCredentials(username, password);
+      final success =
+          await widget.usersDao.checkUserCredentials(username, password);
       if (success) {
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(
-            builder: (_) => HomeScreen(db: widget.db, username: username),
+            builder: (_) =>
+                HomeScreen(usersDao: widget.usersDao, username: username),
           ),
         );
       } else {
@@ -60,6 +63,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 const SizedBox(height: 12),
               ],
               TextFormField(
+                key: const Key("usernameInput"),
                 controller: _usernameCtrl,
                 decoration: const InputDecoration(labelText: 'Username'),
                 validator: (val) => (val == null || val.trim().isEmpty)
@@ -67,6 +71,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     : null,
               ),
               TextFormField(
+                key: const Key("passwordInput"),
                 controller: _passwordCtrl,
                 decoration: const InputDecoration(labelText: 'Password'),
                 obscureText: true,
@@ -74,13 +79,17 @@ class _LoginScreenState extends State<LoginScreen> {
                     (val == null || val.isEmpty) ? 'Enter password' : null,
               ),
               const SizedBox(height: 24),
-              ElevatedButton(onPressed: _login, child: const Text('Login')),
+              ElevatedButton(
+                onPressed: _login,
+                key: const Key("loginBtn"),
+                child: const Text('Login'),
+              ),
               TextButton(
                 onPressed: () {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (_) => SignupScreen(db: widget.db),
+                      builder: (_) => SignupScreen(usersDao: widget.usersDao),
                     ),
                   );
                 },

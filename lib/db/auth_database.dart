@@ -1,52 +1,41 @@
 import 'package:drift/drift.dart';
 import 'package:drift/native.dart';
-import 'package:crypto/crypto.dart';
-import 'dart:convert';
 import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
 import 'dart:io';
 
+import 'tables.dart';
+import 'users_dao.dart';
+
 part 'auth_database.g.dart';
 
-class Users extends Table {
-  IntColumn get id => integer().autoIncrement()();
-  TextColumn get username =>
-      text().withLength(min: 3, max: 32).customConstraint('UNIQUE')();
-  TextColumn get passwordHash => text()();
-}
+// class Users extends Table {
+//   IntColumn get id => integer().autoIncrement()();
+//   TextColumn get username =>
+//       text().withLength(min: 3, max: 32).customConstraint('UNIQUE')();
+//   TextColumn get passwordHash => text()();
+// }
 
-@DriftDatabase(tables: [Users])
+@DriftDatabase(tables: [Users], daos: [UsersDao])
 class AuthDatabase extends _$AuthDatabase {
   AuthDatabase() : super(_openConnection());
+
+  AuthDatabase.custom(QueryExecutor e) : super(e);
 
   @override
   int get schemaVersion => 1;
 
-  Future<int> createUser(String username, String password) {
-    final passwordHash = _hashPassword(password);
-    return into(users).insert(UsersCompanion(
-      username: Value(username),
-      passwordHash: Value(passwordHash),
-    ));
-  }
-
-  Future<User?> getUserByUsername(String username) {
-    return (select(users)..where((u) => u.username.equals(username)))
-        .getSingleOrNull();
-  }
-
-  Future<bool> checkUserCredentials(String username, String password) async {
-    final user = await getUserByUsername(username);
-    if (user == null) return false;
-    final hashedInput = _hashPassword(password);
-    return user.passwordHash == hashedInput;
-  }
-
-  String _hashPassword(String password) {
-    final bytes = utf8.encode(password);
-    final digest = sha256.convert(bytes);
-    return digest.toString();
-  }
+  @override
+  MigrationStrategy get migration => MigrationStrategy(
+        onCreate: (m) => m.createAll(),
+      );
+  // @override
+  // MigrationStrategy get migration => MigrationStrategy(
+  //       onCreate: (m) => m.createAll(),
+  //       onUpgrade: (m, from, to) async {
+  //         // Add custom migrations here if needed later
+  //       },
+  //     );
 }
 
 LazyDatabase _openConnection() {

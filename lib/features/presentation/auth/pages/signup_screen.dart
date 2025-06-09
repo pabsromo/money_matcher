@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import '../../../../db/auth_database.dart';
+import '../../../../db/users_dao.dart';
 import 'home_screen.dart';
 
 class SignupScreen extends StatefulWidget {
-  final AuthDatabase db;
-  const SignupScreen({super.key, required this.db});
+  // final AuthDatabase db;
+  final UsersDao usersDao;
+  const SignupScreen({super.key, required this.usersDao});
 
   @override
   State<SignupScreen> createState() => _SignupScreenState();
@@ -13,6 +15,7 @@ class SignupScreen extends StatefulWidget {
 class _SignupScreenState extends State<SignupScreen> {
   final _formKey = GlobalKey<FormState>();
   final _usernameCtrl = TextEditingController();
+  final _emailCtrl = TextEditingController();
   final _passwordCtrl = TextEditingController();
   final _passwordConfirmCtrl = TextEditingController();
 
@@ -21,9 +24,10 @@ class _SignupScreenState extends State<SignupScreen> {
   Future<void> _signup() async {
     if (_formKey.currentState?.validate() ?? false) {
       final username = _usernameCtrl.text.trim();
+      final email = _emailCtrl.text.trim();
       final password = _passwordCtrl.text;
 
-      final existingUser = await widget.db.getUserByUsername(username);
+      final existingUser = await widget.usersDao.getUserByUsername(username);
       if (existingUser != null) {
         setState(() {
           _errorText = 'Username already taken';
@@ -31,14 +35,15 @@ class _SignupScreenState extends State<SignupScreen> {
         return;
       }
 
-      await widget.db.createUser(username, password);
+      await widget.usersDao.createUser(username, email, password);
 
       // Navigate to home after successful signup
       if (context.mounted) {
         Navigator.pushAndRemoveUntil(
           context,
           MaterialPageRoute(
-            builder: (_) => HomeScreen(db: widget.db, username: username),
+            builder: (_) =>
+                HomeScreen(usersDao: widget.usersDao, username: username),
           ),
           (route) => false,
         );
@@ -49,6 +54,7 @@ class _SignupScreenState extends State<SignupScreen> {
   @override
   void dispose() {
     _usernameCtrl.dispose();
+    _emailCtrl.dispose();
     _passwordCtrl.dispose();
     _passwordConfirmCtrl.dispose();
     super.dispose();
@@ -80,6 +86,12 @@ class _SignupScreenState extends State<SignupScreen> {
                 validator: (val) => (val == null || val.trim().isEmpty)
                     ? 'Enter username'
                     : null,
+              ),
+              TextFormField(
+                controller: _emailCtrl,
+                decoration: const InputDecoration(labelText: 'Email'),
+                validator: (val) =>
+                    (val == null || val.trim().isEmpty) ? 'Enter email' : null,
               ),
               TextFormField(
                 controller: _passwordCtrl,

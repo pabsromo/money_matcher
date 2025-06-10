@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 
 import '../../../../shared/domain/entities/item.dart';
 import '../../../../shared/domain/entities/person.dart';
-import '../../edit/pages/item_page.dart';
-import '../../edit/pages/person_page.dart';
+import '../../edit/screens/item_page.dart';
+import '../../edit/screens/person_page.dart';
 import '../widgets/person_summary_card.dart';
 
 class SummaryPage extends StatefulWidget {

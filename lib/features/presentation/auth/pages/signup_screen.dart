@@ -59,9 +59,34 @@ class _SignupScreenState extends State<SignupScreen> {
     super.dispose();
   }
 
-  String? _validatePassword(String? val) {
-    if (val == null || val.isEmpty) return 'Enter password';
-    if (val.length < 6) return 'Password must be at least 6 characters';
+  String? _validateUsername(String? username) {
+    if (username == null || username.trim().isEmpty) return 'Enter username';
+    if (username.length > 32) {
+      return 'Username must be equal to or less than 32 characters';
+    }
+    return null;
+  }
+
+  String? _validateEmail(String? email) {
+    if (email == null || email.isEmpty) return 'Enter email';
+    bool isValidEmail = RegExp(
+            r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
+        .hasMatch(email);
+    if (!isValidEmail) {
+      return 'Email must be valid';
+    }
+    return null;
+  }
+
+  String? _validatePassword(String? password) {
+    if (password == null || password.isEmpty) return 'Enter password';
+    if (password.length < 8) return 'Password must be at least 8 characters';
+    bool isValidPassword = RegExp(
+            r"^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$")
+        .hasMatch(password);
+    if (!isValidPassword) {
+      return 'Password must be at least 8 chars, at least have one letter, at least one number, and at least one special character';
+    }
     return null;
   }
 
@@ -84,21 +109,21 @@ class _SignupScreenState extends State<SignupScreen> {
                 key: const Key("usernameTextForm"),
                 controller: _usernameCtrl,
                 decoration: const InputDecoration(labelText: 'Username'),
-                validator: (val) => (val == null || val.trim().isEmpty)
-                    ? 'Enter username'
-                    : null,
+                validator: _validateUsername,
               ),
               TextFormField(
                 key: const Key("emailTextForm"),
                 controller: _emailCtrl,
                 decoration: const InputDecoration(labelText: 'Email'),
-                validator: (val) =>
-                    (val == null || val.trim().isEmpty) ? 'Enter email' : null,
+                validator: _validateEmail,
               ),
               TextFormField(
                 key: const Key("initialPasswordTextForm"),
                 controller: _passwordCtrl,
-                decoration: const InputDecoration(labelText: 'Password'),
+                decoration: const InputDecoration(
+                  labelText: 'Password',
+                  errorMaxLines: 3,
+                ),
                 obscureText: true,
                 validator: _validatePassword,
               ),

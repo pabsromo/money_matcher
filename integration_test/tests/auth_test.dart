@@ -9,6 +9,15 @@ import 'package:money_matcher/db/auth_database.dart';
 import 'package:money_matcher/db/users_dao.dart';
 
 void main() {
+  String defaultUser = "pabromo";
+  String validEmail = "pabsromo@gmail.com";
+  String invalidEmail = "bademail";
+  String validPassword = "Password123!";
+  String invalidPassword = "password";
+  String shortInvalidPassword = "passy";
+  String chars101 =
+      "charscharscharscharscharscharscharscharscharscharscharscharscharscharscharscharscharscharscharscharss";
+
   group('Logging In:', () {
     testWidgets(
       'Verify able to log in with existing user',
@@ -18,7 +27,7 @@ void main() {
         final usersDao = UsersDao(db);
 
         usersDao.deleteAll();
-        usersDao.createUser("pabromo", "pabsromo@gmail.com", "password");
+        usersDao.createUser(defaultUser, validEmail, validPassword);
 
         // Launch the app
         await tester.pumpWidget(money_matcher.MyApp(db: db));
@@ -28,8 +37,8 @@ void main() {
         final loginScreen = LoginScreen(tester);
 
         //// ACTIONS ////
-        await loginScreen.insertUsername("pabromo");
-        await loginScreen.insertPassword("password");
+        await loginScreen.insertUsername(defaultUser);
+        await loginScreen.insertPassword(validPassword);
         await loginScreen.login();
 
         //// VALIDATIONS ////
@@ -46,7 +55,7 @@ void main() {
         final usersDao = UsersDao(db);
 
         usersDao.deleteAll();
-        usersDao.createUser("pabromo", "pabsromo@gmail.com", "password");
+        usersDao.createUser(defaultUser, validEmail, validPassword);
 
         // Launch the app
         await tester.pumpWidget(money_matcher.MyApp(db: db));
@@ -58,8 +67,8 @@ void main() {
 
         //// PHASE 1 ////
         // ACTIONS //
-        await loginScreen.insertUsername("pabromo");
-        await loginScreen.insertPassword("password");
+        await loginScreen.insertUsername(defaultUser);
+        await loginScreen.insertPassword(validPassword);
         await loginScreen.login();
 
         // VALIDATIONS //
@@ -88,8 +97,8 @@ void main() {
         final loginScreen = LoginScreen(tester);
 
         //// ACTIONS ////
-        await loginScreen.insertUsername("pabromo");
-        await loginScreen.insertPassword("password");
+        await loginScreen.insertUsername(defaultUser);
+        await loginScreen.insertPassword(validPassword);
         await loginScreen.login();
 
         //// VALIDATIONS ////
@@ -114,10 +123,10 @@ void main() {
       //// ACTIONS ////
       await loginScreen.createAccount();
 
-      await signupScreen.insertUsername("pabromo");
-      await signupScreen.insertEmail("pabsromo@gmail.com");
-      await signupScreen.insertInitialPassword("password");
-      await signupScreen.insertConfirmPassword("password");
+      await signupScreen.insertUsername(defaultUser);
+      await signupScreen.insertEmail(validEmail);
+      await signupScreen.insertInitialPassword(validPassword);
+      await signupScreen.insertConfirmPassword(validPassword);
       await signupScreen.signup();
 
       //// VALIDATIONS ////
@@ -140,10 +149,10 @@ void main() {
       // ACTIONS //
       await loginScreen.createAccount();
 
-      await signupScreen.insertUsername("pabromo");
-      await signupScreen.insertEmail("pabsromo@gmail.com");
-      await signupScreen.insertInitialPassword("password");
-      await signupScreen.insertConfirmPassword("password");
+      await signupScreen.insertUsername(defaultUser);
+      await signupScreen.insertEmail(validEmail);
+      await signupScreen.insertInitialPassword(validPassword);
+      await signupScreen.insertConfirmPassword(validPassword);
       await signupScreen.signup();
 
       // VALIDATIONS //
@@ -154,8 +163,8 @@ void main() {
       // ACTIONS //
       await homeScreen.logout();
 
-      await loginScreen.insertUsername("pabromo");
-      await loginScreen.insertPassword("password");
+      await loginScreen.insertUsername(defaultUser);
+      await loginScreen.insertPassword(validPassword);
       await loginScreen.login();
 
       // VALIDATIONS //
@@ -177,9 +186,9 @@ void main() {
       // ACTIONS //
       await loginScreen.createAccount();
 
-      await signupScreen.insertEmail("pabsromo@gmail.com");
-      await signupScreen.insertInitialPassword("password");
-      await signupScreen.insertConfirmPassword("password");
+      await signupScreen.insertEmail(validEmail);
+      await signupScreen.insertInitialPassword(validPassword);
+      await signupScreen.insertConfirmPassword(validPassword);
       await signupScreen.signup();
 
       // VALIDATIONS //
@@ -190,14 +199,14 @@ void main() {
           reason: "User should still be on signup screen");
     });
 
-    testWidgets('Validate unable to create new user with no email',
+    testWidgets('Verify unable to create new user with no email',
         (WidgetTester tester) async {
       // Launch the app
       final db = AuthDatabase.custom(NativeDatabase.memory());
       await tester.pumpWidget(money_matcher.MyApp(db: db));
       await tester.pumpAndSettle();
 
-      //// PREPARATIONS ////
+      // PREPARATIONS //
       final loginScreen = LoginScreen(tester);
       final signupScreen = SignupScreen(tester);
 
@@ -205,9 +214,9 @@ void main() {
       // ACTIONS //
       await loginScreen.createAccount();
 
-      await signupScreen.insertUsername("pabromo");
-      await signupScreen.insertInitialPassword("password");
-      await signupScreen.insertConfirmPassword("password");
+      await signupScreen.insertUsername(defaultUser);
+      await signupScreen.insertInitialPassword(validPassword);
+      await signupScreen.insertConfirmPassword(validPassword);
       await signupScreen.signup();
 
       // VALIDATIONS //
@@ -218,14 +227,14 @@ void main() {
           reason: "User should still be on signup screen");
     });
 
-    testWidgets('Validate unable to create new user with no intial password',
+    testWidgets('Verify unable to create new user with no intial password',
         (WidgetTester tester) async {
       // Launch the app
       final db = AuthDatabase.custom(NativeDatabase.memory());
       await tester.pumpWidget(money_matcher.MyApp(db: db));
       await tester.pumpAndSettle();
 
-      //// PREPARATIONS ////
+      // PREPARATIONS //
       final loginScreen = LoginScreen(tester);
       final signupScreen = SignupScreen(tester);
 
@@ -233,9 +242,9 @@ void main() {
       // ACTIONS //
       await loginScreen.createAccount();
 
-      await signupScreen.insertUsername("pabromo");
-      await signupScreen.insertEmail("pabsromo@gmail.com");
-      await signupScreen.insertConfirmPassword("password");
+      await signupScreen.insertUsername(defaultUser);
+      await signupScreen.insertEmail(validEmail);
+      await signupScreen.insertConfirmPassword(validPassword);
       await signupScreen.signup();
 
       // VALIDATIONS //
@@ -249,14 +258,14 @@ void main() {
           reason: "User should still be on signup screen");
     });
 
-    testWidgets('Validate unable to create new user with no confirm password',
+    testWidgets('Verify unable to create new user with no confirm password',
         (WidgetTester tester) async {
       // Launch the app
       final db = AuthDatabase.custom(NativeDatabase.memory());
       await tester.pumpWidget(money_matcher.MyApp(db: db));
       await tester.pumpAndSettle();
 
-      //// PREPARATIONS ////
+      // PREPARATIONS //
       final loginScreen = LoginScreen(tester);
       final signupScreen = SignupScreen(tester);
 
@@ -264,9 +273,9 @@ void main() {
       // ACTIONS //
       await loginScreen.createAccount();
 
-      await signupScreen.insertUsername("pabromo");
-      await signupScreen.insertEmail("pabsromo@gmail.com");
-      await signupScreen.insertInitialPassword("password");
+      await signupScreen.insertUsername(defaultUser);
+      await signupScreen.insertEmail(validEmail);
+      await signupScreen.insertInitialPassword(validPassword);
       await signupScreen.signup();
 
       // VALIDATIONS //
@@ -277,7 +286,109 @@ void main() {
           reason: "User should still be on signup screen");
     });
 
-    testWidgets('Validate unable to create new user with differing passwords',
+    testWidgets('Verify unable to create new user with differing passwords',
+        (WidgetTester tester) async {
+      // Launch the app
+      final db = AuthDatabase.custom(NativeDatabase.memory());
+      await tester.pumpWidget(money_matcher.MyApp(db: db));
+      await tester.pumpAndSettle();
+
+      // PREPARATIONS //
+      final loginScreen = LoginScreen(tester);
+      final signupScreen = SignupScreen(tester);
+
+      //// PHASE 1 ////
+      // ACTIONS //
+      await loginScreen.createAccount();
+
+      await signupScreen.insertUsername(defaultUser);
+      await signupScreen.insertEmail(validEmail);
+      await signupScreen.insertInitialPassword(validPassword);
+      await signupScreen.insertConfirmPassword(invalidPassword);
+      await signupScreen.signup();
+
+      // VALIDATIONS //
+      expect(find.text("Passwords do not match"), findsOneWidget,
+          reason: "User should have differing passwords");
+
+      expect(find.byKey(const Key("signupScreen")), findsOneWidget,
+          reason: "User should still be on signup screen");
+    });
+
+    testWidgets('Verify bad email gets rejected', (WidgetTester tester) async {
+      // Launch the app
+      final db = AuthDatabase.custom(NativeDatabase.memory());
+      await tester.pumpWidget(money_matcher.MyApp(db: db));
+      await tester.pumpAndSettle();
+
+      // PREPARATIONS //
+      final loginScreen = LoginScreen(tester);
+      final signupScreen = SignupScreen(tester);
+
+      // ACTIONS //
+      await loginScreen.createAccount();
+
+      await signupScreen.insertUsername(defaultUser);
+      await signupScreen.insertEmail(invalidEmail);
+      await signupScreen.insertInitialPassword(validPassword);
+      await signupScreen.insertConfirmPassword(validPassword);
+      await signupScreen.signup();
+
+      // VALIDATIONS //
+      expect(find.text("Email must be valid"), findsOneWidget,
+          reason: "User should have invalid email");
+
+      expect(find.byKey(const Key("signupScreen")), findsOneWidget,
+          reason: "User should still be on signup screen");
+    });
+
+    testWidgets('Verify an invalid password is rejected',
+        (WidgetTester tester) async {
+      // Launch the app
+      final db = AuthDatabase.custom(NativeDatabase.memory());
+      await tester.pumpWidget(money_matcher.MyApp(db: db));
+      await tester.pumpAndSettle();
+
+      // PREPARATIONS //
+      final loginScreen = LoginScreen(tester);
+      final signupScreen = SignupScreen(tester);
+
+      // ACTIONS //
+      await loginScreen.createAccount();
+
+      await signupScreen.insertUsername(defaultUser);
+      await signupScreen.insertEmail(invalidEmail);
+      await signupScreen.insertInitialPassword(invalidPassword);
+      await signupScreen.insertConfirmPassword(invalidPassword);
+      await signupScreen.signup();
+
+      // VALIDATIONS //
+      expect(
+          find.text(
+              "Password must be at least 8 chars, at least have one letter, at least one number, and at least one special character"),
+          findsOneWidget,
+          reason: "User should have invalid password");
+
+      expect(find.byKey(const Key("signupScreen")), findsOneWidget,
+          reason: "User should still be on signup screen");
+
+      // ACTIONS //
+      await signupScreen.insertUsername(defaultUser);
+      await signupScreen.insertEmail(invalidEmail);
+      await signupScreen.insertInitialPassword(shortInvalidPassword);
+      await signupScreen.insertConfirmPassword(shortInvalidPassword);
+      await signupScreen.signup();
+
+      // VALIDATIONS //
+      expect(
+          find.text("Password must be at least 8 characters"), findsOneWidget,
+          reason: "User should have invalid password");
+
+      expect(find.byKey(const Key("signupScreen")), findsOneWidget,
+          reason: "User should still be on signup screen");
+    });
+
+    testWidgets('Verify a very long username is rejected',
         (WidgetTester tester) async {
       // Launch the app
       final db = AuthDatabase.custom(NativeDatabase.memory());
@@ -288,19 +399,53 @@ void main() {
       final loginScreen = LoginScreen(tester);
       final signupScreen = SignupScreen(tester);
 
-      //// PHASE 1 ////
       // ACTIONS //
       await loginScreen.createAccount();
 
-      await signupScreen.insertUsername("pabromo");
-      await signupScreen.insertEmail("pabsromo@gmail.com");
-      await signupScreen.insertInitialPassword("password");
-      await signupScreen.insertConfirmPassword("poppycock");
+      await signupScreen.insertUsername(chars101);
+      await signupScreen.insertEmail(invalidEmail);
+      await signupScreen.insertInitialPassword(invalidPassword);
+      await signupScreen.insertConfirmPassword(validPassword);
       await signupScreen.signup();
 
       // VALIDATIONS //
-      expect(find.text("Passwords do not match"), findsOneWidget,
-          reason: "User should have differing passwords");
+      expect(find.text("Username must be equal to or less than 32 characters"),
+          findsOneWidget,
+          reason: "User should have invalid username");
+
+      expect(find.byKey(const Key("signupScreen")), findsOneWidget,
+          reason: "User should still be on signup screen");
+    });
+
+    testWidgets('verify an existing username is rejected',
+        (WidgetTester tester) async {
+      // Prep data
+      final db = AuthDatabase.custom(NativeDatabase.memory());
+      final usersDao = UsersDao(db);
+
+      usersDao.deleteAll();
+      usersDao.createUser(defaultUser, validEmail, validPassword);
+
+      // Launch the app
+      await tester.pumpWidget(money_matcher.MyApp(db: db));
+      await tester.pumpAndSettle();
+
+      // PREPARATIONS //
+      final loginScreen = LoginScreen(tester);
+      final signupScreen = SignupScreen(tester);
+
+      // ACTIONS //
+      await loginScreen.createAccount();
+
+      await signupScreen.insertUsername(defaultUser);
+      await signupScreen.insertEmail(validEmail);
+      await signupScreen.insertInitialPassword(validPassword);
+      await signupScreen.insertConfirmPassword(validPassword);
+      await signupScreen.signup();
+
+      // VALIDATIONS //
+      expect(find.text("Username already taken"), findsOneWidget,
+          reason: "User should have invalid username");
 
       expect(find.byKey(const Key("signupScreen")), findsOneWidget,
           reason: "User should still be on signup screen");

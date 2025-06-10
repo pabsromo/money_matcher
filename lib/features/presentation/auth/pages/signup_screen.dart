@@ -68,6 +68,7 @@ class _SignupScreenState extends State<SignupScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: const Key("signupScreen"),
       appBar: AppBar(title: const Text('Sign Up')),
       body: Padding(
         padding: const EdgeInsets.all(16),
@@ -80,6 +81,7 @@ class _SignupScreenState extends State<SignupScreen> {
                 const SizedBox(height: 12),
               ],
               TextFormField(
+                key: const Key("usernameTextForm"),
                 controller: _usernameCtrl,
                 decoration: const InputDecoration(labelText: 'Username'),
                 validator: (val) => (val == null || val.trim().isEmpty)
@@ -87,18 +89,21 @@ class _SignupScreenState extends State<SignupScreen> {
                     : null,
               ),
               TextFormField(
+                key: const Key("emailTextForm"),
                 controller: _emailCtrl,
                 decoration: const InputDecoration(labelText: 'Email'),
                 validator: (val) =>
                     (val == null || val.trim().isEmpty) ? 'Enter email' : null,
               ),
               TextFormField(
+                key: const Key("initialPasswordTextForm"),
                 controller: _passwordCtrl,
                 decoration: const InputDecoration(labelText: 'Password'),
                 obscureText: true,
                 validator: _validatePassword,
               ),
               TextFormField(
+                key: const Key("confirmPasswordTextForm"),
                 controller: _passwordConfirmCtrl,
                 decoration:
                     const InputDecoration(labelText: 'Confirm Password'),
@@ -114,7 +119,10 @@ class _SignupScreenState extends State<SignupScreen> {
                 },
               ),
               const SizedBox(height: 24),
-              ElevatedButton(onPressed: _signup, child: const Text('Sign Up')),
+              ElevatedButton(
+                  onPressed: _signup,
+                  key: const Key("signupBtn"),
+                  child: const Text('Sign Up')),
             ],
           ),
         ),

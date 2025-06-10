@@ -12,6 +12,7 @@ class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: const Key("homeScreen"),
       appBar: AppBar(
         title: const Text('Home'),
         actions: [
@@ -30,7 +31,6 @@ class HomeScreen extends StatelessWidget {
         ],
       ),
       body: Center(
-        key: const Key('homeScreenBody'),
         child:
             Text('Welcome, $username!', style: const TextStyle(fontSize: 24)),
       ),

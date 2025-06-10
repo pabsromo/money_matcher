@@ -1,15 +1,17 @@
 import 'package:flutter_test/flutter_test.dart';
+import 'package:flutter/material.dart';
 import 'package:money_matcher/main.dart' as money_matcher;
 import 'package:drift/native.dart';
 import '../screen/home_screen.dart';
 import '../screen/login_screen.dart';
+import '../screen/signup_screen.dart';
 import 'package:money_matcher/db/auth_database.dart';
 import 'package:money_matcher/db/users_dao.dart';
 
 void main() {
   group('Logging In:', () {
     testWidgets(
-      'Validate able to log in with existing user',
+      'Verify able to log in with existing user',
       (WidgetTester tester) async {
         // Prep data
         final db = AuthDatabase.custom(NativeDatabase.memory());
@@ -20,12 +22,10 @@ void main() {
 
         // Launch the app
         await tester.pumpWidget(money_matcher.MyApp(db: db));
-
-        await tester.pumpAndSettle(); // Wait for UI to fully build
+        await tester.pumpAndSettle();
 
         //// PREPARATIONS ////
         final loginScreen = LoginScreen(tester);
-        final homeScreen = HomeScreen(tester);
 
         //// ACTIONS ////
         await loginScreen.insertUsername("pabromo");
@@ -33,27 +33,56 @@ void main() {
         await loginScreen.login();
 
         //// VALIDATIONS ////
-        final isOnHome = await homeScreen.isOnHome();
-
-        expect(isOnHome, equals(true), reason: "Should be logged in!");
+        expect(find.byKey(const Key("homeScreen")), findsOneWidget,
+            reason: "Should be logged in!");
       },
       timeout: const Timeout(Duration(minutes: 1)),
     );
-
     testWidgets(
       'Verify able to log user out back to log in screen',
-      (WidgetTester tester) async {},
+      (WidgetTester tester) async {
+        // Prep data
+        final db = AuthDatabase.custom(NativeDatabase.memory());
+        final usersDao = UsersDao(db);
+
+        usersDao.deleteAll();
+        usersDao.createUser("pabromo", "pabsromo@gmail.com", "password");
+
+        // Launch the app
+        await tester.pumpWidget(money_matcher.MyApp(db: db));
+        await tester.pumpAndSettle();
+
+        // PREPARATIONS //
+        final loginScreen = LoginScreen(tester);
+        final homeScreen = HomeScreen(tester);
+
+        //// PHASE 1 ////
+        // ACTIONS //
+        await loginScreen.insertUsername("pabromo");
+        await loginScreen.insertPassword("password");
+        await loginScreen.login();
+
+        // VALIDATIONS //
+        final isOnHome = await homeScreen.isOnHome();
+
+        expect(isOnHome, equals(true), reason: "Should be logged in!");
+
+        //// PHASE 2 ////
+        // ACTIONS //
+        await homeScreen.logout();
+
+        // VALIDATIONS //
+        expect(find.byKey(const Key("loginScreen")), findsOneWidget);
+      },
       timeout: const Timeout(Duration(minutes: 1)),
     );
-
     testWidgets(
-      'Validate unable to log in with non-existent user',
+      'Verify unable to log in with non-existent user',
       (WidgetTester tester) async {
         // Launch the app
         final db = AuthDatabase.custom(NativeDatabase.memory());
         await tester.pumpWidget(money_matcher.MyApp(db: db));
-
-        await tester.pumpAndSettle(); // Wait for UI to fully build
+        await tester.pumpAndSettle();
 
         //// PREPARATIONS ////
         final loginScreen = LoginScreen(tester);
@@ -71,23 +100,210 @@ void main() {
   });
 
   group('Signing Up:', () {
-    testWidgets('Validate able to create new user and log in',
-        (WidgetTester tester) async {});
-    testWidgets('Validate able to create new user, log out, and log back in',
-        (WidgetTester tester) async {});
-    testWidgets('Validate unable to create new user with no username',
-        (WidgetTester tester) async {});
+    testWidgets('Verify able to create new user and log in',
+        (WidgetTester tester) async {
+      // Launch the app
+      final db = AuthDatabase.custom(NativeDatabase.memory());
+      await tester.pumpWidget(money_matcher.MyApp(db: db));
+      await tester.pumpAndSettle();
+
+      //// PREPARATIONS ////
+      final loginScreen = LoginScreen(tester);
+      final signupScreen = SignupScreen(tester);
+
+      //// ACTIONS ////
+      await loginScreen.createAccount();
+
+      await signupScreen.insertUsername("pabromo");
+      await signupScreen.insertEmail("pabsromo@gmail.com");
+      await signupScreen.insertInitialPassword("password");
+      await signupScreen.insertConfirmPassword("password");
+      await signupScreen.signup();
+
+      //// VALIDATIONS ////
+      expect(find.byKey(const Key("homeScreen")), findsOneWidget,
+          reason: "Should be logged in!");
+    });
+    testWidgets('Verify able to create new user, log out, and log back in',
+        (WidgetTester tester) async {
+      // Launch the app
+      final db = AuthDatabase.custom(NativeDatabase.memory());
+      await tester.pumpWidget(money_matcher.MyApp(db: db));
+      await tester.pumpAndSettle();
+
+      //// PREPARATIONS ////
+      final loginScreen = LoginScreen(tester);
+      final signupScreen = SignupScreen(tester);
+      final homeScreen = HomeScreen(tester);
+
+      //// PHASE 1 ////
+      // ACTIONS //
+      await loginScreen.createAccount();
+
+      await signupScreen.insertUsername("pabromo");
+      await signupScreen.insertEmail("pabsromo@gmail.com");
+      await signupScreen.insertInitialPassword("password");
+      await signupScreen.insertConfirmPassword("password");
+      await signupScreen.signup();
+
+      // VALIDATIONS //
+      expect(find.byKey(const Key("homeScreen")), findsOneWidget,
+          reason: "Should be logged in!");
+
+      //// PHASE 2 ////
+      // ACTIONS //
+      await homeScreen.logout();
+
+      await loginScreen.insertUsername("pabromo");
+      await loginScreen.insertPassword("password");
+      await loginScreen.login();
+
+      // VALIDATIONS //
+      expect(find.byKey(const Key("homeScreen")), findsOneWidget,
+          reason: "Should be logged in!");
+    });
+    testWidgets('Verify unable to create new user with no username',
+        (WidgetTester tester) async {
+      // Launch the app
+      final db = AuthDatabase.custom(NativeDatabase.memory());
+      await tester.pumpWidget(money_matcher.MyApp(db: db));
+      await tester.pumpAndSettle();
+
+      //// PREPARATIONS ////
+      final loginScreen = LoginScreen(tester);
+      final signupScreen = SignupScreen(tester);
+
+      //// PHASE 1 ////
+      // ACTIONS //
+      await loginScreen.createAccount();
+
+      await signupScreen.insertEmail("pabsromo@gmail.com");
+      await signupScreen.insertInitialPassword("password");
+      await signupScreen.insertConfirmPassword("password");
+      await signupScreen.signup();
+
+      // VALIDATIONS //
+      expect(find.text("Enter username"), findsOneWidget,
+          reason: "User should have to input username!");
+
+      expect(find.byKey(const Key("signupScreen")), findsOneWidget,
+          reason: "User should still be on signup screen");
+    });
 
     testWidgets('Validate unable to create new user with no email',
-        (WidgetTester tester) async {});
+        (WidgetTester tester) async {
+      // Launch the app
+      final db = AuthDatabase.custom(NativeDatabase.memory());
+      await tester.pumpWidget(money_matcher.MyApp(db: db));
+      await tester.pumpAndSettle();
+
+      //// PREPARATIONS ////
+      final loginScreen = LoginScreen(tester);
+      final signupScreen = SignupScreen(tester);
+
+      //// PHASE 1 ////
+      // ACTIONS //
+      await loginScreen.createAccount();
+
+      await signupScreen.insertUsername("pabromo");
+      await signupScreen.insertInitialPassword("password");
+      await signupScreen.insertConfirmPassword("password");
+      await signupScreen.signup();
+
+      // VALIDATIONS //
+      expect(find.text("Enter email"), findsOneWidget,
+          reason: "User should have no email");
+
+      expect(find.byKey(const Key("signupScreen")), findsOneWidget,
+          reason: "User should still be on signup screen");
+    });
 
     testWidgets('Validate unable to create new user with no intial password',
-        (WidgetTester tester) async {});
+        (WidgetTester tester) async {
+      // Launch the app
+      final db = AuthDatabase.custom(NativeDatabase.memory());
+      await tester.pumpWidget(money_matcher.MyApp(db: db));
+      await tester.pumpAndSettle();
 
-    testWidgets('Validate unable to create new user with no sanity password',
-        (WidgetTester tester) async {});
+      //// PREPARATIONS ////
+      final loginScreen = LoginScreen(tester);
+      final signupScreen = SignupScreen(tester);
+
+      //// PHASE 1 ////
+      // ACTIONS //
+      await loginScreen.createAccount();
+
+      await signupScreen.insertUsername("pabromo");
+      await signupScreen.insertEmail("pabsromo@gmail.com");
+      await signupScreen.insertConfirmPassword("password");
+      await signupScreen.signup();
+
+      // VALIDATIONS //
+      expect(find.text("Enter password"), findsOneWidget,
+          reason: "User have no initial password");
+
+      expect(find.text("Passwords do not match"), findsOneWidget,
+          reason: "User should have differing passwords");
+
+      expect(find.byKey(const Key("signupScreen")), findsOneWidget,
+          reason: "User should still be on signup screen");
+    });
+
+    testWidgets('Validate unable to create new user with no confirm password',
+        (WidgetTester tester) async {
+      // Launch the app
+      final db = AuthDatabase.custom(NativeDatabase.memory());
+      await tester.pumpWidget(money_matcher.MyApp(db: db));
+      await tester.pumpAndSettle();
+
+      //// PREPARATIONS ////
+      final loginScreen = LoginScreen(tester);
+      final signupScreen = SignupScreen(tester);
+
+      //// PHASE 1 ////
+      // ACTIONS //
+      await loginScreen.createAccount();
+
+      await signupScreen.insertUsername("pabromo");
+      await signupScreen.insertEmail("pabsromo@gmail.com");
+      await signupScreen.insertInitialPassword("password");
+      await signupScreen.signup();
+
+      // VALIDATIONS //
+      expect(find.text("Confirm your password"), findsOneWidget,
+          reason: "User have no confirm password");
+
+      expect(find.byKey(const Key("signupScreen")), findsOneWidget,
+          reason: "User should still be on signup screen");
+    });
 
     testWidgets('Validate unable to create new user with differing passwords',
-        (WidgetTester tester) async {});
+        (WidgetTester tester) async {
+      // Launch the app
+      final db = AuthDatabase.custom(NativeDatabase.memory());
+      await tester.pumpWidget(money_matcher.MyApp(db: db));
+      await tester.pumpAndSettle();
+
+      //// PREPARATIONS ////
+      final loginScreen = LoginScreen(tester);
+      final signupScreen = SignupScreen(tester);
+
+      //// PHASE 1 ////
+      // ACTIONS //
+      await loginScreen.createAccount();
+
+      await signupScreen.insertUsername("pabromo");
+      await signupScreen.insertEmail("pabsromo@gmail.com");
+      await signupScreen.insertInitialPassword("password");
+      await signupScreen.insertConfirmPassword("poppycock");
+      await signupScreen.signup();
+
+      // VALIDATIONS //
+      expect(find.text("Passwords do not match"), findsOneWidget,
+          reason: "User should have differing passwords");
+
+      expect(find.byKey(const Key("signupScreen")), findsOneWidget,
+          reason: "User should still be on signup screen");
+    });
   });
 }

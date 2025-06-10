@@ -54,6 +54,7 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: const Key("loginScreen"),
       appBar: AppBar(title: const Text('Login')),
       body: Padding(
         padding: const EdgeInsets.all(16),
@@ -88,6 +89,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 child: const Text('Login'),
               ),
               TextButton(
+                key: const Key("createAccntBtn"),
                 onPressed: () {
                   Navigator.push(
                     context,

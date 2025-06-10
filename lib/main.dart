@@ -5,13 +5,11 @@ import 'features/presentation/auth/pages/login_screen.dart';
 
 void main() {
   final db = AuthDatabase();
-  // final usersDao = UsersDao(db);
   runApp(MyApp(db: db));
 }
 
 class MyApp extends StatelessWidget {
   final AuthDatabase db;
-  // final UsersDao usersDao;
   const MyApp({super.key, required this.db});
 
   @override

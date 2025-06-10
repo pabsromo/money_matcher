@@ -14,4 +14,9 @@ class HomeScreen {
     await tester.pumpAndSettle();
     return _logoutButtonLocator.evaluate().isNotEmpty;
   }
+
+  Future<void> logout() async {
+    await tester.tap(_logoutButtonLocator, warnIfMissed: true);
+    await tester.pumpAndSettle();
+  }
 }

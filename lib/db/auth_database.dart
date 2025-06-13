@@ -6,17 +6,14 @@ import 'dart:io';
 
 import 'tables.dart';
 import 'users_dao.dart';
+import 'groups_dao.dart';
+import 'persons_dao.dart';
 
 part 'auth_database.g.dart';
 
-// class Users extends Table {
-//   IntColumn get id => integer().autoIncrement()();
-//   TextColumn get username =>
-//       text().withLength(min: 3, max: 32).customConstraint('UNIQUE')();
-//   TextColumn get passwordHash => text()();
-// }
-
-@DriftDatabase(tables: [Users], daos: [UsersDao])
+@DriftDatabase(
+    tables: [Users, Groups, Persons, GroupPersons],
+    daos: [UsersDao, PersonsDao, GroupsDao])
 class AuthDatabase extends _$AuthDatabase {
   AuthDatabase() : super(_openConnection());
 

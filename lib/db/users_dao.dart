@@ -1,4 +1,3 @@
-// lib/database/auth_dao.dart
 import 'package:drift/drift.dart';
 import 'dart:convert';
 import 'package:crypto/crypto.dart';

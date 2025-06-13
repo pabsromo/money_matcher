@@ -8,3 +8,28 @@ class Users extends Table {
   TextColumn get passwordHash => text().withLength(min: 8)();
   DateTimeColumn get createdAt => dateTime().withDefault(currentDateAndTime)();
 }
+
+class Groups extends Table {
+  IntColumn get id => integer().autoIncrement()();
+  TextColumn get groupName => text().withLength(max: 32)();
+  IntColumn get user_id =>
+      integer().references(Users, #id)(); // Owner of the group
+  BoolColumn get isChosenGroup =>
+      boolean().withDefault(const Constant(false))();
+}
+
+class Persons extends Table {
+  IntColumn get id => integer().autoIncrement()();
+  TextColumn get firstName => text().withLength(max: 32)();
+  TextColumn get lastName => text().withLength(max: 32)();
+  TextColumn get nickName => text().withLength(max: 32)();
+  TextColumn get email => text()();
+  IntColumn get user_id => integer().references(Users, #id).nullable()();
+  BoolColumn get isMain => boolean().withDefault(const Constant(false))();
+}
+
+class GroupPersons extends Table {
+  IntColumn get id => integer().autoIncrement()();
+  IntColumn get group_id => integer().references(Groups, #id)();
+  IntColumn get person_id => integer().references(Persons, #id)();
+}

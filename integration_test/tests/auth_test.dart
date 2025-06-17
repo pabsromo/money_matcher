@@ -9,6 +9,9 @@ import 'package:money_matcher/db/auth_database.dart';
 import 'package:money_matcher/db/users_dao.dart';
 
 void main() {
+  String defaultFirstName = 'Pablo';
+  String defaultLastName = 'Romo';
+  String defaultNickName = 'pabs';
   String defaultUser = "pabromo";
   String validEmail = "pabsromo@gmail.com";
   String invalidEmail = "bademail";
@@ -123,10 +126,15 @@ void main() {
       //// ACTIONS ////
       await loginScreen.createAccount();
 
+      await signupScreen.insertFirstname(defaultFirstName);
+      await signupScreen.insertLastname(defaultLastName);
+      await signupScreen.insertNickname(defaultNickName);
       await signupScreen.insertUsername(defaultUser);
       await signupScreen.insertEmail(validEmail);
       await signupScreen.insertInitialPassword(validPassword);
       await signupScreen.insertConfirmPassword(validPassword);
+      FocusManager.instance.primaryFocus?.unfocus(); // lower keyboard
+      await tester.pumpAndSettle();
       await signupScreen.signup();
 
       //// VALIDATIONS ////
@@ -149,10 +157,17 @@ void main() {
       // ACTIONS //
       await loginScreen.createAccount();
 
+      await signupScreen.insertFirstname(defaultFirstName);
+      await signupScreen.insertLastname(defaultLastName);
+      await signupScreen.insertNickname(defaultNickName);
       await signupScreen.insertUsername(defaultUser);
       await signupScreen.insertEmail(validEmail);
       await signupScreen.insertInitialPassword(validPassword);
+      FocusManager.instance.primaryFocus?.unfocus(); // lower keyboard
+      await tester.pumpAndSettle();
       await signupScreen.insertConfirmPassword(validPassword);
+      FocusManager.instance.primaryFocus?.unfocus(); // lower keyboard
+      await tester.pumpAndSettle();
       await signupScreen.signup();
 
       // VALIDATIONS //
@@ -186,9 +201,15 @@ void main() {
       // ACTIONS //
       await loginScreen.createAccount();
 
+      await signupScreen.insertFirstname(defaultFirstName);
+      await signupScreen.insertLastname(defaultLastName);
+      await signupScreen.insertNickname(defaultNickName);
+      // no username
       await signupScreen.insertEmail(validEmail);
       await signupScreen.insertInitialPassword(validPassword);
       await signupScreen.insertConfirmPassword(validPassword);
+      FocusManager.instance.primaryFocus?.unfocus(); // lower keyboard
+      await tester.pumpAndSettle();
       await signupScreen.signup();
 
       // VALIDATIONS //
@@ -214,9 +235,15 @@ void main() {
       // ACTIONS //
       await loginScreen.createAccount();
 
+      await signupScreen.insertFirstname(defaultFirstName);
+      await signupScreen.insertLastname(defaultLastName);
+      await signupScreen.insertNickname(defaultNickName);
       await signupScreen.insertUsername(defaultUser);
+      // no email
       await signupScreen.insertInitialPassword(validPassword);
       await signupScreen.insertConfirmPassword(validPassword);
+      FocusManager.instance.primaryFocus?.unfocus(); // lower keyboard
+      await tester.pumpAndSettle();
       await signupScreen.signup();
 
       // VALIDATIONS //
@@ -242,9 +269,15 @@ void main() {
       // ACTIONS //
       await loginScreen.createAccount();
 
+      await signupScreen.insertFirstname(defaultFirstName);
+      await signupScreen.insertLastname(defaultLastName);
+      await signupScreen.insertNickname(defaultNickName);
       await signupScreen.insertUsername(defaultUser);
       await signupScreen.insertEmail(validEmail);
+      // no initial password
       await signupScreen.insertConfirmPassword(validPassword);
+      FocusManager.instance.primaryFocus?.unfocus(); // lower keyboard
+      await tester.pumpAndSettle();
       await signupScreen.signup();
 
       // VALIDATIONS //
@@ -273,9 +306,15 @@ void main() {
       // ACTIONS //
       await loginScreen.createAccount();
 
+      await signupScreen.insertFirstname(defaultFirstName);
+      await signupScreen.insertLastname(defaultLastName);
+      await signupScreen.insertNickname(defaultNickName);
       await signupScreen.insertUsername(defaultUser);
       await signupScreen.insertEmail(validEmail);
       await signupScreen.insertInitialPassword(validPassword);
+      // no confirm password
+      FocusManager.instance.primaryFocus?.unfocus(); // lower keyboard
+      await tester.pumpAndSettle();
       await signupScreen.signup();
 
       // VALIDATIONS //
@@ -301,10 +340,15 @@ void main() {
       // ACTIONS //
       await loginScreen.createAccount();
 
+      await signupScreen.insertFirstname(defaultFirstName);
+      await signupScreen.insertLastname(defaultLastName);
+      await signupScreen.insertNickname(defaultNickName);
       await signupScreen.insertUsername(defaultUser);
       await signupScreen.insertEmail(validEmail);
       await signupScreen.insertInitialPassword(validPassword);
       await signupScreen.insertConfirmPassword(invalidPassword);
+      FocusManager.instance.primaryFocus?.unfocus(); // lower keyboard
+      await tester.pumpAndSettle();
       await signupScreen.signup();
 
       // VALIDATIONS //
@@ -328,10 +372,15 @@ void main() {
       // ACTIONS //
       await loginScreen.createAccount();
 
+      await signupScreen.insertFirstname(defaultFirstName);
+      await signupScreen.insertLastname(defaultLastName);
+      await signupScreen.insertNickname(defaultNickName);
       await signupScreen.insertUsername(defaultUser);
       await signupScreen.insertEmail(invalidEmail);
       await signupScreen.insertInitialPassword(validPassword);
       await signupScreen.insertConfirmPassword(validPassword);
+      FocusManager.instance.primaryFocus?.unfocus(); // lower keyboard
+      await tester.pumpAndSettle();
       await signupScreen.signup();
 
       // VALIDATIONS //
@@ -356,10 +405,15 @@ void main() {
       // ACTIONS //
       await loginScreen.createAccount();
 
+      await signupScreen.insertFirstname(defaultFirstName);
+      await signupScreen.insertLastname(defaultLastName);
+      await signupScreen.insertNickname(defaultNickName);
       await signupScreen.insertUsername(defaultUser);
       await signupScreen.insertEmail(invalidEmail);
       await signupScreen.insertInitialPassword(invalidPassword);
       await signupScreen.insertConfirmPassword(invalidPassword);
+      FocusManager.instance.primaryFocus?.unfocus(); // lower keyboard
+      await tester.pumpAndSettle();
       await signupScreen.signup();
 
       // VALIDATIONS //
@@ -373,10 +427,15 @@ void main() {
           reason: "User should still be on signup screen");
 
       // ACTIONS //
+      await signupScreen.insertFirstname(defaultFirstName);
+      await signupScreen.insertLastname(defaultLastName);
+      await signupScreen.insertNickname(defaultNickName);
       await signupScreen.insertUsername(defaultUser);
       await signupScreen.insertEmail(invalidEmail);
       await signupScreen.insertInitialPassword(shortInvalidPassword);
       await signupScreen.insertConfirmPassword(shortInvalidPassword);
+      FocusManager.instance.primaryFocus?.unfocus(); // lower keyboard
+      await tester.pumpAndSettle();
       await signupScreen.signup();
 
       // VALIDATIONS //
@@ -402,10 +461,15 @@ void main() {
       // ACTIONS //
       await loginScreen.createAccount();
 
+      await signupScreen.insertFirstname(defaultFirstName);
+      await signupScreen.insertLastname(defaultLastName);
+      await signupScreen.insertNickname(defaultNickName);
       await signupScreen.insertUsername(chars101);
       await signupScreen.insertEmail(invalidEmail);
       await signupScreen.insertInitialPassword(invalidPassword);
       await signupScreen.insertConfirmPassword(validPassword);
+      FocusManager.instance.primaryFocus?.unfocus(); // lower keyboard
+      await tester.pumpAndSettle();
       await signupScreen.signup();
 
       // VALIDATIONS //
@@ -437,10 +501,15 @@ void main() {
       // ACTIONS //
       await loginScreen.createAccount();
 
+      await signupScreen.insertFirstname(defaultFirstName);
+      await signupScreen.insertLastname(defaultLastName);
+      await signupScreen.insertNickname(defaultNickName);
       await signupScreen.insertUsername(defaultUser);
       await signupScreen.insertEmail(validEmail);
       await signupScreen.insertInitialPassword(validPassword);
       await signupScreen.insertConfirmPassword(validPassword);
+      FocusManager.instance.primaryFocus?.unfocus(); // lower keyboard
+      await tester.pumpAndSettle();
       await signupScreen.signup();
 
       // VALIDATIONS //

@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:money_matcher/features/presentation/edit/screens/persons_screen.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+
 import '../../../../db/auth_database.dart';
-import '../../../../db/users_dao.dart';
 import '../../../../db/persons_dao.dart';
 import '../../../../db/groups_dao.dart';
 import '../../../../db/group_persons_dao.dart';
@@ -17,32 +18,43 @@ class GroupsScreen extends StatefulWidget {
 }
 
 class _GroupsScreenState extends State<GroupsScreen> {
+  // ignore: unused_field
   Person? _mainPerson;
   List<Person>? _userPersons;
   List<Group>? _userGroups;
-  // List<GroupPerson>? _groupPersons;
   Map<int, List<Person>>? _groupPersons;
   final ScrollController _groupScrollController = ScrollController();
   final ScrollController _avatarScrollController = ScrollController();
 
-  late UsersDao _usersDao;
   late PersonsDao _personsDao;
   late GroupsDao _groupsDao;
   late GroupPersonsDao _groupPersonsDao;
 
-  Set<int> _activePersonIds = {};
+  final Set<int> _activePersonIds = {};
   bool _isLoading = true;
+  int _currentIndex = 0;
 
   late List<TextEditingController> groupControllers;
+  late List<FocusNode> groupFocusNodes;
 
   @override
   void initState() {
     super.initState();
-    _usersDao = UsersDao(widget.db);
     _personsDao = PersonsDao(widget.db);
     _groupsDao = GroupsDao(widget.db);
     _groupPersonsDao = GroupPersonsDao(widget.db);
-    _initializeData(); // Do all async loading in one method
+    _initializeData();
+  }
+
+  @override
+  void dispose() {
+    for (var controller in groupControllers) {
+      controller.dispose();
+    }
+    for (var node in groupFocusNodes) {
+      node.dispose();
+    }
+    super.dispose();
   }
 
   Future<void> _initializeData() async {
@@ -64,21 +76,25 @@ class _GroupsScreenState extends State<GroupsScreen> {
       _userPersons = userPersons;
       _userGroups = userGroups;
       _groupPersons = groupPersons;
+
       groupControllers = _userGroups!
           .map((group) => TextEditingController(text: group.groupName))
           .toList();
+
+      groupFocusNodes = List.generate(_userGroups!.length, (index) {
+        final node = FocusNode();
+        node.addListener(() {
+          if (!node.hasFocus) {
+            final groupId = _userGroups![index].id;
+            final newName = groupControllers[index].text;
+            _groupsDao.setGroupNameById(groupId, newName);
+          }
+        });
+        return node;
+      });
     });
     setState(() => _isLoading = false);
   }
-
-  // Future<void> _loadMainPerson() async {
-  //   final person = await _personsDao.getMainPersonByUserId(widget.userId);
-  //   if (mounted) {
-  //     setState(() {
-  //       _mainPerson = person;
-  //     });
-  //   }
-  // }
 
   Future<void> _loadPersons() async {
     final persons = await _personsDao.getPersonsByUserId(widget.userId);
@@ -93,16 +109,30 @@ class _GroupsScreenState extends State<GroupsScreen> {
     final groups = await _groupsDao.getGroupsByUserId(widget.userId);
     if (mounted) {
       setState(() {
-        _userGroups = groups ?? [];
+        _userGroups = groups;
+
         groupControllers = _userGroups!
             .map((group) => TextEditingController(text: group.groupName))
             .toList();
+
+        groupFocusNodes = List.generate(_userGroups!.length, (index) {
+          final node = FocusNode();
+          node.addListener(() {
+            if (!node.hasFocus) {
+              final groupId = _userGroups![index].id;
+              final newName = groupControllers[index].text;
+              _groupsDao.setGroupNameById(groupId, newName);
+            }
+          });
+          return node;
+        });
       });
     }
   }
 
   void _addGroup() async {
-    await _groupsDao.createGroup('', widget.userId);
+    final id = await _groupsDao.createGroup('', widget.userId);
+    _groupPersons![id] = [];
     await _loadGroups();
   }
 
@@ -127,9 +157,14 @@ class _GroupsScreenState extends State<GroupsScreen> {
     await _groupsDao.setChosenGroupById(chosenGroupId, true);
   }
 
-  Future<void> _loadGroupPersons() async {
-    // go through all groups of the user and get the persons associated with that group
-    // final groupPersons = await _groupPersonsDao.getGroupPersonsByGroupId()
+  void _editPersons() async {
+    await Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (_) => PersonsScreen(db: widget.db, userId: widget.userId),
+      ),
+    );
+    await _loadPersons();
   }
 
   bool light = false;
@@ -137,31 +172,55 @@ class _GroupsScreenState extends State<GroupsScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        key: const Key('groupsScreen'),
-        appBar: AppBar(
-          title: const Text('Groups'),
+      key: const Key('groupsScreen'),
+      appBar: AppBar(
+        title: const Text('Groups'),
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          onPressed: () {
+            Navigator.pop(
+                context, true); // Return true to signal data was updated
+          },
         ),
-        body: (_isLoading || _userGroups == null || _userPersons == null)
-            ? const Center(child: CircularProgressIndicator())
-            : Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  // LEFT SIDE: Group cards
-                  Expanded(
-                      flex: 3,
-                      child: Scrollbar(
-                        thumbVisibility: true,
+      ),
+      body: (_isLoading || _userGroups == null || _userPersons == null)
+          ? const Center(child: CircularProgressIndicator())
+          : Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Expanded(
+                    flex: 3,
+                    child: Scrollbar(
+                      thumbVisibility: true,
+                      controller: _groupScrollController,
+                      child: SingleChildScrollView(
                         controller: _groupScrollController,
-                        child: SingleChildScrollView(
-                          padding: const EdgeInsets.all(8),
-                          child: Column(
-                            children:
-                                List.generate(groupControllers.length, (index) {
-                              return Card(
-                                  elevation: 2,
-                                  margin:
-                                      const EdgeInsets.symmetric(vertical: 6),
-                                  child: Column(children: [
+                        padding: const EdgeInsets.all(8),
+                        child: Column(
+                          children:
+                              List.generate(groupControllers.length, (index) {
+                            return GestureDetector(
+                              onTap: () async {
+                                final groupId = _userGroups![index].id;
+
+                                for (var personId in _activePersonIds) {
+                                  await _groupPersonsDao.addPersonToGroup(
+                                      groupId, personId);
+                                }
+
+                                final updatedPersons = await _personsDao
+                                    .getPersonsByGroupId(groupId);
+
+                                setState(() {
+                                  _groupPersons![groupId] = updatedPersons;
+                                  _activePersonIds.clear();
+                                });
+                              },
+                              child: Card(
+                                elevation: 2,
+                                margin: const EdgeInsets.symmetric(vertical: 6),
+                                child: Column(
+                                  children: [
                                     Padding(
                                       padding: const EdgeInsets.all(8),
                                       child: Row(
@@ -170,21 +229,16 @@ class _GroupsScreenState extends State<GroupsScreen> {
                                             child: TextFormField(
                                               controller:
                                                   groupControllers[index],
+                                              focusNode: groupFocusNodes[index],
                                               decoration: const InputDecoration(
                                                   hintText: 'Group Name'),
                                               textInputAction:
                                                   TextInputAction.done,
-                                              onFieldSubmitted: (value) {
-                                                int groupId =
-                                                    _userGroups![index].id;
-                                                _groupsDao.setGroupNameById(
-                                                    groupId, value);
-                                              },
                                             ),
                                           ),
                                           IconButton(
                                             icon: const Icon(Icons.delete,
-                                                color: Colors.red),
+                                                color: Colors.blueGrey),
                                             onPressed: () =>
                                                 _deleteGroup(index),
                                           ),
@@ -199,107 +253,158 @@ class _GroupsScreenState extends State<GroupsScreen> {
                                         ],
                                       ),
                                     ),
-                                    Row(
-                                      children: List.generate(
-                                          _groupPersons!.length, (jndex) {
-                                        return Chip(
-                                          label: Text(_groupPersons![
-                                                  _userGroups![index]
-                                                      .id]![jndex]
-                                              .nickName),
-                                        );
-                                      }),
-                                    ),
-                                  ]));
-                            }),
-                          ),
-                        ),
-                      )),
+                                    Padding(
+                                      padding: const EdgeInsets.symmetric(
+                                          horizontal: 8.0),
+                                      child: _groupPersons != null &&
+                                              _userGroups != null &&
+                                              _groupPersons![
+                                                      _userGroups![index].id] !=
+                                                  null &&
+                                              _groupPersons![
+                                                      _userGroups![index].id]!
+                                                  .isNotEmpty
+                                          ? Align(
+                                              alignment: Alignment.centerLeft,
+                                              child: Wrap(
+                                                spacing: 4.0,
+                                                runSpacing: 4.0,
+                                                children: _groupPersons![
+                                                        _userGroups![index].id]!
+                                                    .map((person) {
+                                                  return GestureDetector(
+                                                    onLongPress: () async {
+                                                      final groupId =
+                                                          _userGroups![index]
+                                                              .id;
+                                                      await _groupPersonsDao
+                                                          .removePersonFromGroup(
+                                                              groupId,
+                                                              person.id);
+                                                      final updatedPersons =
+                                                          await _personsDao
+                                                              .getPersonsByGroupId(
+                                                                  groupId);
 
-                  // RIGHT SIDE: Settings and scrollable icons
-                  Container(
-                    width: 70,
-                    // padding: const EdgeInsets.all(8),
-                    child: Column(
-                      children: [
-                        IconButton(
-                          icon: const Icon(Icons.settings),
-                          onPressed: () async {
-                            await Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (_) => PersonsScreen(
-                                    db: widget.db, userId: widget.userId),
+                                                      if (!mounted) return;
+                                                      setState(() {
+                                                        _groupPersons![
+                                                                groupId] =
+                                                            updatedPersons;
+                                                      });
+
+                                                      Fluttertoast.showToast(
+                                                        msg:
+                                                            '${person.nickName} removed from group.',
+                                                        toastLength:
+                                                            Toast.LENGTH_SHORT,
+                                                        gravity:
+                                                            ToastGravity.TOP,
+                                                        backgroundColor:
+                                                            Colors.black87,
+                                                        textColor: Colors.white,
+                                                        fontSize: 16.0,
+                                                      );
+                                                    },
+                                                    child: Chip(
+                                                      label:
+                                                          Text(person.nickName),
+                                                    ),
+                                                  );
+                                                }).toList(),
+                                              ),
+                                            )
+                                          : const Padding(
+                                              padding: EdgeInsets.all(16.0),
+                                              child: Text('No persons yet'),
+                                            ),
+                                    ),
+                                  ],
+                                ),
                               ),
                             );
-                            await _loadPersons();
-                          },
+                          }),
                         ),
-                        const SizedBox(height: 10),
-                        Expanded(
-                            child: Scrollbar(
+                      ),
+                    )),
+                Container(
+                  width: 70,
+                  child: Column(
+                    children: [
+                      const SizedBox(height: 10),
+                      Expanded(
+                        child: Scrollbar(
                           thumbVisibility: true,
                           controller: _avatarScrollController,
                           child: SingleChildScrollView(
+                            controller: _avatarScrollController,
                             child: Column(
                               children: _userPersons == null
                                   ? []
                                   : List.generate(_userPersons!.length,
                                       (index) {
                                       return Padding(
-                                          padding:
-                                              const EdgeInsets.only(right: 8.0),
-                                          child: GestureDetector(
-                                            onTap: () {
-                                              setState(() {
-                                                final personId =
-                                                    _userPersons![index].id;
-                                                if (_activePersonIds
-                                                    .contains(personId)) {
-                                                  _activePersonIds
-                                                      .remove(personId);
-                                                } else {
-                                                  _activePersonIds
-                                                      .add(personId);
-                                                }
-                                              });
-                                            },
-                                            child: CircleAvatar(
-                                              radius: 24,
-                                              backgroundColor:
-                                                  _activePersonIds.contains(
-                                                          _userPersons![index]
-                                                              .id)
-                                                      ? Colors.blueAccent
-                                                      : null,
-                                              child: Text(_userPersons![index]
-                                                  .nickName),
-                                            ),
-                                          )
-
-                                          // child: CircleAvatar(
-                                          //   radius: 24,
-                                          //   child: Text(_userPersons![index].nickName),
-                                          // ),
-                                          );
+                                        padding:
+                                            const EdgeInsets.only(right: 8.0),
+                                        child: GestureDetector(
+                                          onTap: () {
+                                            setState(() {
+                                              final personId =
+                                                  _userPersons![index].id;
+                                              if (_activePersonIds
+                                                  .contains(personId)) {
+                                                _activePersonIds
+                                                    .remove(personId);
+                                              } else {
+                                                _activePersonIds.add(personId);
+                                              }
+                                            });
+                                          },
+                                          child: CircleAvatar(
+                                            radius: 24,
+                                            backgroundColor:
+                                                _activePersonIds.contains(
+                                                        _userPersons![index].id)
+                                                    ? Colors.blueAccent
+                                                    : null,
+                                            child: Text(
+                                                _userPersons![index].nickName),
+                                          ),
+                                        ),
+                                      );
                                     }),
                             ),
                           ),
-                        )),
-                      ],
-                    ),
+                        ),
+                      ),
+                    ],
                   ),
-                ],
-              ),
-        floatingActionButtonLocation:
-            FloatingActionButtonLocation.miniStartDocked,
-        floatingActionButton: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: FloatingActionButton(
-            onPressed: _addGroup,
-            tooltip: 'Add Group',
-            child: const Icon(Icons.group_add),
+                ),
+              ],
+            ),
+      bottomNavigationBar: BottomNavigationBar(
+        currentIndex: _currentIndex,
+        unselectedItemColor: Colors.blueGrey,
+        selectedItemColor: Colors.blueGrey,
+        items: const [
+          BottomNavigationBarItem(
+            icon: Icon(Icons.mode_edit),
+            label: 'Edit Persons',
           ),
-        ));
+          BottomNavigationBarItem(
+            icon: Icon(Icons.groups),
+            label: 'Add Group',
+          ),
+        ],
+        onTap: (index) {
+          setState(() => _currentIndex = index);
+          if (index == 0) {
+            _editPersons();
+          } else if (index == 1) {
+            _addGroup();
+          }
+        },
+      ),
+    );
   }
 }

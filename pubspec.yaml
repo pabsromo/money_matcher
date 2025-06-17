@@ -18,6 +18,8 @@ dependencies:
   sqlite3_flutter_libs: ^0.5.0
   path_provider: ^2.1.2  # ✅ Added for local file paths
   image_picker: ^1.1.2
+  fluttertoast: ^8.2.2
+  intl: ^0.18.1
 
 dev_dependencies:
   integration_test:

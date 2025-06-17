@@ -2,9 +2,9 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter/material.dart';
 import 'package:money_matcher/main.dart' as money_matcher;
 import 'package:drift/native.dart';
-import '../screen/home_screen.dart';
-import '../screen/login_screen.dart';
-import '../screen/signup_screen.dart';
+import '../screen/home_screen_test_helper.dart';
+import '../screen/login_screen_test_helper.dart';
+import '../screen/signup_screen_test_helper.dart';
 import 'package:money_matcher/db/auth_database.dart';
 import 'package:money_matcher/db/users_dao.dart';
 
@@ -34,7 +34,7 @@ void main() {
         await tester.pumpAndSettle();
 
         //// PREPARATIONS ////
-        final loginScreen = LoginScreen(tester);
+        final loginScreen = LoginScreenTestHelper(tester);
 
         //// ACTIONS ////
         await loginScreen.insertUsername(defaultUser);
@@ -62,8 +62,8 @@ void main() {
         await tester.pumpAndSettle();
 
         // PREPARATIONS //
-        final loginScreen = LoginScreen(tester);
-        final homeScreen = HomeScreen(tester);
+        final loginScreen = LoginScreenTestHelper(tester);
+        final homeScreen = HomeScreenTestHelper(tester);
 
         //// PHASE 1 ////
         // ACTIONS //
@@ -94,7 +94,7 @@ void main() {
         await tester.pumpAndSettle();
 
         //// PREPARATIONS ////
-        final loginScreen = LoginScreen(tester);
+        final loginScreen = LoginScreenTestHelper(tester);
 
         //// ACTIONS ////
         await loginScreen.insertUsername(defaultUser);
@@ -117,7 +117,7 @@ void main() {
       await tester.pumpAndSettle();
 
       //// PREPARATIONS ////
-      final loginScreen = LoginScreen(tester);
+      final loginScreen = LoginScreenTestHelper(tester);
       final signupScreen = SignupScreen(tester);
 
       //// ACTIONS ////
@@ -141,9 +141,9 @@ void main() {
       await tester.pumpAndSettle();
 
       //// PREPARATIONS ////
-      final loginScreen = LoginScreen(tester);
+      final loginScreen = LoginScreenTestHelper(tester);
       final signupScreen = SignupScreen(tester);
-      final homeScreen = HomeScreen(tester);
+      final homeScreen = HomeScreenTestHelper(tester);
 
       //// PHASE 1 ////
       // ACTIONS //
@@ -179,7 +179,7 @@ void main() {
       await tester.pumpAndSettle();
 
       //// PREPARATIONS ////
-      final loginScreen = LoginScreen(tester);
+      final loginScreen = LoginScreenTestHelper(tester);
       final signupScreen = SignupScreen(tester);
 
       //// PHASE 1 ////
@@ -207,7 +207,7 @@ void main() {
       await tester.pumpAndSettle();
 
       // PREPARATIONS //
-      final loginScreen = LoginScreen(tester);
+      final loginScreen = LoginScreenTestHelper(tester);
       final signupScreen = SignupScreen(tester);
 
       //// PHASE 1 ////
@@ -235,7 +235,7 @@ void main() {
       await tester.pumpAndSettle();
 
       // PREPARATIONS //
-      final loginScreen = LoginScreen(tester);
+      final loginScreen = LoginScreenTestHelper(tester);
       final signupScreen = SignupScreen(tester);
 
       //// PHASE 1 ////
@@ -266,7 +266,7 @@ void main() {
       await tester.pumpAndSettle();
 
       // PREPARATIONS //
-      final loginScreen = LoginScreen(tester);
+      final loginScreen = LoginScreenTestHelper(tester);
       final signupScreen = SignupScreen(tester);
 
       //// PHASE 1 ////
@@ -294,7 +294,7 @@ void main() {
       await tester.pumpAndSettle();
 
       // PREPARATIONS //
-      final loginScreen = LoginScreen(tester);
+      final loginScreen = LoginScreenTestHelper(tester);
       final signupScreen = SignupScreen(tester);
 
       //// PHASE 1 ////
@@ -322,7 +322,7 @@ void main() {
       await tester.pumpAndSettle();
 
       // PREPARATIONS //
-      final loginScreen = LoginScreen(tester);
+      final loginScreen = LoginScreenTestHelper(tester);
       final signupScreen = SignupScreen(tester);
 
       // ACTIONS //
@@ -350,7 +350,7 @@ void main() {
       await tester.pumpAndSettle();
 
       // PREPARATIONS //
-      final loginScreen = LoginScreen(tester);
+      final loginScreen = LoginScreenTestHelper(tester);
       final signupScreen = SignupScreen(tester);
 
       // ACTIONS //
@@ -396,7 +396,7 @@ void main() {
       await tester.pumpAndSettle();
 
       //// PREPARATIONS ////
-      final loginScreen = LoginScreen(tester);
+      final loginScreen = LoginScreenTestHelper(tester);
       final signupScreen = SignupScreen(tester);
 
       // ACTIONS //
@@ -431,7 +431,7 @@ void main() {
       await tester.pumpAndSettle();
 
       // PREPARATIONS //
-      final loginScreen = LoginScreen(tester);
+      final loginScreen = LoginScreenTestHelper(tester);
       final signupScreen = SignupScreen(tester);
 
       // ACTIONS //

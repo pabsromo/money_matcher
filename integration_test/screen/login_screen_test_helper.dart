@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-class LoginScreen {
+class LoginScreenTestHelper {
   late WidgetTester tester;
 
-  LoginScreen(this.tester);
+  LoginScreenTestHelper(this.tester);
 
   final _usernameInputLocator = find.byKey(const Key("usernameInput"));
   final _passwordInputLocator = find.byKey(const Key("passwordInput"));
@@ -12,7 +12,6 @@ class LoginScreen {
   final _createAccountButtonLocator = find.byKey(const Key(("createAccntBtn")));
 
   //// BUTTONS ////
-
   Future<void> login() async {
     await tester.tap(_loginButtonLocator, warnIfMissed: true);
     await tester.pumpAndSettle();

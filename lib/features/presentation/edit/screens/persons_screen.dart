@@ -1,8 +1,5 @@
-import 'dart:ffi';
-
 import 'package:flutter/material.dart';
 import '../../../../db/auth_database.dart';
-import '../../../../db/users_dao.dart';
 import '../../../../db/persons_dao.dart';
 
 class PersonsScreen extends StatefulWidget {
@@ -16,16 +13,15 @@ class PersonsScreen extends StatefulWidget {
 }
 
 class _PersonsScreenState extends State<PersonsScreen> {
+  // ignore: unused_field
   Person? _mainPerson;
   List<Person>? _userPersons;
-  late UsersDao _usersDao;
   late PersonsDao _personsDao;
-  late List<TextEditingController> personControllers;
+  late List<TextEditingController> _personControllers;
 
   @override
   void initState() {
     super.initState();
-    _usersDao = UsersDao(widget.db);
     _personsDao = PersonsDao(widget.db);
     _loadPersons();
     _loadMainPerson();
@@ -35,8 +31,8 @@ class _PersonsScreenState extends State<PersonsScreen> {
     final persons = await _personsDao.getPersonsByUserId(widget.userId);
     if (mounted) {
       setState(() {
-        _userPersons = persons ?? [];
-        personControllers = _userPersons!
+        _userPersons = persons;
+        _personControllers = _userPersons!
             .map((person) => TextEditingController(text: person.nickName))
             .toList();
       });
@@ -71,7 +67,7 @@ class _PersonsScreenState extends State<PersonsScreen> {
       ),
       body: SingleChildScrollView(
           child: Column(
-        children: List.generate(personControllers.length, (index) {
+        children: List.generate(_personControllers.length, (index) {
           return Card(
               child: Padding(
                   padding: const EdgeInsets.all(8),
@@ -79,7 +75,7 @@ class _PersonsScreenState extends State<PersonsScreen> {
                     children: [
                       Expanded(
                         child: TextFormField(
-                          controller: personControllers[index],
+                          controller: _personControllers[index],
                           decoration:
                               const InputDecoration(hintText: 'Nickname'),
                           textInputAction: TextInputAction.done,
@@ -90,9 +86,10 @@ class _PersonsScreenState extends State<PersonsScreen> {
                         ),
                       ),
                       _userPersons![index].isMain
-                          ? Text('(you)')
+                          ? const Text('(you)')
                           : IconButton(
-                              icon: const Icon(Icons.delete, color: Colors.red),
+                              icon: const Icon(Icons.delete,
+                                  color: Colors.blueGrey),
                               onPressed: () => _deletePerson(index),
                             )
                     ],

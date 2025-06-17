@@ -53,6 +53,7 @@ class _SignupScreenState extends State<SignupScreen> {
       }
 
       var userId = await _usersDao.createUser(username, email, password);
+      // ignore: unused_local_variable
       var personId = await _personsDao.createPerson(
           firstName, lastName, nickName, email, userId, true);
 

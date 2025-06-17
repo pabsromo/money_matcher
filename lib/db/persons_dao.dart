@@ -10,7 +10,7 @@ class PersonsDao extends DatabaseAccessor<AuthDatabase> with _$PersonsDaoMixin {
 
   // Create
   Future<int> createPerson(String? firstName, String? lastName,
-      String? nickName, String? email, int user_id, bool isMain) {
+      String? nickName, String? email, int? user_id, bool isMain) {
     return into(persons).insert(PersonsCompanion(
       firstName: firstName != null ? Value(firstName) : const Value.absent(),
       lastName: lastName != null ? Value(lastName) : const Value.absent(),

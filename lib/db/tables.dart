@@ -33,3 +33,13 @@ class GroupPersons extends Table {
   IntColumn get group_id => integer().references(Groups, #id)();
   IntColumn get person_id => integer().references(Persons, #id)();
 }
+
+class Events extends Table {
+  IntColumn get id => integer().autoIncrement()();
+  TextColumn get eventName => text()();
+  TextColumn get location => text()();
+  DateTimeColumn get date => dateTime().nullable()();
+  IntColumn get user_id => integer().references(Users, #id)();
+  IntColumn get group_id => integer().references(Groups, #id).nullable()();
+  BoolColumn get isEditing => boolean().withDefault(const Constant(false))();
+}

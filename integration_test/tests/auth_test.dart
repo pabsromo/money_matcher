@@ -163,8 +163,6 @@ void main() {
       await signupScreen.insertUsername(defaultUser);
       await signupScreen.insertEmail(validEmail);
       await signupScreen.insertInitialPassword(validPassword);
-      FocusManager.instance.primaryFocus?.unfocus(); // lower keyboard
-      await tester.pumpAndSettle();
       await signupScreen.insertConfirmPassword(validPassword);
       FocusManager.instance.primaryFocus?.unfocus(); // lower keyboard
       await tester.pumpAndSettle();
@@ -186,6 +184,9 @@ void main() {
       expect(find.byKey(const Key("homeScreen")), findsOneWidget,
           reason: "Should be logged in!");
     });
+    // Verify unable to create new user without a first name
+    // Verify unable to create new user without a last name
+    // Verify unable to create new user without nickname
     testWidgets('Verify unable to create new user with no username',
         (WidgetTester tester) async {
       // Launch the app
@@ -411,6 +412,8 @@ void main() {
       await signupScreen.insertUsername(defaultUser);
       await signupScreen.insertEmail(invalidEmail);
       await signupScreen.insertInitialPassword(invalidPassword);
+      FocusManager.instance.primaryFocus?.unfocus(); // lower keyboard
+      await tester.pumpAndSettle();
       await signupScreen.insertConfirmPassword(invalidPassword);
       FocusManager.instance.primaryFocus?.unfocus(); // lower keyboard
       await tester.pumpAndSettle();
@@ -433,6 +436,8 @@ void main() {
       await signupScreen.insertUsername(defaultUser);
       await signupScreen.insertEmail(invalidEmail);
       await signupScreen.insertInitialPassword(shortInvalidPassword);
+      FocusManager.instance.primaryFocus?.unfocus(); // lower keyboard
+      await tester.pumpAndSettle();
       await signupScreen.insertConfirmPassword(shortInvalidPassword);
       FocusManager.instance.primaryFocus?.unfocus(); // lower keyboard
       await tester.pumpAndSettle();

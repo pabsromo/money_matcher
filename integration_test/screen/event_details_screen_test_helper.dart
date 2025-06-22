@@ -11,10 +11,16 @@ class EventDetailsScreenTestHelper {
       find.byKey(const Key('eventLocationInput'));
   final _eventDateInputLocator = find.byKey(const Key('eventDateInput'));
   final _doneButtonLocator = find.byKey(const Key('doneBtn'));
+  final _editGroupButtonLocator = find.byIcon(Icons.edit);
 
   // BUTTONS //
   Future<void> clickDone() async {
     await tester.tap(_doneButtonLocator, warnIfMissed: true);
+    await tester.pumpAndSettle();
+  }
+
+  Future<void> clickEditGroup() async {
+    await tester.tap(_editGroupButtonLocator, warnIfMissed: true);
     await tester.pumpAndSettle();
   }
 
@@ -49,6 +55,13 @@ class EventDetailsScreenTestHelper {
 
   Future<String> getEventDate() async {
     return await getControllerText('eventDateInput');
+  }
+
+  Future<String?> getChosenGroupText() async {
+    // final _locator = find.byKey(const Key('chosenGroupText'));
+    final groupText =
+        tester.widget<Text>(find.byKey(const Key('chosenGroupText')));
+    return groupText.data;
   }
 
   Future<Finder> getChipFinder() async {

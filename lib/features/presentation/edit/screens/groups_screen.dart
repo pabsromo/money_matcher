@@ -227,6 +227,7 @@ class _GroupsScreenState extends State<GroupsScreen> {
                                         children: [
                                           Expanded(
                                             child: TextFormField(
+                                              key: Key('group $index'),
                                               controller:
                                                   groupControllers[index],
                                               focusNode: groupFocusNodes[index],
@@ -243,6 +244,7 @@ class _GroupsScreenState extends State<GroupsScreen> {
                                                 _deleteGroup(index),
                                           ),
                                           Switch(
+                                            key: Key('group_${index}_switch'),
                                             value: _checkChosen(index),
                                             activeColor: Colors.blue,
                                             onChanged: (bool value) async {
@@ -267,6 +269,8 @@ class _GroupsScreenState extends State<GroupsScreen> {
                                           ? Align(
                                               alignment: Alignment.centerLeft,
                                               child: Wrap(
+                                                key: Key(
+                                                    'group_${index}_add_area'),
                                                 spacing: 4.0,
                                                 runSpacing: 4.0,
                                                 children: _groupPersons![
@@ -314,9 +318,13 @@ class _GroupsScreenState extends State<GroupsScreen> {
                                                 }).toList(),
                                               ),
                                             )
-                                          : const Padding(
-                                              padding: EdgeInsets.all(16.0),
-                                              child: Text('No persons yet'),
+                                          : Padding(
+                                              key: Key(
+                                                  'group_${index}_add_area'),
+                                              padding:
+                                                  const EdgeInsets.all(16.0),
+                                              child:
+                                                  const Text('No persons yet'),
                                             ),
                                     ),
                                   ],
@@ -361,6 +369,8 @@ class _GroupsScreenState extends State<GroupsScreen> {
                                             });
                                           },
                                           child: CircleAvatar(
+                                            key: Key(
+                                                _userPersons![index].nickName),
                                             radius: 24,
                                             backgroundColor:
                                                 _activePersonIds.contains(

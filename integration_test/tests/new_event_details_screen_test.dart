@@ -607,17 +607,20 @@ void main() {
           equals('Monday, June 16th 2025'),
           reason: 'Date default is empty');
     });
-    testWidgets('Verify event gets persisted after value in Event Name',
-        (WidgetTester tester) async {});
-    testWidgets('Verify event gets persisted after value in Event Location',
-        (WidgetTester tester) async {});
-    testWidgets('Verify event gets persisted after value in Event Date',
+    testWidgets(
+        'Verify event gets persisted after backing out with value in Event Name',
         (WidgetTester tester) async {});
     testWidgets(
-        'Verify event gets persisted after values in Event Name, Location, and Date',
+        'Verify event gets persisted after backing out with value in Event Location',
         (WidgetTester tester) async {});
     testWidgets(
-        'Verify NO event gets persisted after NO values in Event Name, Location, and Date',
+        'Verify event gets persisted after backing out with value in Event Date',
+        (WidgetTester tester) async {});
+    testWidgets(
+        'Verify event gets persisted after backing out with values in Event Name, Location, and Date',
+        (WidgetTester tester) async {});
+    testWidgets(
+        'Verify NO event gets persisted after backing out with NO values in Event Name, Location, and Date',
         (WidgetTester tester) async {});
     testWidgets(
         'Verify fresh event after going back to home and proceeding to New Ticket again',

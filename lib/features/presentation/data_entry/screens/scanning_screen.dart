@@ -80,81 +80,94 @@ class _ScanningScreenState extends State<ScanningScreen> {
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (_) => RefineScanScreen(images: _selectedImages),
+        builder: (_) => RefineScanScreen(selectedImages: _selectedImages),
       ),
     );
   }
 
+  Future<void> _exitScreen() async {
+    // Save images and associate with current event
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      key: const Key("scanningScreen"),
-      appBar: AppBar(
-        title: const Text('Scan'),
-        actions: [
-          Row(
-            children: [
-              TextButton.icon(
-                icon: const Icon(Icons.skip_next),
-                label: const Text('Skip'),
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (_) => const ManualEntryScreen(),
-                    ),
-                  );
-                },
-              )
-            ],
-          )
-        ],
-      ),
-      body: _selectedImages.isEmpty
-          ? const Center(
-              child: Padding(
-                padding: EdgeInsets.all(16.0),
-                child: Text(
-                  'Take a single or multiple photos of your receipt or choose from your photo gallery',
-                  textAlign: TextAlign.center,
-                  style: TextStyle(fontSize: 16),
-                ),
-              ),
-            )
-          : SelectedImagesViewer(
-              selectedImages: _selectedImages,
-              onMoveUp: _moveImageUp,
-              onMoveDown: _moveImageDown,
-              onDelete: _deleteImage,
-            ),
-      bottomNavigationBar: BottomNavigationBar(
-        currentIndex: _currentIndex,
-        items: _selectedImages.isEmpty
-            ? [
-                const BottomNavigationBarItem(
-                    icon: Icon(Icons.photo), label: 'Gallery'),
-                const BottomNavigationBarItem(
-                    icon: Icon(Icons.camera_alt), label: 'Camera'),
-              ]
-            : [
-                const BottomNavigationBarItem(
-                    icon: Icon(Icons.add_photo_alternate), label: 'Gallery'),
-                const BottomNavigationBarItem(
-                    icon: Icon(Icons.add_a_photo), label: 'Camera'),
-                const BottomNavigationBarItem(
-                    icon: Icon(Icons.check), label: 'Done')
-              ],
-        onTap: (index) {
-          setState(() => _currentIndex = index);
-          if (index == 0) {
-            _pickImageFromGallery();
-          } else if (index == 1) {
-            _pickImageFromCamera();
-          } else if (index == 2) {
-            _done();
+    return PopScope(
+        canPop: true,
+        onPopInvokedWithResult: (bool didPop, Object? result) async {
+          if (didPop) {
+            await _exitScreen();
           }
         },
-      ),
-    );
+        child: Scaffold(
+          key: const Key("scanningScreen"),
+          appBar: AppBar(
+            title: const Text('Scan'),
+            actions: [
+              Row(
+                children: [
+                  TextButton.icon(
+                    icon: const Icon(Icons.skip_next),
+                    label: const Text('Skip'),
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (_) => const ManualEntryScreen(),
+                        ),
+                      );
+                    },
+                  )
+                ],
+              )
+            ],
+          ),
+          body: _selectedImages.isEmpty
+              ? const Center(
+                  child: Padding(
+                    padding: EdgeInsets.all(16.0),
+                    child: Text(
+                      'Take a single or multiple photos of your receipt or choose from your photo gallery',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(fontSize: 16),
+                    ),
+                  ),
+                )
+              : SelectedImagesViewer(
+                  selectedImages: _selectedImages,
+                  onMoveUp: _moveImageUp,
+                  onMoveDown: _moveImageDown,
+                  onDelete: _deleteImage,
+                  isEditable: true,
+                ),
+          bottomNavigationBar: BottomNavigationBar(
+            currentIndex: _currentIndex,
+            items: _selectedImages.isEmpty
+                ? [
+                    const BottomNavigationBarItem(
+                        icon: Icon(Icons.photo), label: 'Gallery'),
+                    const BottomNavigationBarItem(
+                        icon: Icon(Icons.camera_alt), label: 'Camera'),
+                  ]
+                : [
+                    const BottomNavigationBarItem(
+                        icon: Icon(Icons.add_photo_alternate),
+                        label: 'Gallery'),
+                    const BottomNavigationBarItem(
+                        icon: Icon(Icons.add_a_photo), label: 'Camera'),
+                    const BottomNavigationBarItem(
+                        icon: Icon(Icons.check), label: 'Done')
+                  ],
+            onTap: (index) {
+              setState(() => _currentIndex = index);
+              if (index == 0) {
+                _pickImageFromGallery();
+              } else if (index == 1) {
+                _pickImageFromCamera();
+              } else if (index == 2) {
+                _done();
+              }
+            },
+          ),
+        ));
   }
 }

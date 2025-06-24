@@ -139,6 +139,7 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
     if (_currEvent != null) {
       if (eventName == '' && location == '' && date == null) {
         await _eventsDao.deleteEventById(_currEvent!.id);
+        // delete associated images as well
       } else {
         if (_chosenGroup == null) {}
         await _eventsDao.setEventById(

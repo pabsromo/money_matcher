@@ -5,6 +5,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:money_matcher/db/auth_database.dart';
 import 'package:money_matcher/features/presentation/data_entry/screens/manual_entry_screen.dart';
 import 'package:money_matcher/features/presentation/data_entry/screens/refine_scan_screen.dart';
+import 'package:money_matcher/features/presentation/data_entry/widgets/selected_images_viewer.dart';
 
 class ScanningScreen extends StatefulWidget {
   final AuthDatabase db;
@@ -50,11 +51,23 @@ class _ScanningScreenState extends State<ScanningScreen> {
   }
 
   Future _moveImageUp(int index) async {
-    setState(() {
-      File temp = _selectedImages[index];
-      _selectedImages.removeAt(index);
-      _selectedImages.insert(index - 1, temp);
-    });
+    if (_selectedImages.length != 1) {
+      setState(() {
+        File temp = _selectedImages[index];
+        _selectedImages.removeAt(index);
+        _selectedImages.insert(index - 1, temp);
+      });
+    }
+  }
+
+  Future _moveImageDown(int index) async {
+    if (_selectedImages.length != 1) {
+      setState(() {
+        File temp = _selectedImages[index];
+        _selectedImages.removeAt(index);
+        _selectedImages.insert(index + 1, temp);
+      });
+    }
   }
 
   Future _deleteImage(int index) async {
@@ -97,34 +110,23 @@ class _ScanningScreenState extends State<ScanningScreen> {
           )
         ],
       ),
-      body: SingleChildScrollView(
-        child: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: List.generate(_selectedImages.length, (index) {
-              return Stack(
-                children: <Widget>[
-                  Container(
-                    alignment: Alignment.center,
-                    child: Image.file(_selectedImages[index]),
-                  ),
-                  Align(
-                      alignment: Alignment.topLeft,
-                      child: IconButton(
-                          onPressed: () => _moveImageUp(index),
-                          icon: const Icon(Icons.arrow_upward,
-                              color: Colors.yellow))),
-                  Align(
-                      alignment: Alignment.topRight,
-                      child: IconButton(
-                          onPressed: () => _deleteImage(index),
-                          icon: const Icon(Icons.delete, color: Colors.red)))
-                ],
-              );
-            }),
-          ),
-        ),
-      ),
+      body: _selectedImages.isEmpty
+          ? const Center(
+              child: Padding(
+                padding: EdgeInsets.all(16.0),
+                child: Text(
+                  'Take a single or multiple photos of your receipt or choose from your photo gallery',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(fontSize: 16),
+                ),
+              ),
+            )
+          : SelectedImagesViewer(
+              selectedImages: _selectedImages,
+              onMoveUp: _moveImageUp,
+              onMoveDown: _moveImageDown,
+              onDelete: _deleteImage,
+            ),
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _currentIndex,
         items: _selectedImages.isEmpty
@@ -133,7 +135,6 @@ class _ScanningScreenState extends State<ScanningScreen> {
                     icon: Icon(Icons.photo), label: 'Gallery'),
                 const BottomNavigationBarItem(
                     icon: Icon(Icons.camera_alt), label: 'Camera'),
-                // const BottomNavigationBarItem(icon: ))
               ]
             : [
                 const BottomNavigationBarItem(
@@ -146,13 +147,11 @@ class _ScanningScreenState extends State<ScanningScreen> {
         onTap: (index) {
           setState(() => _currentIndex = index);
           if (index == 0) {
-            // photo gallery
             _pickImageFromGallery();
           } else if (index == 1) {
-            // from camera
             _pickImageFromCamera();
           } else if (index == 2) {
-            _done;
+            _done();
           }
         },
       ),

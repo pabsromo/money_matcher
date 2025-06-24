@@ -27,6 +27,10 @@ class EventsDao extends DatabaseAccessor<AuthDatabase> with _$EventsDaoMixin {
   }
 
   // Read
+  Future<List<Event?>> getAllEvents() {
+    return (select(events)).get();
+  }
+
   Future<Event?> getEventById(int id) {
     return (select(events)..where((e) => e.id.equals(id))).getSingleOrNull();
   }
@@ -39,12 +43,12 @@ class EventsDao extends DatabaseAccessor<AuthDatabase> with _$EventsDaoMixin {
 
   // Update
   Future<int> setEventById(int id, String eventName, String eventLocation,
-      DateTime? date, int groupId, bool isEditingValue) {
+      DateTime? date, int? groupId, bool isEditingValue) {
     return (update(events)..where((e) => e.id.equals(id))).write(
         EventsCompanion(
             eventName: Value(eventName),
             location: Value(eventLocation),
-            date: Value(date!),
+            date: Value(date),
             group_id: Value(groupId),
             isEditing: Value(isEditingValue)));
   }

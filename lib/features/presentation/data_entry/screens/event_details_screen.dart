@@ -131,13 +131,18 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
   }
 
   Future<void> _exitScreen() async {
+    final eventName = _eventNameCtrl.text.trim();
+    final location = _eventLocationCtrl.text.trim();
+    final date = _selectedDate;
+    final groupId = _chosenGroup?.id;
+
     if (_currEvent != null) {
-      if (_currEvent!.eventName == '' &&
-          _currEvent!.location == '' &&
-          _eventDateCtrl.text == '') {
+      if (eventName == '' && location == '' && date == null) {
         await _eventsDao.deleteEventById(_currEvent!.id);
       } else {
-        await _eventsDao.setEditingById(_currEvent!.id, false);
+        if (_chosenGroup == null) {}
+        await _eventsDao.setEventById(
+            _currEvent!.id, eventName, location, date, groupId, false);
       }
     }
   }
@@ -174,7 +179,14 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
         child: Scaffold(
             key: const Key('eventDetailsScreen'),
             appBar: AppBar(
-              title: const Text('New Event Details'),
+              title: const Text('Groups'),
+              leading: IconButton(
+                icon: const Icon(Icons.arrow_back),
+                onPressed: () {
+                  Navigator.pop(
+                      context, true); // Return true to signal data was updated
+                },
+              ),
             ),
             body: SingleChildScrollView(
                 child: Padding(

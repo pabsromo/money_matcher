@@ -1,5 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter/material.dart';
+import 'package:money_matcher/db/events_dao.dart';
 import 'package:money_matcher/db/group_persons_dao.dart';
 import 'package:money_matcher/db/groups_dao.dart';
 import 'package:money_matcher/main.dart' as money_matcher;
@@ -609,19 +610,259 @@ void main() {
     });
     testWidgets(
         'Verify event gets persisted after backing out with value in Event Name',
-        (WidgetTester tester) async {});
+        (WidgetTester tester) async {
+      // PREPARATIONS //
+      // Prep data
+      final db = AuthDatabase.custom(NativeDatabase.memory());
+      final usersDao = UsersDao(db);
+      final personsDao = PersonsDao(db);
+      final groupsDao = GroupsDao(db);
+      final groupPersonsDao = GroupPersonsDao(db);
+      final eventsDao = EventsDao(db);
+
+      /* Creates...
+        User pabromo with nickname pabs
+        Person cami
+        Group 'test group' with persons pabs and cami
+      */
+      usersDao.deleteAll();
+      usersDao.createUser(defaultUser, validEmail, validPassword);
+      final userId = await usersDao.getUserByUsername('pabromo');
+      personsDao.createPerson('', '', 'pabs', '', userId!.id, true);
+      personsDao.createPerson('', '', 'cami', '', userId.id, false);
+      final groupId = await groupsDao.createGroup('test group', userId.id);
+      groupsDao.setChosenGroupById(groupId, true);
+      groupPersonsDao.addPersonToGroup(groupId, 0);
+      groupPersonsDao.addPersonToGroup(groupId, 1);
+
+      // Launch the app
+      await tester.pumpWidget(money_matcher.MyApp(db: db));
+      await tester.pumpAndSettle();
+
+      // Prep Screen Test Helpers
+      final loginScreen = LoginScreenTestHelper(tester);
+      final homeScreen = HomeScreenTestHelper(tester);
+      final eventDetailsScreen = EventDetailsScreenTestHelper(tester);
+
+      // ACTIONS //
+      await loginScreen.insertUsername(defaultUser);
+      await loginScreen.insertPassword(validPassword);
+      await loginScreen.login();
+      await homeScreen.clickNewTicket();
+      await eventDetailsScreen.insertEventName('test event');
+
+      await eventDetailsScreen.clickBack();
+
+      final actualEvent = await eventsDao.getAllEvents();
+
+      // VALIDATIONS //
+      expect(actualEvent[0]!.eventName, equals('test event'));
+    });
     testWidgets(
         'Verify event gets persisted after backing out with value in Event Location',
-        (WidgetTester tester) async {});
+        (WidgetTester tester) async {
+      // PREPARATIONS //
+      // Prep data
+      final db = AuthDatabase.custom(NativeDatabase.memory());
+      final usersDao = UsersDao(db);
+      final personsDao = PersonsDao(db);
+      final groupsDao = GroupsDao(db);
+      final groupPersonsDao = GroupPersonsDao(db);
+      final eventsDao = EventsDao(db);
+
+      /* Creates...
+        User pabromo with nickname pabs
+        Person cami
+        Group 'test group' with persons pabs and cami
+      */
+      usersDao.deleteAll();
+      usersDao.createUser(defaultUser, validEmail, validPassword);
+      final userId = await usersDao.getUserByUsername('pabromo');
+      personsDao.createPerson('', '', 'pabs', '', userId!.id, true);
+      personsDao.createPerson('', '', 'cami', '', userId.id, false);
+      final groupId = await groupsDao.createGroup('test group', userId.id);
+      groupsDao.setChosenGroupById(groupId, true);
+      groupPersonsDao.addPersonToGroup(groupId, 0);
+      groupPersonsDao.addPersonToGroup(groupId, 1);
+
+      // Launch the app
+      await tester.pumpWidget(money_matcher.MyApp(db: db));
+      await tester.pumpAndSettle();
+
+      // Prep Screen Test Helpers
+      final loginScreen = LoginScreenTestHelper(tester);
+      final homeScreen = HomeScreenTestHelper(tester);
+      final eventDetailsScreen = EventDetailsScreenTestHelper(tester);
+
+      // ACTIONS //
+      await loginScreen.insertUsername(defaultUser);
+      await loginScreen.insertPassword(validPassword);
+      await loginScreen.login();
+      await homeScreen.clickNewTicket();
+      await eventDetailsScreen.insertLocation('test location');
+
+      await eventDetailsScreen.clickBack();
+
+      final actualEvent = await eventsDao.getAllEvents();
+
+      // VALIDATIONS //
+      expect(actualEvent[0]!.location, equals('test location'));
+    });
     testWidgets(
         'Verify event gets persisted after backing out with value in Event Date',
-        (WidgetTester tester) async {});
+        (WidgetTester tester) async {
+      // PREPARATIONS //
+      // Prep data
+      final db = AuthDatabase.custom(NativeDatabase.memory());
+      final usersDao = UsersDao(db);
+      final personsDao = PersonsDao(db);
+      final groupsDao = GroupsDao(db);
+      final groupPersonsDao = GroupPersonsDao(db);
+      final eventsDao = EventsDao(db);
+
+      /* Creates...
+        User pabromo with nickname pabs
+        Person cami
+        Group 'test group' with persons pabs and cami
+      */
+      usersDao.deleteAll();
+      usersDao.createUser(defaultUser, validEmail, validPassword);
+      final userId = await usersDao.getUserByUsername('pabromo');
+      personsDao.createPerson('', '', 'pabs', '', userId!.id, true);
+      personsDao.createPerson('', '', 'cami', '', userId.id, false);
+      final groupId = await groupsDao.createGroup('test group', userId.id);
+      groupsDao.setChosenGroupById(groupId, true);
+      groupPersonsDao.addPersonToGroup(groupId, 0);
+      groupPersonsDao.addPersonToGroup(groupId, 1);
+
+      // Launch the app
+      await tester.pumpWidget(money_matcher.MyApp(db: db));
+      await tester.pumpAndSettle();
+
+      // Prep Screen Test Helpers
+      final loginScreen = LoginScreenTestHelper(tester);
+      final homeScreen = HomeScreenTestHelper(tester);
+      final eventDetailsScreen = EventDetailsScreenTestHelper(tester);
+
+      // ACTIONS //
+      await loginScreen.insertUsername(defaultUser);
+      await loginScreen.insertPassword(validPassword);
+      await loginScreen.login();
+      await homeScreen.clickNewTicket();
+      await eventDetailsScreen.chooseDate(16, 06, 2025);
+
+      await eventDetailsScreen.clickBack();
+
+      final actualEvent = await eventsDao.getAllEvents();
+
+      // VALIDATIONS //
+      expect(eventDetailsScreen.formatDateWithSuffix(actualEvent[0]!.date!),
+          equals('Monday, June 16th 2025'));
+    });
     testWidgets(
         'Verify event gets persisted after backing out with values in Event Name, Location, and Date',
-        (WidgetTester tester) async {});
+        (WidgetTester tester) async {
+      // PREPARATIONS //
+      // Prep data
+      final db = AuthDatabase.custom(NativeDatabase.memory());
+      final usersDao = UsersDao(db);
+      final personsDao = PersonsDao(db);
+      final groupsDao = GroupsDao(db);
+      final groupPersonsDao = GroupPersonsDao(db);
+      final eventsDao = EventsDao(db);
+
+      /* Creates...
+        User pabromo with nickname pabs
+        Person cami
+        Group 'test group' with persons pabs and cami
+      */
+      usersDao.deleteAll();
+      usersDao.createUser(defaultUser, validEmail, validPassword);
+      final userId = await usersDao.getUserByUsername('pabromo');
+      personsDao.createPerson('', '', 'pabs', '', userId!.id, true);
+      personsDao.createPerson('', '', 'cami', '', userId.id, false);
+      final groupId = await groupsDao.createGroup('test group', userId.id);
+      groupsDao.setChosenGroupById(groupId, true);
+      groupPersonsDao.addPersonToGroup(groupId, 0);
+      groupPersonsDao.addPersonToGroup(groupId, 1);
+
+      // Launch the app
+      await tester.pumpWidget(money_matcher.MyApp(db: db));
+      await tester.pumpAndSettle();
+
+      // Prep Screen Test Helpers
+      final loginScreen = LoginScreenTestHelper(tester);
+      final homeScreen = HomeScreenTestHelper(tester);
+      final eventDetailsScreen = EventDetailsScreenTestHelper(tester);
+
+      // ACTIONS //
+      await loginScreen.insertUsername(defaultUser);
+      await loginScreen.insertPassword(validPassword);
+      await loginScreen.login();
+      await homeScreen.clickNewTicket();
+      await eventDetailsScreen.insertEventName('test event');
+      await eventDetailsScreen.insertLocation('test location');
+      await eventDetailsScreen.chooseDate(16, 06, 2025);
+
+      await eventDetailsScreen.clickBack();
+
+      final actualEvent = await eventsDao.getAllEvents();
+
+      // VALIDATIONS //
+      expect(actualEvent[0]!.eventName, equals('test event'));
+      expect(actualEvent[0]!.location, equals('test location'));
+      expect(eventDetailsScreen.formatDateWithSuffix(actualEvent[0]!.date!),
+          equals('Monday, June 16th 2025'));
+    });
     testWidgets(
         'Verify NO event gets persisted after backing out with NO values in Event Name, Location, and Date',
-        (WidgetTester tester) async {});
+        (WidgetTester tester) async {
+      // PREPARATIONS //
+      // Prep data
+      final db = AuthDatabase.custom(NativeDatabase.memory());
+      final usersDao = UsersDao(db);
+      final personsDao = PersonsDao(db);
+      final groupsDao = GroupsDao(db);
+      final groupPersonsDao = GroupPersonsDao(db);
+      final eventsDao = EventsDao(db);
+
+      /* Creates...
+        User pabromo with nickname pabs
+        Person cami
+        Group 'test group' with persons pabs and cami
+      */
+      usersDao.deleteAll();
+      usersDao.createUser(defaultUser, validEmail, validPassword);
+      final userId = await usersDao.getUserByUsername('pabromo');
+      personsDao.createPerson('', '', 'pabs', '', userId!.id, true);
+      personsDao.createPerson('', '', 'cami', '', userId.id, false);
+      final groupId = await groupsDao.createGroup('test group', userId.id);
+      groupsDao.setChosenGroupById(groupId, true);
+      groupPersonsDao.addPersonToGroup(groupId, 0);
+      groupPersonsDao.addPersonToGroup(groupId, 1);
+
+      // Launch the app
+      await tester.pumpWidget(money_matcher.MyApp(db: db));
+      await tester.pumpAndSettle();
+
+      // Prep Screen Test Helpers
+      final loginScreen = LoginScreenTestHelper(tester);
+      final homeScreen = HomeScreenTestHelper(tester);
+      final eventDetailsScreen = EventDetailsScreenTestHelper(tester);
+
+      // ACTIONS //
+      await loginScreen.insertUsername(defaultUser);
+      await loginScreen.insertPassword(validPassword);
+      await loginScreen.login();
+      await homeScreen.clickNewTicket();
+
+      await eventDetailsScreen.clickBack();
+
+      final actualEvent = await eventsDao.getAllEvents();
+
+      // VALIDATIONS //
+      expect(actualEvent.length, equals(0));
+    });
     testWidgets(
         'Verify fresh event after going back to home and proceeding to New Ticket again',
         (WidgetTester tester) async {});

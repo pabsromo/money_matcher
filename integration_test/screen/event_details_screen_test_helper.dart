@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:intl/intl.dart';
 
 class EventDetailsScreenTestHelper {
   late WidgetTester tester;
@@ -12,8 +13,14 @@ class EventDetailsScreenTestHelper {
   final _eventDateInputLocator = find.byKey(const Key('eventDateInput'));
   final _doneButtonLocator = find.byKey(const Key('doneBtn'));
   final _editGroupButtonLocator = find.byIcon(Icons.edit);
+  final _backButtonLocator = find.byIcon(Icons.arrow_back);
 
   // BUTTONS //
+  Future<void> clickBack() async {
+    await tester.tap(_backButtonLocator, warnIfMissed: true);
+    await tester.pumpAndSettle();
+  }
+
   Future<void> clickDone() async {
     await tester.tap(_doneButtonLocator, warnIfMissed: true);
     await tester.pumpAndSettle();
@@ -81,5 +88,20 @@ class EventDetailsScreenTestHelper {
     );
     final nameController = nameField.controller!;
     return nameController.text;
+  }
+
+  String formatDateWithSuffix(DateTime date) {
+    final day = date.day;
+    final suffix = (day >= 11 && day <= 13)
+        ? 'th'
+        : {
+              1: 'st',
+              2: 'nd',
+              3: 'rd',
+            }[day % 10] ??
+            'th';
+
+    final formatted = DateFormat('EEEE, MMMM d').format(date);
+    return '$formatted$suffix ${date.year}'; // e.g., "Wednesday, June 26th 2025"
   }
 }

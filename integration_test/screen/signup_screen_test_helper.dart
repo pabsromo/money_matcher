@@ -7,6 +7,9 @@ class SignupScreen {
   SignupScreen(this.tester);
 
   final _signupScreenLocator = find.byKey(const Key("signupScreen"));
+  final _firstNameInputLocator = find.byKey(const Key('firstNameTextForm'));
+  final _lastNameInputLocator = find.byKey(const Key('lastNameTextForm'));
+  final _nickNameInputLocator = find.byKey(const Key('nickNameTextForm'));
   final _usernameInputLocator = find.byKey(const Key("usernameTextForm"));
   final _emailInputLocator = find.byKey(const Key("emailTextForm"));
   final _initialPassInputLocator =
@@ -21,6 +24,21 @@ class SignupScreen {
   }
 
   // FORMS INPUTS //
+  Future<void> insertFirstname(String firstName) async {
+    await tester.enterText(_firstNameInputLocator, firstName);
+    await tester.pumpAndSettle();
+  }
+
+  Future<void> insertLastname(String lastName) async {
+    await tester.enterText(_lastNameInputLocator, lastName);
+    await tester.pumpAndSettle();
+  }
+
+  Future<void> insertNickname(String nickName) async {
+    await tester.enterText(_nickNameInputLocator, nickName);
+    await tester.pumpAndSettle();
+  }
+
   Future<void> insertUsername(String username) async {
     await tester.enterText(_usernameInputLocator, username);
     await tester.pumpAndSettle();

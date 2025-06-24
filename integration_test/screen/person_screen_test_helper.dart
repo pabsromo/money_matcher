@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-class PersonScreen {
+class PersonScreenTestHelper {
   late WidgetTester tester;
 
-  PersonScreen(this.tester);
+  PersonScreenTestHelper(this.tester);
 
   final _addPersonIconLocator = find.byType(FloatingActionButton);
   final _savePersonIconLocator = find.byIcon(Icons.save);

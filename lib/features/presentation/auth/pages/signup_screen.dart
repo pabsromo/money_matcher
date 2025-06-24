@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
+import '../../../../db/auth_database.dart';
 import '../../../../db/users_dao.dart';
+import '../../../../db/persons_dao.dart';
 import 'home_screen.dart';
 
 class SignupScreen extends StatefulWidget {
-  // final AuthDatabase db;
-  final UsersDao usersDao;
-  const SignupScreen({super.key, required this.usersDao});
+  final AuthDatabase db;
+  // final UsersDao usersDao;
+  const SignupScreen({super.key, required this.db});
 
   @override
   State<SignupScreen> createState() => _SignupScreenState();
@@ -13,20 +15,36 @@ class SignupScreen extends StatefulWidget {
 
 class _SignupScreenState extends State<SignupScreen> {
   final _formKey = GlobalKey<FormState>();
+  final _firstNameCtrl = TextEditingController();
+  final _lastNameCtrl = TextEditingController();
+  final _nickNameCtrl = TextEditingController();
   final _usernameCtrl = TextEditingController();
   final _emailCtrl = TextEditingController();
   final _passwordCtrl = TextEditingController();
   final _passwordConfirmCtrl = TextEditingController();
 
+  late UsersDao _usersDao;
+  late PersonsDao _personsDao;
+
+  @override
+  void initState() {
+    super.initState();
+    _usersDao = UsersDao(widget.db);
+    _personsDao = PersonsDao(widget.db);
+  }
+
   String? _errorText;
 
   Future<void> _signup() async {
     if (_formKey.currentState?.validate() ?? false) {
+      final firstName = _firstNameCtrl.text.trim();
+      final lastName = _lastNameCtrl.text.trim();
+      final nickName = _nickNameCtrl.text.trim();
       final username = _usernameCtrl.text.trim();
       final email = _emailCtrl.text.trim();
       final password = _passwordCtrl.text;
 
-      final existingUser = await widget.usersDao.getUserByUsername(username);
+      final existingUser = await _usersDao.getUserByUsername(username);
       if (existingUser != null) {
         setState(() {
           _errorText = 'Username already taken';
@@ -34,7 +52,10 @@ class _SignupScreenState extends State<SignupScreen> {
         return;
       }
 
-      await widget.usersDao.createUser(username, email, password);
+      var userId = await _usersDao.createUser(username, email, password);
+      // ignore: unused_local_variable
+      var personId = await _personsDao.createPerson(
+          firstName, lastName, nickName, email, userId, true);
 
       if (!mounted) return;
 
@@ -42,8 +63,7 @@ class _SignupScreenState extends State<SignupScreen> {
       Navigator.pushAndRemoveUntil(
         context,
         MaterialPageRoute(
-          builder: (_) =>
-              HomeScreen(usersDao: widget.usersDao, username: username),
+          builder: (_) => HomeScreen(db: widget.db, userId: userId),
         ),
         (route) => false,
       );
@@ -52,11 +72,21 @@ class _SignupScreenState extends State<SignupScreen> {
 
   @override
   void dispose() {
+    _firstNameCtrl.dispose();
+    _lastNameCtrl.dispose();
     _usernameCtrl.dispose();
     _emailCtrl.dispose();
     _passwordCtrl.dispose();
     _passwordConfirmCtrl.dispose();
     super.dispose();
+  }
+
+  String? _validateName(String? name) {
+    if (name == null || name.trim().isEmpty) return 'Enter a name';
+    if (name.length > 32) {
+      return 'Name must be equal to or less than 32 characters';
+    }
+    return null;
   }
 
   String? _validateUsername(String? username) {
@@ -105,6 +135,24 @@ class _SignupScreenState extends State<SignupScreen> {
                 Text(_errorText!, style: const TextStyle(color: Colors.red)),
                 const SizedBox(height: 12),
               ],
+              TextFormField(
+                key: const Key("firstNameTextForm"),
+                controller: _firstNameCtrl,
+                decoration: const InputDecoration(labelText: 'First Name'),
+                validator: _validateName,
+              ),
+              TextFormField(
+                key: const Key("lastNameTextForm"),
+                controller: _lastNameCtrl,
+                decoration: const InputDecoration(labelText: 'Last Name'),
+                validator: _validateName,
+              ),
+              TextFormField(
+                key: const Key("nickNameTextForm"),
+                controller: _nickNameCtrl,
+                decoration: const InputDecoration(labelText: 'Nickname'),
+                validator: _validateName,
+              ),
               TextFormField(
                 key: const Key("usernameTextForm"),
                 controller: _usernameCtrl,

@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
+import '../../../../db/auth_database.dart';
 import '../../../../db/users_dao.dart';
 import 'signup_screen.dart';
 import 'home_screen.dart';
 
 class LoginScreen extends StatefulWidget {
-  // final AuthDatabase db;
-  final UsersDao usersDao;
-  const LoginScreen({super.key, required this.usersDao});
+  final AuthDatabase db;
+  // final UsersDao usersDao;
+  const LoginScreen({super.key, required this.db});
 
   @override
   State<LoginScreen> createState() => _LoginScreenState();
@@ -17,23 +18,31 @@ class _LoginScreenState extends State<LoginScreen> {
   final _usernameCtrl = TextEditingController();
   final _passwordCtrl = TextEditingController();
 
+  late UsersDao _usersDao;
+
+  @override
+  void initState() {
+    super.initState();
+    _usersDao = UsersDao(widget.db);
+  }
+
   String? _errorText;
 
   Future<void> _login() async {
     if (_formKey.currentState?.validate() ?? false) {
       final username = _usernameCtrl.text.trim();
       final password = _passwordCtrl.text;
-      final success =
-          await widget.usersDao.checkUserCredentials(username, password);
+      final success = await _usersDao.checkUserCredentials(username, password);
+
+      final user = await _usersDao.getUserByUsername(username);
 
       if (!mounted) return;
 
-      if (success) {
+      if (success && user != null) {
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(
-            builder: (_) =>
-                HomeScreen(usersDao: widget.usersDao, username: username),
+            builder: (_) => HomeScreen(db: widget.db, userId: user.id),
           ),
         );
       } else {
@@ -94,7 +103,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (_) => SignupScreen(usersDao: widget.usersDao),
+                      builder: (_) => SignupScreen(db: widget.db),
                     ),
                   );
                 },

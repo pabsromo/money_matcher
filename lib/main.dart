@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'db/auth_database.dart';
-import 'db/users_dao.dart';
 import 'features/presentation/auth/pages/login_screen.dart';
 
 void main() {
@@ -14,11 +13,10 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final usersDao = UsersDao(db);
     return MaterialApp(
       title: 'Money Matcher',
       theme: ThemeData(primarySwatch: Colors.blue),
-      home: LoginScreen(usersDao: usersDao),
+      home: LoginScreen(db: db),
     );
   }
 }

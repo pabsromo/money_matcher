@@ -1,13 +1,15 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:money_matcher/features/presentation/data_entry/widgets/selected_images_viewer.dart';
 
 class RefineScanScreen extends StatefulWidget {
-  static Route<List<File>> route({required List<File> images}) =>
-      MaterialPageRoute(builder: (_) => RefineScanScreen(images: images));
+  static Route<List<File>> route({required List<File> selectedImages}) =>
+      MaterialPageRoute(
+          builder: (_) => RefineScanScreen(selectedImages: selectedImages));
 
-  final List<File> images;
-  const RefineScanScreen({super.key, required this.images});
+  final List<File> selectedImages;
+  const RefineScanScreen({super.key, required this.selectedImages});
 
   @override
   State<RefineScanScreen> createState() => _RefineScanScreenState();
@@ -21,35 +23,12 @@ class _RefineScanScreenState extends State<RefineScanScreen> {
       appBar: AppBar(
         title: const Text('Refine Scan'),
       ),
-      body: Container(
-        child: SingleChildScrollView(
-          child: Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: List.generate(widget.images.length, (index) {
-                return Stack(
-                  children: <Widget>[
-                    Container(
-                      alignment: Alignment.center,
-                      child: Image.file(widget.images[index]),
-                    ),
-                    Align(
-                        alignment: Alignment.topLeft,
-                        child: IconButton(
-                            onPressed: () => {},
-                            icon: const Icon(Icons.arrow_upward,
-                                color: Colors.yellow))),
-                    Align(
-                        alignment: Alignment.topRight,
-                        child: IconButton(
-                            onPressed: () => {},
-                            icon: const Icon(Icons.delete, color: Colors.red)))
-                  ],
-                );
-              }),
-            ),
-          ),
-        ),
+      body: SelectedImagesViewer(
+        selectedImages: widget.selectedImages,
+        onMoveUp: null,
+        onMoveDown: null,
+        onDelete: null,
+        isEditable: false,
       ),
     );
   }

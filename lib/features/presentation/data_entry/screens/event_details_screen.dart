@@ -122,8 +122,8 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (_) =>
-                ScanningScreen(db: widget.db, userId: widget.userId),
+            builder: (_) => ScanningScreen(
+                db: widget.db, userId: widget.userId, eventId: _currEvent!.id),
           ),
         );
       }
@@ -139,6 +139,7 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
     if (_currEvent != null) {
       if (eventName == '' && location == '' && date == null) {
         await _eventsDao.deleteEventById(_currEvent!.id);
+        // delete associated images as well
       } else {
         if (_chosenGroup == null) {}
         await _eventsDao.setEventById(
@@ -277,8 +278,6 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
                         key: const Key("eventDateInput"),
                         controller: _eventDateCtrl,
                         decoration: const InputDecoration(labelText: 'Date'),
-                        // keyboardType: TextInputType.none,
-                        // readOnly: true,
                         onTap: () async {
                           FocusScope.of(context).requestFocus(FocusNode());
 

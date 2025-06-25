@@ -1,17 +1,26 @@
 import 'dart:io';
+import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:money_matcher/db/auth_database.dart';
 import 'package:money_matcher/features/presentation/data_entry/screens/manual_entry_screen.dart';
 import 'package:money_matcher/features/presentation/data_entry/screens/refine_scan_screen.dart';
 import 'package:money_matcher/features/presentation/data_entry/widgets/selected_images_viewer.dart';
 
+import '../../../../db/images_dao.dart';
+
 class ScanningScreen extends StatefulWidget {
   final AuthDatabase db;
   final int userId;
+  final int eventId;
 
-  const ScanningScreen({super.key, required this.db, required this.userId});
+  const ScanningScreen(
+      {super.key,
+      required this.db,
+      required this.userId,
+      required this.eventId});
 
   @override
   State<ScanningScreen> createState() => _ScanningScreenState();
@@ -20,12 +29,30 @@ class ScanningScreen extends StatefulWidget {
 class _ScanningScreenState extends State<ScanningScreen> {
   late List<File> _selectedImages;
 
+  late ImagesDao _imagesDao;
+
   int _currentIndex = 0;
 
   @override
   void initState() {
     super.initState();
+    _imagesDao = ImagesDao(widget.db);
     _selectedImages = [];
+
+    _loadImages();
+  }
+
+  Future _loadImages() async {
+    final storedImages = await _imagesDao.getEventImages(widget.eventId);
+    final List<File> selectedImages = [];
+    if (storedImages.isNotEmpty) {
+      for (var image in storedImages) {
+        selectedImages.add(File(image.imagePath));
+      }
+    }
+    setState(() {
+      _selectedImages = selectedImages;
+    });
   }
 
   Future _pickImageFromGallery() async {
@@ -77,6 +104,13 @@ class _ScanningScreenState extends State<ScanningScreen> {
   }
 
   Future<void> _done() async {
+    // Save images before proceeding
+    _imagesDao.deleteImagesOfEvent(widget.eventId);
+    for (var i = 0; i < _selectedImages.length; i++) {
+      final savedPath = await saveImage(_selectedImages[i], '${Random(2)}.png');
+      _imagesDao.createImage(savedPath, widget.eventId);
+    }
+
     Navigator.push(
       context,
       MaterialPageRoute(
@@ -85,8 +119,20 @@ class _ScanningScreenState extends State<ScanningScreen> {
     );
   }
 
+  Future<String> saveImage(File imageFile, String filename) async {
+    final dir = await getApplicationDocumentsDirectory();
+    final savedImage = await imageFile.copy('${dir.path}/$filename');
+    return savedImage.path;
+  }
+
   Future<void> _exitScreen() async {
     // Save images and associate with current event
+    _imagesDao.deleteImagesOfEvent(widget.eventId);
+    for (var i = 0; i < _selectedImages.length; i++) {
+      final savedPath =
+          await saveImage(_selectedImages[i], '${Random(2).hashCode}.png');
+      _imagesDao.createImage(savedPath, widget.eventId);
+    }
   }
 
   @override

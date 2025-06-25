@@ -122,8 +122,8 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (_) =>
-                ScanningScreen(db: widget.db, userId: widget.userId),
+            builder: (_) => ScanningScreen(
+                db: widget.db, userId: widget.userId, eventId: _currEvent!.id),
           ),
         );
       }
@@ -278,8 +278,6 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
                         key: const Key("eventDateInput"),
                         controller: _eventDateCtrl,
                         decoration: const InputDecoration(labelText: 'Date'),
-                        // keyboardType: TextInputType.none,
-                        // readOnly: true,
                         onTap: () async {
                           FocusScope.of(context).requestFocus(FocusNode());
 

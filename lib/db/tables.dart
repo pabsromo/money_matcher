@@ -43,3 +43,9 @@ class Events extends Table {
   IntColumn get group_id => integer().references(Groups, #id).nullable()();
   BoolColumn get isEditing => boolean().withDefault(const Constant(false))();
 }
+
+class Images extends Table {
+  IntColumn get id => integer().autoIncrement()();
+  TextColumn get imagePath => text()();
+  IntColumn get event_id => integer().references(Events, #id)();
+}

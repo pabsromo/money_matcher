@@ -1560,6 +1560,224 @@ class EventsCompanion extends UpdateCompanion<Event> {
   }
 }
 
+class $ImagesTable extends Images with TableInfo<$ImagesTable, Image> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $ImagesTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<int> id = GeneratedColumn<int>(
+      'id', aliasedName, false,
+      hasAutoIncrement: true,
+      type: DriftSqlType.int,
+      requiredDuringInsert: false,
+      defaultConstraints:
+          GeneratedColumn.constraintIsAlways('PRIMARY KEY AUTOINCREMENT'));
+  static const VerificationMeta _imagePathMeta =
+      const VerificationMeta('imagePath');
+  @override
+  late final GeneratedColumn<String> imagePath = GeneratedColumn<String>(
+      'image_path', aliasedName, false,
+      type: DriftSqlType.string, requiredDuringInsert: true);
+  static const VerificationMeta _event_idMeta =
+      const VerificationMeta('event_id');
+  @override
+  late final GeneratedColumn<int> event_id = GeneratedColumn<int>(
+      'event_id', aliasedName, false,
+      type: DriftSqlType.int,
+      requiredDuringInsert: true,
+      defaultConstraints:
+          GeneratedColumn.constraintIsAlways('REFERENCES events (id)'));
+  @override
+  List<GeneratedColumn> get $columns => [id, imagePath, event_id];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'images';
+  @override
+  VerificationContext validateIntegrity(Insertable<Image> instance,
+      {bool isInserting = false}) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    }
+    if (data.containsKey('image_path')) {
+      context.handle(_imagePathMeta,
+          imagePath.isAcceptableOrUnknown(data['image_path']!, _imagePathMeta));
+    } else if (isInserting) {
+      context.missing(_imagePathMeta);
+    }
+    if (data.containsKey('event_id')) {
+      context.handle(_event_idMeta,
+          event_id.isAcceptableOrUnknown(data['event_id']!, _event_idMeta));
+    } else if (isInserting) {
+      context.missing(_event_idMeta);
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  Image map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return Image(
+      id: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}id'])!,
+      imagePath: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}image_path'])!,
+      event_id: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}event_id'])!,
+    );
+  }
+
+  @override
+  $ImagesTable createAlias(String alias) {
+    return $ImagesTable(attachedDatabase, alias);
+  }
+}
+
+class Image extends DataClass implements Insertable<Image> {
+  final int id;
+  final String imagePath;
+  final int event_id;
+  const Image(
+      {required this.id, required this.imagePath, required this.event_id});
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['id'] = Variable<int>(id);
+    map['image_path'] = Variable<String>(imagePath);
+    map['event_id'] = Variable<int>(event_id);
+    return map;
+  }
+
+  ImagesCompanion toCompanion(bool nullToAbsent) {
+    return ImagesCompanion(
+      id: Value(id),
+      imagePath: Value(imagePath),
+      event_id: Value(event_id),
+    );
+  }
+
+  factory Image.fromJson(Map<String, dynamic> json,
+      {ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return Image(
+      id: serializer.fromJson<int>(json['id']),
+      imagePath: serializer.fromJson<String>(json['imagePath']),
+      event_id: serializer.fromJson<int>(json['event_id']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<int>(id),
+      'imagePath': serializer.toJson<String>(imagePath),
+      'event_id': serializer.toJson<int>(event_id),
+    };
+  }
+
+  Image copyWith({int? id, String? imagePath, int? event_id}) => Image(
+        id: id ?? this.id,
+        imagePath: imagePath ?? this.imagePath,
+        event_id: event_id ?? this.event_id,
+      );
+  Image copyWithCompanion(ImagesCompanion data) {
+    return Image(
+      id: data.id.present ? data.id.value : this.id,
+      imagePath: data.imagePath.present ? data.imagePath.value : this.imagePath,
+      event_id: data.event_id.present ? data.event_id.value : this.event_id,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('Image(')
+          ..write('id: $id, ')
+          ..write('imagePath: $imagePath, ')
+          ..write('event_id: $event_id')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(id, imagePath, event_id);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is Image &&
+          other.id == this.id &&
+          other.imagePath == this.imagePath &&
+          other.event_id == this.event_id);
+}
+
+class ImagesCompanion extends UpdateCompanion<Image> {
+  final Value<int> id;
+  final Value<String> imagePath;
+  final Value<int> event_id;
+  const ImagesCompanion({
+    this.id = const Value.absent(),
+    this.imagePath = const Value.absent(),
+    this.event_id = const Value.absent(),
+  });
+  ImagesCompanion.insert({
+    this.id = const Value.absent(),
+    required String imagePath,
+    required int event_id,
+  })  : imagePath = Value(imagePath),
+        event_id = Value(event_id);
+  static Insertable<Image> custom({
+    Expression<int>? id,
+    Expression<String>? imagePath,
+    Expression<int>? event_id,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (imagePath != null) 'image_path': imagePath,
+      if (event_id != null) 'event_id': event_id,
+    });
+  }
+
+  ImagesCompanion copyWith(
+      {Value<int>? id, Value<String>? imagePath, Value<int>? event_id}) {
+    return ImagesCompanion(
+      id: id ?? this.id,
+      imagePath: imagePath ?? this.imagePath,
+      event_id: event_id ?? this.event_id,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<int>(id.value);
+    }
+    if (imagePath.present) {
+      map['image_path'] = Variable<String>(imagePath.value);
+    }
+    if (event_id.present) {
+      map['event_id'] = Variable<int>(event_id.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('ImagesCompanion(')
+          ..write('id: $id, ')
+          ..write('imagePath: $imagePath, ')
+          ..write('event_id: $event_id')
+          ..write(')'))
+        .toString();
+  }
+}
+
 abstract class _$AuthDatabase extends GeneratedDatabase {
   _$AuthDatabase(QueryExecutor e) : super(e);
   $AuthDatabaseManager get managers => $AuthDatabaseManager(this);
@@ -1568,16 +1786,18 @@ abstract class _$AuthDatabase extends GeneratedDatabase {
   late final $PersonsTable persons = $PersonsTable(this);
   late final $GroupPersonsTable groupPersons = $GroupPersonsTable(this);
   late final $EventsTable events = $EventsTable(this);
+  late final $ImagesTable images = $ImagesTable(this);
   late final UsersDao usersDao = UsersDao(this as AuthDatabase);
   late final PersonsDao personsDao = PersonsDao(this as AuthDatabase);
   late final GroupsDao groupsDao = GroupsDao(this as AuthDatabase);
   late final EventsDao eventsDao = EventsDao(this as AuthDatabase);
+  late final ImagesDao imagesDao = ImagesDao(this as AuthDatabase);
   @override
   Iterable<TableInfo<Table, Object?>> get allTables =>
       allSchemaEntities.whereType<TableInfo<Table, Object?>>();
   @override
   List<DatabaseSchemaEntity> get allSchemaEntities =>
-      [users, groups, persons, groupPersons, events];
+      [users, groups, persons, groupPersons, events, images];
 }
 
 typedef $$UsersTableCreateCompanionBuilder = UsersCompanion Function({
@@ -3084,6 +3304,20 @@ final class $$EventsTableReferences
     return ProcessedTableManager(
         manager.$state.copyWith(prefetchedData: [item]));
   }
+
+  static MultiTypedResultKey<$ImagesTable, List<Image>> _imagesRefsTable(
+          _$AuthDatabase db) =>
+      MultiTypedResultKey.fromTable(db.images,
+          aliasName: $_aliasNameGenerator(db.events.id, db.images.event_id));
+
+  $$ImagesTableProcessedTableManager get imagesRefs {
+    final manager = $$ImagesTableTableManager($_db, $_db.images)
+        .filter((f) => f.event_id.id.sqlEquals($_itemColumn<int>('id')!));
+
+    final cache = $_typedResult.readTableOrNull(_imagesRefsTable($_db));
+    return ProcessedTableManager(
+        manager.$state.copyWith(prefetchedData: cache));
+  }
 }
 
 class $$EventsTableFilterComposer
@@ -3148,6 +3382,27 @@ class $$EventsTableFilterComposer
                   $removeJoinBuilderFromRootComposer,
             ));
     return composer;
+  }
+
+  Expression<bool> imagesRefs(
+      Expression<bool> Function($$ImagesTableFilterComposer f) f) {
+    final $$ImagesTableFilterComposer composer = $composerBuilder(
+        composer: this,
+        getCurrentColumn: (t) => t.id,
+        referencedTable: $db.images,
+        getReferencedColumn: (t) => t.event_id,
+        builder: (joinBuilder,
+                {$addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer}) =>
+            $$ImagesTableFilterComposer(
+              $db: $db,
+              $table: $db.images,
+              $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+              joinBuilder: joinBuilder,
+              $removeJoinBuilderFromRootComposer:
+                  $removeJoinBuilderFromRootComposer,
+            ));
+    return f(composer);
   }
 }
 
@@ -3279,6 +3534,27 @@ class $$EventsTableAnnotationComposer
             ));
     return composer;
   }
+
+  Expression<T> imagesRefs<T extends Object>(
+      Expression<T> Function($$ImagesTableAnnotationComposer a) f) {
+    final $$ImagesTableAnnotationComposer composer = $composerBuilder(
+        composer: this,
+        getCurrentColumn: (t) => t.id,
+        referencedTable: $db.images,
+        getReferencedColumn: (t) => t.event_id,
+        builder: (joinBuilder,
+                {$addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer}) =>
+            $$ImagesTableAnnotationComposer(
+              $db: $db,
+              $table: $db.images,
+              $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+              joinBuilder: joinBuilder,
+              $removeJoinBuilderFromRootComposer:
+                  $removeJoinBuilderFromRootComposer,
+            ));
+    return f(composer);
+  }
 }
 
 class $$EventsTableTableManager extends RootTableManager<
@@ -3292,7 +3568,7 @@ class $$EventsTableTableManager extends RootTableManager<
     $$EventsTableUpdateCompanionBuilder,
     (Event, $$EventsTableReferences),
     Event,
-    PrefetchHooks Function({bool user_id, bool group_id})> {
+    PrefetchHooks Function({bool user_id, bool group_id, bool imagesRefs})> {
   $$EventsTableTableManager(_$AuthDatabase db, $EventsTable table)
       : super(TableManagerState(
           db: db,
@@ -3343,10 +3619,11 @@ class $$EventsTableTableManager extends RootTableManager<
               .map((e) =>
                   (e.readTable(table), $$EventsTableReferences(db, table, e)))
               .toList(),
-          prefetchHooksCallback: ({user_id = false, group_id = false}) {
+          prefetchHooksCallback: (
+              {user_id = false, group_id = false, imagesRefs = false}) {
             return PrefetchHooks(
               db: db,
-              explicitlyWatchedTables: [],
+              explicitlyWatchedTables: [if (imagesRefs) db.images],
               addJoins: <
                   T extends TableManagerState<
                       dynamic,
@@ -3382,7 +3659,19 @@ class $$EventsTableTableManager extends RootTableManager<
                 return state;
               },
               getPrefetchedDataCallback: (items) async {
-                return [];
+                return [
+                  if (imagesRefs)
+                    await $_getPrefetchedData<Event, $EventsTable, Image>(
+                        currentTable: table,
+                        referencedTable:
+                            $$EventsTableReferences._imagesRefsTable(db),
+                        managerFromTypedResult: (p0) =>
+                            $$EventsTableReferences(db, table, p0).imagesRefs,
+                        referencedItemsForCurrentItem: (item,
+                                referencedItems) =>
+                            referencedItems.where((e) => e.event_id == item.id),
+                        typedResults: items)
+                ];
               },
             );
           },
@@ -3400,7 +3689,240 @@ typedef $$EventsTableProcessedTableManager = ProcessedTableManager<
     $$EventsTableUpdateCompanionBuilder,
     (Event, $$EventsTableReferences),
     Event,
-    PrefetchHooks Function({bool user_id, bool group_id})>;
+    PrefetchHooks Function({bool user_id, bool group_id, bool imagesRefs})>;
+typedef $$ImagesTableCreateCompanionBuilder = ImagesCompanion Function({
+  Value<int> id,
+  required String imagePath,
+  required int event_id,
+});
+typedef $$ImagesTableUpdateCompanionBuilder = ImagesCompanion Function({
+  Value<int> id,
+  Value<String> imagePath,
+  Value<int> event_id,
+});
+
+final class $$ImagesTableReferences
+    extends BaseReferences<_$AuthDatabase, $ImagesTable, Image> {
+  $$ImagesTableReferences(super.$_db, super.$_table, super.$_typedResult);
+
+  static $EventsTable _event_idTable(_$AuthDatabase db) => db.events
+      .createAlias($_aliasNameGenerator(db.images.event_id, db.events.id));
+
+  $$EventsTableProcessedTableManager get event_id {
+    final $_column = $_itemColumn<int>('event_id')!;
+
+    final manager = $$EventsTableTableManager($_db, $_db.events)
+        .filter((f) => f.id.sqlEquals($_column));
+    final item = $_typedResult.readTableOrNull(_event_idTable($_db));
+    if (item == null) return manager;
+    return ProcessedTableManager(
+        manager.$state.copyWith(prefetchedData: [item]));
+  }
+}
+
+class $$ImagesTableFilterComposer
+    extends Composer<_$AuthDatabase, $ImagesTable> {
+  $$ImagesTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<int> get id => $composableBuilder(
+      column: $table.id, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<String> get imagePath => $composableBuilder(
+      column: $table.imagePath, builder: (column) => ColumnFilters(column));
+
+  $$EventsTableFilterComposer get event_id {
+    final $$EventsTableFilterComposer composer = $composerBuilder(
+        composer: this,
+        getCurrentColumn: (t) => t.event_id,
+        referencedTable: $db.events,
+        getReferencedColumn: (t) => t.id,
+        builder: (joinBuilder,
+                {$addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer}) =>
+            $$EventsTableFilterComposer(
+              $db: $db,
+              $table: $db.events,
+              $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+              joinBuilder: joinBuilder,
+              $removeJoinBuilderFromRootComposer:
+                  $removeJoinBuilderFromRootComposer,
+            ));
+    return composer;
+  }
+}
+
+class $$ImagesTableOrderingComposer
+    extends Composer<_$AuthDatabase, $ImagesTable> {
+  $$ImagesTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<int> get id => $composableBuilder(
+      column: $table.id, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<String> get imagePath => $composableBuilder(
+      column: $table.imagePath, builder: (column) => ColumnOrderings(column));
+
+  $$EventsTableOrderingComposer get event_id {
+    final $$EventsTableOrderingComposer composer = $composerBuilder(
+        composer: this,
+        getCurrentColumn: (t) => t.event_id,
+        referencedTable: $db.events,
+        getReferencedColumn: (t) => t.id,
+        builder: (joinBuilder,
+                {$addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer}) =>
+            $$EventsTableOrderingComposer(
+              $db: $db,
+              $table: $db.events,
+              $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+              joinBuilder: joinBuilder,
+              $removeJoinBuilderFromRootComposer:
+                  $removeJoinBuilderFromRootComposer,
+            ));
+    return composer;
+  }
+}
+
+class $$ImagesTableAnnotationComposer
+    extends Composer<_$AuthDatabase, $ImagesTable> {
+  $$ImagesTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<int> get id =>
+      $composableBuilder(column: $table.id, builder: (column) => column);
+
+  GeneratedColumn<String> get imagePath =>
+      $composableBuilder(column: $table.imagePath, builder: (column) => column);
+
+  $$EventsTableAnnotationComposer get event_id {
+    final $$EventsTableAnnotationComposer composer = $composerBuilder(
+        composer: this,
+        getCurrentColumn: (t) => t.event_id,
+        referencedTable: $db.events,
+        getReferencedColumn: (t) => t.id,
+        builder: (joinBuilder,
+                {$addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer}) =>
+            $$EventsTableAnnotationComposer(
+              $db: $db,
+              $table: $db.events,
+              $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+              joinBuilder: joinBuilder,
+              $removeJoinBuilderFromRootComposer:
+                  $removeJoinBuilderFromRootComposer,
+            ));
+    return composer;
+  }
+}
+
+class $$ImagesTableTableManager extends RootTableManager<
+    _$AuthDatabase,
+    $ImagesTable,
+    Image,
+    $$ImagesTableFilterComposer,
+    $$ImagesTableOrderingComposer,
+    $$ImagesTableAnnotationComposer,
+    $$ImagesTableCreateCompanionBuilder,
+    $$ImagesTableUpdateCompanionBuilder,
+    (Image, $$ImagesTableReferences),
+    Image,
+    PrefetchHooks Function({bool event_id})> {
+  $$ImagesTableTableManager(_$AuthDatabase db, $ImagesTable table)
+      : super(TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$ImagesTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$ImagesTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$ImagesTableAnnotationComposer($db: db, $table: table),
+          updateCompanionCallback: ({
+            Value<int> id = const Value.absent(),
+            Value<String> imagePath = const Value.absent(),
+            Value<int> event_id = const Value.absent(),
+          }) =>
+              ImagesCompanion(
+            id: id,
+            imagePath: imagePath,
+            event_id: event_id,
+          ),
+          createCompanionCallback: ({
+            Value<int> id = const Value.absent(),
+            required String imagePath,
+            required int event_id,
+          }) =>
+              ImagesCompanion.insert(
+            id: id,
+            imagePath: imagePath,
+            event_id: event_id,
+          ),
+          withReferenceMapper: (p0) => p0
+              .map((e) =>
+                  (e.readTable(table), $$ImagesTableReferences(db, table, e)))
+              .toList(),
+          prefetchHooksCallback: ({event_id = false}) {
+            return PrefetchHooks(
+              db: db,
+              explicitlyWatchedTables: [],
+              addJoins: <
+                  T extends TableManagerState<
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic>>(state) {
+                if (event_id) {
+                  state = state.withJoin(
+                    currentTable: table,
+                    currentColumn: table.event_id,
+                    referencedTable: $$ImagesTableReferences._event_idTable(db),
+                    referencedColumn:
+                        $$ImagesTableReferences._event_idTable(db).id,
+                  ) as T;
+                }
+
+                return state;
+              },
+              getPrefetchedDataCallback: (items) async {
+                return [];
+              },
+            );
+          },
+        ));
+}
+
+typedef $$ImagesTableProcessedTableManager = ProcessedTableManager<
+    _$AuthDatabase,
+    $ImagesTable,
+    Image,
+    $$ImagesTableFilterComposer,
+    $$ImagesTableOrderingComposer,
+    $$ImagesTableAnnotationComposer,
+    $$ImagesTableCreateCompanionBuilder,
+    $$ImagesTableUpdateCompanionBuilder,
+    (Image, $$ImagesTableReferences),
+    Image,
+    PrefetchHooks Function({bool event_id})>;
 
 class $AuthDatabaseManager {
   final _$AuthDatabase _db;
@@ -3415,4 +3937,6 @@ class $AuthDatabaseManager {
       $$GroupPersonsTableTableManager(_db, _db.groupPersons);
   $$EventsTableTableManager get events =>
       $$EventsTableTableManager(_db, _db.events);
+  $$ImagesTableTableManager get images =>
+      $$ImagesTableTableManager(_db, _db.images);
 }

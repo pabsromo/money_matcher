@@ -15,12 +15,14 @@ class ScanningScreen extends StatefulWidget {
   final AuthDatabase db;
   final int userId;
   final int eventId;
+  final int ticketId;
 
   const ScanningScreen(
       {super.key,
       required this.db,
       required this.userId,
-      required this.eventId});
+      required this.eventId,
+      required this.ticketId});
 
   @override
   State<ScanningScreen> createState() => _ScanningScreenState();
@@ -107,14 +109,20 @@ class _ScanningScreenState extends State<ScanningScreen> {
     // Save images before proceeding
     _imagesDao.deleteImagesOfEvent(widget.eventId);
     for (var i = 0; i < _selectedImages.length; i++) {
-      final savedPath = await saveImage(_selectedImages[i], '${Random(2)}.png');
+      final savedPath =
+          await saveImage(_selectedImages[i], '${Random(2).hashCode}.png');
       _imagesDao.createImage(savedPath, widget.eventId);
     }
 
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (_) => RefineScanScreen(selectedImages: _selectedImages),
+        builder: (_) => RefineScanScreen(
+          db: widget.db,
+          userId: widget.userId,
+          eventId: widget.eventId,
+          ticketId: widget.ticketId,
+        ),
       ),
     );
   }

@@ -1778,6 +1778,1090 @@ class ImagesCompanion extends UpdateCompanion<Image> {
   }
 }
 
+class $TicketsTable extends Tickets with TableInfo<$TicketsTable, Ticket> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $TicketsTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<int> id = GeneratedColumn<int>(
+      'id', aliasedName, false,
+      hasAutoIncrement: true,
+      type: DriftSqlType.int,
+      requiredDuringInsert: false,
+      defaultConstraints:
+          GeneratedColumn.constraintIsAlways('PRIMARY KEY AUTOINCREMENT'));
+  static const VerificationMeta _event_idMeta =
+      const VerificationMeta('event_id');
+  @override
+  late final GeneratedColumn<int> event_id = GeneratedColumn<int>(
+      'event_id', aliasedName, false,
+      type: DriftSqlType.int,
+      requiredDuringInsert: true,
+      defaultConstraints:
+          GeneratedColumn.constraintIsAlways('REFERENCES events (id)'));
+  static const VerificationMeta _tipInDollarsMeta =
+      const VerificationMeta('tipInDollars');
+  @override
+  late final GeneratedColumn<double> tipInDollars = GeneratedColumn<double>(
+      'tip_in_dollars', aliasedName, false,
+      type: DriftSqlType.double,
+      requiredDuringInsert: false,
+      defaultValue: const Constant(0.00));
+  static const VerificationMeta _tipInPercentMeta =
+      const VerificationMeta('tipInPercent');
+  @override
+  late final GeneratedColumn<double> tipInPercent = GeneratedColumn<double>(
+      'tip_in_percent', aliasedName, false,
+      type: DriftSqlType.double,
+      requiredDuringInsert: false,
+      defaultValue: const Constant(0.00));
+  static const VerificationMeta _tipTypeMeta =
+      const VerificationMeta('tipType');
+  @override
+  late final GeneratedColumn<String> tipType = GeneratedColumn<String>(
+      'tip_type', aliasedName, false,
+      type: DriftSqlType.string,
+      requiredDuringInsert: false,
+      defaultValue: const Constant('dollar'));
+  static const VerificationMeta _taxesMeta = const VerificationMeta('taxes');
+  @override
+  late final GeneratedColumn<double> taxes = GeneratedColumn<double>(
+      'taxes', aliasedName, false,
+      type: DriftSqlType.double,
+      requiredDuringInsert: false,
+      defaultValue: const Constant(0.00));
+  static const VerificationMeta _taxTypeMeta =
+      const VerificationMeta('taxType');
+  @override
+  late final GeneratedColumn<String> taxType = GeneratedColumn<String>(
+      'tax_type', aliasedName, false,
+      type: DriftSqlType.string,
+      requiredDuringInsert: false,
+      defaultValue: const Constant('dollar'));
+  static const VerificationMeta _subtotalMeta =
+      const VerificationMeta('subtotal');
+  @override
+  late final GeneratedColumn<double> subtotal = GeneratedColumn<double>(
+      'subtotal', aliasedName, false,
+      type: DriftSqlType.double,
+      requiredDuringInsert: false,
+      defaultValue: const Constant(0.00));
+  static const VerificationMeta _totalMeta = const VerificationMeta('total');
+  @override
+  late final GeneratedColumn<double> total = GeneratedColumn<double>(
+      'total', aliasedName, false,
+      type: DriftSqlType.double,
+      requiredDuringInsert: false,
+      defaultValue: const Constant(0.00));
+  static const VerificationMeta _isScannedMeta =
+      const VerificationMeta('isScanned');
+  @override
+  late final GeneratedColumn<bool> isScanned = GeneratedColumn<bool>(
+      'is_scanned', aliasedName, false,
+      type: DriftSqlType.bool,
+      requiredDuringInsert: false,
+      defaultConstraints:
+          GeneratedColumn.constraintIsAlways('CHECK ("is_scanned" IN (0, 1))'),
+      defaultValue: const Constant(false));
+  @override
+  List<GeneratedColumn> get $columns => [
+        id,
+        event_id,
+        tipInDollars,
+        tipInPercent,
+        tipType,
+        taxes,
+        taxType,
+        subtotal,
+        total,
+        isScanned
+      ];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'tickets';
+  @override
+  VerificationContext validateIntegrity(Insertable<Ticket> instance,
+      {bool isInserting = false}) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    }
+    if (data.containsKey('event_id')) {
+      context.handle(_event_idMeta,
+          event_id.isAcceptableOrUnknown(data['event_id']!, _event_idMeta));
+    } else if (isInserting) {
+      context.missing(_event_idMeta);
+    }
+    if (data.containsKey('tip_in_dollars')) {
+      context.handle(
+          _tipInDollarsMeta,
+          tipInDollars.isAcceptableOrUnknown(
+              data['tip_in_dollars']!, _tipInDollarsMeta));
+    }
+    if (data.containsKey('tip_in_percent')) {
+      context.handle(
+          _tipInPercentMeta,
+          tipInPercent.isAcceptableOrUnknown(
+              data['tip_in_percent']!, _tipInPercentMeta));
+    }
+    if (data.containsKey('tip_type')) {
+      context.handle(_tipTypeMeta,
+          tipType.isAcceptableOrUnknown(data['tip_type']!, _tipTypeMeta));
+    }
+    if (data.containsKey('taxes')) {
+      context.handle(
+          _taxesMeta, taxes.isAcceptableOrUnknown(data['taxes']!, _taxesMeta));
+    }
+    if (data.containsKey('tax_type')) {
+      context.handle(_taxTypeMeta,
+          taxType.isAcceptableOrUnknown(data['tax_type']!, _taxTypeMeta));
+    }
+    if (data.containsKey('subtotal')) {
+      context.handle(_subtotalMeta,
+          subtotal.isAcceptableOrUnknown(data['subtotal']!, _subtotalMeta));
+    }
+    if (data.containsKey('total')) {
+      context.handle(
+          _totalMeta, total.isAcceptableOrUnknown(data['total']!, _totalMeta));
+    }
+    if (data.containsKey('is_scanned')) {
+      context.handle(_isScannedMeta,
+          isScanned.isAcceptableOrUnknown(data['is_scanned']!, _isScannedMeta));
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  Ticket map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return Ticket(
+      id: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}id'])!,
+      event_id: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}event_id'])!,
+      tipInDollars: attachedDatabase.typeMapping
+          .read(DriftSqlType.double, data['${effectivePrefix}tip_in_dollars'])!,
+      tipInPercent: attachedDatabase.typeMapping
+          .read(DriftSqlType.double, data['${effectivePrefix}tip_in_percent'])!,
+      tipType: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}tip_type'])!,
+      taxes: attachedDatabase.typeMapping
+          .read(DriftSqlType.double, data['${effectivePrefix}taxes'])!,
+      taxType: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}tax_type'])!,
+      subtotal: attachedDatabase.typeMapping
+          .read(DriftSqlType.double, data['${effectivePrefix}subtotal'])!,
+      total: attachedDatabase.typeMapping
+          .read(DriftSqlType.double, data['${effectivePrefix}total'])!,
+      isScanned: attachedDatabase.typeMapping
+          .read(DriftSqlType.bool, data['${effectivePrefix}is_scanned'])!,
+    );
+  }
+
+  @override
+  $TicketsTable createAlias(String alias) {
+    return $TicketsTable(attachedDatabase, alias);
+  }
+}
+
+class Ticket extends DataClass implements Insertable<Ticket> {
+/**
+   * id
+   * event_id
+   * tip
+   * tipType - to know if dollar or percentage
+   * taxes
+   * taxType - to know if dollar or percentage
+   * subtotal - total of just items
+   * total - total of everything: items, tax, and tip
+   */
+  final int id;
+  final int event_id;
+  final double tipInDollars;
+  final double tipInPercent;
+  final String tipType;
+  final double taxes;
+  final String taxType;
+  final double subtotal;
+  final double total;
+  final bool isScanned;
+  const Ticket(
+      {required this.id,
+      required this.event_id,
+      required this.tipInDollars,
+      required this.tipInPercent,
+      required this.tipType,
+      required this.taxes,
+      required this.taxType,
+      required this.subtotal,
+      required this.total,
+      required this.isScanned});
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['id'] = Variable<int>(id);
+    map['event_id'] = Variable<int>(event_id);
+    map['tip_in_dollars'] = Variable<double>(tipInDollars);
+    map['tip_in_percent'] = Variable<double>(tipInPercent);
+    map['tip_type'] = Variable<String>(tipType);
+    map['taxes'] = Variable<double>(taxes);
+    map['tax_type'] = Variable<String>(taxType);
+    map['subtotal'] = Variable<double>(subtotal);
+    map['total'] = Variable<double>(total);
+    map['is_scanned'] = Variable<bool>(isScanned);
+    return map;
+  }
+
+  TicketsCompanion toCompanion(bool nullToAbsent) {
+    return TicketsCompanion(
+      id: Value(id),
+      event_id: Value(event_id),
+      tipInDollars: Value(tipInDollars),
+      tipInPercent: Value(tipInPercent),
+      tipType: Value(tipType),
+      taxes: Value(taxes),
+      taxType: Value(taxType),
+      subtotal: Value(subtotal),
+      total: Value(total),
+      isScanned: Value(isScanned),
+    );
+  }
+
+  factory Ticket.fromJson(Map<String, dynamic> json,
+      {ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return Ticket(
+      id: serializer.fromJson<int>(json['id']),
+      event_id: serializer.fromJson<int>(json['event_id']),
+      tipInDollars: serializer.fromJson<double>(json['tipInDollars']),
+      tipInPercent: serializer.fromJson<double>(json['tipInPercent']),
+      tipType: serializer.fromJson<String>(json['tipType']),
+      taxes: serializer.fromJson<double>(json['taxes']),
+      taxType: serializer.fromJson<String>(json['taxType']),
+      subtotal: serializer.fromJson<double>(json['subtotal']),
+      total: serializer.fromJson<double>(json['total']),
+      isScanned: serializer.fromJson<bool>(json['isScanned']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<int>(id),
+      'event_id': serializer.toJson<int>(event_id),
+      'tipInDollars': serializer.toJson<double>(tipInDollars),
+      'tipInPercent': serializer.toJson<double>(tipInPercent),
+      'tipType': serializer.toJson<String>(tipType),
+      'taxes': serializer.toJson<double>(taxes),
+      'taxType': serializer.toJson<String>(taxType),
+      'subtotal': serializer.toJson<double>(subtotal),
+      'total': serializer.toJson<double>(total),
+      'isScanned': serializer.toJson<bool>(isScanned),
+    };
+  }
+
+  Ticket copyWith(
+          {int? id,
+          int? event_id,
+          double? tipInDollars,
+          double? tipInPercent,
+          String? tipType,
+          double? taxes,
+          String? taxType,
+          double? subtotal,
+          double? total,
+          bool? isScanned}) =>
+      Ticket(
+        id: id ?? this.id,
+        event_id: event_id ?? this.event_id,
+        tipInDollars: tipInDollars ?? this.tipInDollars,
+        tipInPercent: tipInPercent ?? this.tipInPercent,
+        tipType: tipType ?? this.tipType,
+        taxes: taxes ?? this.taxes,
+        taxType: taxType ?? this.taxType,
+        subtotal: subtotal ?? this.subtotal,
+        total: total ?? this.total,
+        isScanned: isScanned ?? this.isScanned,
+      );
+  Ticket copyWithCompanion(TicketsCompanion data) {
+    return Ticket(
+      id: data.id.present ? data.id.value : this.id,
+      event_id: data.event_id.present ? data.event_id.value : this.event_id,
+      tipInDollars: data.tipInDollars.present
+          ? data.tipInDollars.value
+          : this.tipInDollars,
+      tipInPercent: data.tipInPercent.present
+          ? data.tipInPercent.value
+          : this.tipInPercent,
+      tipType: data.tipType.present ? data.tipType.value : this.tipType,
+      taxes: data.taxes.present ? data.taxes.value : this.taxes,
+      taxType: data.taxType.present ? data.taxType.value : this.taxType,
+      subtotal: data.subtotal.present ? data.subtotal.value : this.subtotal,
+      total: data.total.present ? data.total.value : this.total,
+      isScanned: data.isScanned.present ? data.isScanned.value : this.isScanned,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('Ticket(')
+          ..write('id: $id, ')
+          ..write('event_id: $event_id, ')
+          ..write('tipInDollars: $tipInDollars, ')
+          ..write('tipInPercent: $tipInPercent, ')
+          ..write('tipType: $tipType, ')
+          ..write('taxes: $taxes, ')
+          ..write('taxType: $taxType, ')
+          ..write('subtotal: $subtotal, ')
+          ..write('total: $total, ')
+          ..write('isScanned: $isScanned')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(id, event_id, tipInDollars, tipInPercent,
+      tipType, taxes, taxType, subtotal, total, isScanned);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is Ticket &&
+          other.id == this.id &&
+          other.event_id == this.event_id &&
+          other.tipInDollars == this.tipInDollars &&
+          other.tipInPercent == this.tipInPercent &&
+          other.tipType == this.tipType &&
+          other.taxes == this.taxes &&
+          other.taxType == this.taxType &&
+          other.subtotal == this.subtotal &&
+          other.total == this.total &&
+          other.isScanned == this.isScanned);
+}
+
+class TicketsCompanion extends UpdateCompanion<Ticket> {
+  final Value<int> id;
+  final Value<int> event_id;
+  final Value<double> tipInDollars;
+  final Value<double> tipInPercent;
+  final Value<String> tipType;
+  final Value<double> taxes;
+  final Value<String> taxType;
+  final Value<double> subtotal;
+  final Value<double> total;
+  final Value<bool> isScanned;
+  const TicketsCompanion({
+    this.id = const Value.absent(),
+    this.event_id = const Value.absent(),
+    this.tipInDollars = const Value.absent(),
+    this.tipInPercent = const Value.absent(),
+    this.tipType = const Value.absent(),
+    this.taxes = const Value.absent(),
+    this.taxType = const Value.absent(),
+    this.subtotal = const Value.absent(),
+    this.total = const Value.absent(),
+    this.isScanned = const Value.absent(),
+  });
+  TicketsCompanion.insert({
+    this.id = const Value.absent(),
+    required int event_id,
+    this.tipInDollars = const Value.absent(),
+    this.tipInPercent = const Value.absent(),
+    this.tipType = const Value.absent(),
+    this.taxes = const Value.absent(),
+    this.taxType = const Value.absent(),
+    this.subtotal = const Value.absent(),
+    this.total = const Value.absent(),
+    this.isScanned = const Value.absent(),
+  }) : event_id = Value(event_id);
+  static Insertable<Ticket> custom({
+    Expression<int>? id,
+    Expression<int>? event_id,
+    Expression<double>? tipInDollars,
+    Expression<double>? tipInPercent,
+    Expression<String>? tipType,
+    Expression<double>? taxes,
+    Expression<String>? taxType,
+    Expression<double>? subtotal,
+    Expression<double>? total,
+    Expression<bool>? isScanned,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (event_id != null) 'event_id': event_id,
+      if (tipInDollars != null) 'tip_in_dollars': tipInDollars,
+      if (tipInPercent != null) 'tip_in_percent': tipInPercent,
+      if (tipType != null) 'tip_type': tipType,
+      if (taxes != null) 'taxes': taxes,
+      if (taxType != null) 'tax_type': taxType,
+      if (subtotal != null) 'subtotal': subtotal,
+      if (total != null) 'total': total,
+      if (isScanned != null) 'is_scanned': isScanned,
+    });
+  }
+
+  TicketsCompanion copyWith(
+      {Value<int>? id,
+      Value<int>? event_id,
+      Value<double>? tipInDollars,
+      Value<double>? tipInPercent,
+      Value<String>? tipType,
+      Value<double>? taxes,
+      Value<String>? taxType,
+      Value<double>? subtotal,
+      Value<double>? total,
+      Value<bool>? isScanned}) {
+    return TicketsCompanion(
+      id: id ?? this.id,
+      event_id: event_id ?? this.event_id,
+      tipInDollars: tipInDollars ?? this.tipInDollars,
+      tipInPercent: tipInPercent ?? this.tipInPercent,
+      tipType: tipType ?? this.tipType,
+      taxes: taxes ?? this.taxes,
+      taxType: taxType ?? this.taxType,
+      subtotal: subtotal ?? this.subtotal,
+      total: total ?? this.total,
+      isScanned: isScanned ?? this.isScanned,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<int>(id.value);
+    }
+    if (event_id.present) {
+      map['event_id'] = Variable<int>(event_id.value);
+    }
+    if (tipInDollars.present) {
+      map['tip_in_dollars'] = Variable<double>(tipInDollars.value);
+    }
+    if (tipInPercent.present) {
+      map['tip_in_percent'] = Variable<double>(tipInPercent.value);
+    }
+    if (tipType.present) {
+      map['tip_type'] = Variable<String>(tipType.value);
+    }
+    if (taxes.present) {
+      map['taxes'] = Variable<double>(taxes.value);
+    }
+    if (taxType.present) {
+      map['tax_type'] = Variable<String>(taxType.value);
+    }
+    if (subtotal.present) {
+      map['subtotal'] = Variable<double>(subtotal.value);
+    }
+    if (total.present) {
+      map['total'] = Variable<double>(total.value);
+    }
+    if (isScanned.present) {
+      map['is_scanned'] = Variable<bool>(isScanned.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('TicketsCompanion(')
+          ..write('id: $id, ')
+          ..write('event_id: $event_id, ')
+          ..write('tipInDollars: $tipInDollars, ')
+          ..write('tipInPercent: $tipInPercent, ')
+          ..write('tipType: $tipType, ')
+          ..write('taxes: $taxes, ')
+          ..write('taxType: $taxType, ')
+          ..write('subtotal: $subtotal, ')
+          ..write('total: $total, ')
+          ..write('isScanned: $isScanned')
+          ..write(')'))
+        .toString();
+  }
+}
+
+class $ItemsTable extends Items with TableInfo<$ItemsTable, Item> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $ItemsTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<int> id = GeneratedColumn<int>(
+      'id', aliasedName, false,
+      hasAutoIncrement: true,
+      type: DriftSqlType.int,
+      requiredDuringInsert: false,
+      defaultConstraints:
+          GeneratedColumn.constraintIsAlways('PRIMARY KEY AUTOINCREMENT'));
+  static const VerificationMeta _ticket_idMeta =
+      const VerificationMeta('ticket_id');
+  @override
+  late final GeneratedColumn<int> ticket_id = GeneratedColumn<int>(
+      'ticket_id', aliasedName, false,
+      type: DriftSqlType.int,
+      requiredDuringInsert: true,
+      defaultConstraints:
+          GeneratedColumn.constraintIsAlways('REFERENCES tickets (id)'));
+  static const VerificationMeta _nameMeta = const VerificationMeta('name');
+  @override
+  late final GeneratedColumn<String> name = GeneratedColumn<String>(
+      'name', aliasedName, false,
+      type: DriftSqlType.string, requiredDuringInsert: true);
+  static const VerificationMeta _amountMeta = const VerificationMeta('amount');
+  @override
+  late final GeneratedColumn<double> amount = GeneratedColumn<double>(
+      'amount', aliasedName, false,
+      type: DriftSqlType.double, requiredDuringInsert: true);
+  static const VerificationMeta _currencyMeta =
+      const VerificationMeta('currency');
+  @override
+  late final GeneratedColumn<String> currency = GeneratedColumn<String>(
+      'currency', aliasedName, false,
+      type: DriftSqlType.string,
+      requiredDuringInsert: false,
+      defaultValue: const Constant('USD'));
+  @override
+  List<GeneratedColumn> get $columns => [id, ticket_id, name, amount, currency];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'items';
+  @override
+  VerificationContext validateIntegrity(Insertable<Item> instance,
+      {bool isInserting = false}) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    }
+    if (data.containsKey('ticket_id')) {
+      context.handle(_ticket_idMeta,
+          ticket_id.isAcceptableOrUnknown(data['ticket_id']!, _ticket_idMeta));
+    } else if (isInserting) {
+      context.missing(_ticket_idMeta);
+    }
+    if (data.containsKey('name')) {
+      context.handle(
+          _nameMeta, name.isAcceptableOrUnknown(data['name']!, _nameMeta));
+    } else if (isInserting) {
+      context.missing(_nameMeta);
+    }
+    if (data.containsKey('amount')) {
+      context.handle(_amountMeta,
+          amount.isAcceptableOrUnknown(data['amount']!, _amountMeta));
+    } else if (isInserting) {
+      context.missing(_amountMeta);
+    }
+    if (data.containsKey('currency')) {
+      context.handle(_currencyMeta,
+          currency.isAcceptableOrUnknown(data['currency']!, _currencyMeta));
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  Item map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return Item(
+      id: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}id'])!,
+      ticket_id: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}ticket_id'])!,
+      name: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}name'])!,
+      amount: attachedDatabase.typeMapping
+          .read(DriftSqlType.double, data['${effectivePrefix}amount'])!,
+      currency: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}currency'])!,
+    );
+  }
+
+  @override
+  $ItemsTable createAlias(String alias) {
+    return $ItemsTable(attachedDatabase, alias);
+  }
+}
+
+class Item extends DataClass implements Insertable<Item> {
+/**
+   * id
+   * ticket_id
+   * name
+   * amount
+   * currency
+   */
+  final int id;
+  final int ticket_id;
+  final String name;
+  final double amount;
+  final String currency;
+  const Item(
+      {required this.id,
+      required this.ticket_id,
+      required this.name,
+      required this.amount,
+      required this.currency});
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['id'] = Variable<int>(id);
+    map['ticket_id'] = Variable<int>(ticket_id);
+    map['name'] = Variable<String>(name);
+    map['amount'] = Variable<double>(amount);
+    map['currency'] = Variable<String>(currency);
+    return map;
+  }
+
+  ItemsCompanion toCompanion(bool nullToAbsent) {
+    return ItemsCompanion(
+      id: Value(id),
+      ticket_id: Value(ticket_id),
+      name: Value(name),
+      amount: Value(amount),
+      currency: Value(currency),
+    );
+  }
+
+  factory Item.fromJson(Map<String, dynamic> json,
+      {ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return Item(
+      id: serializer.fromJson<int>(json['id']),
+      ticket_id: serializer.fromJson<int>(json['ticket_id']),
+      name: serializer.fromJson<String>(json['name']),
+      amount: serializer.fromJson<double>(json['amount']),
+      currency: serializer.fromJson<String>(json['currency']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<int>(id),
+      'ticket_id': serializer.toJson<int>(ticket_id),
+      'name': serializer.toJson<String>(name),
+      'amount': serializer.toJson<double>(amount),
+      'currency': serializer.toJson<String>(currency),
+    };
+  }
+
+  Item copyWith(
+          {int? id,
+          int? ticket_id,
+          String? name,
+          double? amount,
+          String? currency}) =>
+      Item(
+        id: id ?? this.id,
+        ticket_id: ticket_id ?? this.ticket_id,
+        name: name ?? this.name,
+        amount: amount ?? this.amount,
+        currency: currency ?? this.currency,
+      );
+  Item copyWithCompanion(ItemsCompanion data) {
+    return Item(
+      id: data.id.present ? data.id.value : this.id,
+      ticket_id: data.ticket_id.present ? data.ticket_id.value : this.ticket_id,
+      name: data.name.present ? data.name.value : this.name,
+      amount: data.amount.present ? data.amount.value : this.amount,
+      currency: data.currency.present ? data.currency.value : this.currency,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('Item(')
+          ..write('id: $id, ')
+          ..write('ticket_id: $ticket_id, ')
+          ..write('name: $name, ')
+          ..write('amount: $amount, ')
+          ..write('currency: $currency')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(id, ticket_id, name, amount, currency);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is Item &&
+          other.id == this.id &&
+          other.ticket_id == this.ticket_id &&
+          other.name == this.name &&
+          other.amount == this.amount &&
+          other.currency == this.currency);
+}
+
+class ItemsCompanion extends UpdateCompanion<Item> {
+  final Value<int> id;
+  final Value<int> ticket_id;
+  final Value<String> name;
+  final Value<double> amount;
+  final Value<String> currency;
+  const ItemsCompanion({
+    this.id = const Value.absent(),
+    this.ticket_id = const Value.absent(),
+    this.name = const Value.absent(),
+    this.amount = const Value.absent(),
+    this.currency = const Value.absent(),
+  });
+  ItemsCompanion.insert({
+    this.id = const Value.absent(),
+    required int ticket_id,
+    required String name,
+    required double amount,
+    this.currency = const Value.absent(),
+  })  : ticket_id = Value(ticket_id),
+        name = Value(name),
+        amount = Value(amount);
+  static Insertable<Item> custom({
+    Expression<int>? id,
+    Expression<int>? ticket_id,
+    Expression<String>? name,
+    Expression<double>? amount,
+    Expression<String>? currency,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (ticket_id != null) 'ticket_id': ticket_id,
+      if (name != null) 'name': name,
+      if (amount != null) 'amount': amount,
+      if (currency != null) 'currency': currency,
+    });
+  }
+
+  ItemsCompanion copyWith(
+      {Value<int>? id,
+      Value<int>? ticket_id,
+      Value<String>? name,
+      Value<double>? amount,
+      Value<String>? currency}) {
+    return ItemsCompanion(
+      id: id ?? this.id,
+      ticket_id: ticket_id ?? this.ticket_id,
+      name: name ?? this.name,
+      amount: amount ?? this.amount,
+      currency: currency ?? this.currency,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<int>(id.value);
+    }
+    if (ticket_id.present) {
+      map['ticket_id'] = Variable<int>(ticket_id.value);
+    }
+    if (name.present) {
+      map['name'] = Variable<String>(name.value);
+    }
+    if (amount.present) {
+      map['amount'] = Variable<double>(amount.value);
+    }
+    if (currency.present) {
+      map['currency'] = Variable<String>(currency.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('ItemsCompanion(')
+          ..write('id: $id, ')
+          ..write('ticket_id: $ticket_id, ')
+          ..write('name: $name, ')
+          ..write('amount: $amount, ')
+          ..write('currency: $currency')
+          ..write(')'))
+        .toString();
+  }
+}
+
+class $PersonItemsTable extends PersonItems
+    with TableInfo<$PersonItemsTable, PersonItem> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $PersonItemsTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<int> id = GeneratedColumn<int>(
+      'id', aliasedName, false,
+      hasAutoIncrement: true,
+      type: DriftSqlType.int,
+      requiredDuringInsert: false,
+      defaultConstraints:
+          GeneratedColumn.constraintIsAlways('PRIMARY KEY AUTOINCREMENT'));
+  static const VerificationMeta _person_idMeta =
+      const VerificationMeta('person_id');
+  @override
+  late final GeneratedColumn<int> person_id = GeneratedColumn<int>(
+      'person_id', aliasedName, false,
+      type: DriftSqlType.int,
+      requiredDuringInsert: true,
+      defaultConstraints:
+          GeneratedColumn.constraintIsAlways('REFERENCES persons (id)'));
+  static const VerificationMeta _item_idMeta =
+      const VerificationMeta('item_id');
+  @override
+  late final GeneratedColumn<int> item_id = GeneratedColumn<int>(
+      'item_id', aliasedName, false,
+      type: DriftSqlType.int,
+      requiredDuringInsert: true,
+      defaultConstraints:
+          GeneratedColumn.constraintIsAlways('REFERENCES items (id)'));
+  static const VerificationMeta _splitRatioMeta =
+      const VerificationMeta('splitRatio');
+  @override
+  late final GeneratedColumn<double> splitRatio = GeneratedColumn<double>(
+      'split_ratio', aliasedName, false,
+      type: DriftSqlType.double, requiredDuringInsert: true);
+  @override
+  List<GeneratedColumn> get $columns => [id, person_id, item_id, splitRatio];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'person_items';
+  @override
+  VerificationContext validateIntegrity(Insertable<PersonItem> instance,
+      {bool isInserting = false}) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    }
+    if (data.containsKey('person_id')) {
+      context.handle(_person_idMeta,
+          person_id.isAcceptableOrUnknown(data['person_id']!, _person_idMeta));
+    } else if (isInserting) {
+      context.missing(_person_idMeta);
+    }
+    if (data.containsKey('item_id')) {
+      context.handle(_item_idMeta,
+          item_id.isAcceptableOrUnknown(data['item_id']!, _item_idMeta));
+    } else if (isInserting) {
+      context.missing(_item_idMeta);
+    }
+    if (data.containsKey('split_ratio')) {
+      context.handle(
+          _splitRatioMeta,
+          splitRatio.isAcceptableOrUnknown(
+              data['split_ratio']!, _splitRatioMeta));
+    } else if (isInserting) {
+      context.missing(_splitRatioMeta);
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  PersonItem map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return PersonItem(
+      id: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}id'])!,
+      person_id: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}person_id'])!,
+      item_id: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}item_id'])!,
+      splitRatio: attachedDatabase.typeMapping
+          .read(DriftSqlType.double, data['${effectivePrefix}split_ratio'])!,
+    );
+  }
+
+  @override
+  $PersonItemsTable createAlias(String alias) {
+    return $PersonItemsTable(attachedDatabase, alias);
+  }
+}
+
+class PersonItem extends DataClass implements Insertable<PersonItem> {
+/**
+   * id
+   * person_id
+   * item_id
+   * splitRatio - tells how much to split the item amount for what that person owes
+   */
+  final int id;
+  final int person_id;
+  final int item_id;
+  final double splitRatio;
+  const PersonItem(
+      {required this.id,
+      required this.person_id,
+      required this.item_id,
+      required this.splitRatio});
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['id'] = Variable<int>(id);
+    map['person_id'] = Variable<int>(person_id);
+    map['item_id'] = Variable<int>(item_id);
+    map['split_ratio'] = Variable<double>(splitRatio);
+    return map;
+  }
+
+  PersonItemsCompanion toCompanion(bool nullToAbsent) {
+    return PersonItemsCompanion(
+      id: Value(id),
+      person_id: Value(person_id),
+      item_id: Value(item_id),
+      splitRatio: Value(splitRatio),
+    );
+  }
+
+  factory PersonItem.fromJson(Map<String, dynamic> json,
+      {ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return PersonItem(
+      id: serializer.fromJson<int>(json['id']),
+      person_id: serializer.fromJson<int>(json['person_id']),
+      item_id: serializer.fromJson<int>(json['item_id']),
+      splitRatio: serializer.fromJson<double>(json['splitRatio']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<int>(id),
+      'person_id': serializer.toJson<int>(person_id),
+      'item_id': serializer.toJson<int>(item_id),
+      'splitRatio': serializer.toJson<double>(splitRatio),
+    };
+  }
+
+  PersonItem copyWith(
+          {int? id, int? person_id, int? item_id, double? splitRatio}) =>
+      PersonItem(
+        id: id ?? this.id,
+        person_id: person_id ?? this.person_id,
+        item_id: item_id ?? this.item_id,
+        splitRatio: splitRatio ?? this.splitRatio,
+      );
+  PersonItem copyWithCompanion(PersonItemsCompanion data) {
+    return PersonItem(
+      id: data.id.present ? data.id.value : this.id,
+      person_id: data.person_id.present ? data.person_id.value : this.person_id,
+      item_id: data.item_id.present ? data.item_id.value : this.item_id,
+      splitRatio:
+          data.splitRatio.present ? data.splitRatio.value : this.splitRatio,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('PersonItem(')
+          ..write('id: $id, ')
+          ..write('person_id: $person_id, ')
+          ..write('item_id: $item_id, ')
+          ..write('splitRatio: $splitRatio')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(id, person_id, item_id, splitRatio);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is PersonItem &&
+          other.id == this.id &&
+          other.person_id == this.person_id &&
+          other.item_id == this.item_id &&
+          other.splitRatio == this.splitRatio);
+}
+
+class PersonItemsCompanion extends UpdateCompanion<PersonItem> {
+  final Value<int> id;
+  final Value<int> person_id;
+  final Value<int> item_id;
+  final Value<double> splitRatio;
+  const PersonItemsCompanion({
+    this.id = const Value.absent(),
+    this.person_id = const Value.absent(),
+    this.item_id = const Value.absent(),
+    this.splitRatio = const Value.absent(),
+  });
+  PersonItemsCompanion.insert({
+    this.id = const Value.absent(),
+    required int person_id,
+    required int item_id,
+    required double splitRatio,
+  })  : person_id = Value(person_id),
+        item_id = Value(item_id),
+        splitRatio = Value(splitRatio);
+  static Insertable<PersonItem> custom({
+    Expression<int>? id,
+    Expression<int>? person_id,
+    Expression<int>? item_id,
+    Expression<double>? splitRatio,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (person_id != null) 'person_id': person_id,
+      if (item_id != null) 'item_id': item_id,
+      if (splitRatio != null) 'split_ratio': splitRatio,
+    });
+  }
+
+  PersonItemsCompanion copyWith(
+      {Value<int>? id,
+      Value<int>? person_id,
+      Value<int>? item_id,
+      Value<double>? splitRatio}) {
+    return PersonItemsCompanion(
+      id: id ?? this.id,
+      person_id: person_id ?? this.person_id,
+      item_id: item_id ?? this.item_id,
+      splitRatio: splitRatio ?? this.splitRatio,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<int>(id.value);
+    }
+    if (person_id.present) {
+      map['person_id'] = Variable<int>(person_id.value);
+    }
+    if (item_id.present) {
+      map['item_id'] = Variable<int>(item_id.value);
+    }
+    if (splitRatio.present) {
+      map['split_ratio'] = Variable<double>(splitRatio.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('PersonItemsCompanion(')
+          ..write('id: $id, ')
+          ..write('person_id: $person_id, ')
+          ..write('item_id: $item_id, ')
+          ..write('splitRatio: $splitRatio')
+          ..write(')'))
+        .toString();
+  }
+}
+
 abstract class _$AuthDatabase extends GeneratedDatabase {
   _$AuthDatabase(QueryExecutor e) : super(e);
   $AuthDatabaseManager get managers => $AuthDatabaseManager(this);
@@ -1787,17 +2871,33 @@ abstract class _$AuthDatabase extends GeneratedDatabase {
   late final $GroupPersonsTable groupPersons = $GroupPersonsTable(this);
   late final $EventsTable events = $EventsTable(this);
   late final $ImagesTable images = $ImagesTable(this);
+  late final $TicketsTable tickets = $TicketsTable(this);
+  late final $ItemsTable items = $ItemsTable(this);
+  late final $PersonItemsTable personItems = $PersonItemsTable(this);
   late final UsersDao usersDao = UsersDao(this as AuthDatabase);
   late final PersonsDao personsDao = PersonsDao(this as AuthDatabase);
   late final GroupsDao groupsDao = GroupsDao(this as AuthDatabase);
   late final EventsDao eventsDao = EventsDao(this as AuthDatabase);
   late final ImagesDao imagesDao = ImagesDao(this as AuthDatabase);
+  late final TicketsDao ticketsDao = TicketsDao(this as AuthDatabase);
+  late final ItemsDao itemsDao = ItemsDao(this as AuthDatabase);
+  late final PersonItemsDao personItemsDao =
+      PersonItemsDao(this as AuthDatabase);
   @override
   Iterable<TableInfo<Table, Object?>> get allTables =>
       allSchemaEntities.whereType<TableInfo<Table, Object?>>();
   @override
-  List<DatabaseSchemaEntity> get allSchemaEntities =>
-      [users, groups, persons, groupPersons, events, images];
+  List<DatabaseSchemaEntity> get allSchemaEntities => [
+        users,
+        groups,
+        persons,
+        groupPersons,
+        events,
+        images,
+        tickets,
+        items,
+        personItems
+      ];
 }
 
 typedef $$UsersTableCreateCompanionBuilder = UsersCompanion Function({
@@ -2626,6 +3726,21 @@ final class $$PersonsTableReferences
     return ProcessedTableManager(
         manager.$state.copyWith(prefetchedData: cache));
   }
+
+  static MultiTypedResultKey<$PersonItemsTable, List<PersonItem>>
+      _personItemsRefsTable(_$AuthDatabase db) => MultiTypedResultKey.fromTable(
+          db.personItems,
+          aliasName:
+              $_aliasNameGenerator(db.persons.id, db.personItems.person_id));
+
+  $$PersonItemsTableProcessedTableManager get personItemsRefs {
+    final manager = $$PersonItemsTableTableManager($_db, $_db.personItems)
+        .filter((f) => f.person_id.id.sqlEquals($_itemColumn<int>('id')!));
+
+    final cache = $_typedResult.readTableOrNull(_personItemsRefsTable($_db));
+    return ProcessedTableManager(
+        manager.$state.copyWith(prefetchedData: cache));
+  }
 }
 
 class $$PersonsTableFilterComposer
@@ -2688,6 +3803,27 @@ class $$PersonsTableFilterComposer
             $$GroupPersonsTableFilterComposer(
               $db: $db,
               $table: $db.groupPersons,
+              $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+              joinBuilder: joinBuilder,
+              $removeJoinBuilderFromRootComposer:
+                  $removeJoinBuilderFromRootComposer,
+            ));
+    return f(composer);
+  }
+
+  Expression<bool> personItemsRefs(
+      Expression<bool> Function($$PersonItemsTableFilterComposer f) f) {
+    final $$PersonItemsTableFilterComposer composer = $composerBuilder(
+        composer: this,
+        getCurrentColumn: (t) => t.id,
+        referencedTable: $db.personItems,
+        getReferencedColumn: (t) => t.person_id,
+        builder: (joinBuilder,
+                {$addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer}) =>
+            $$PersonItemsTableFilterComposer(
+              $db: $db,
+              $table: $db.personItems,
               $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
               joinBuilder: joinBuilder,
               $removeJoinBuilderFromRootComposer:
@@ -2812,6 +3948,27 @@ class $$PersonsTableAnnotationComposer
             ));
     return f(composer);
   }
+
+  Expression<T> personItemsRefs<T extends Object>(
+      Expression<T> Function($$PersonItemsTableAnnotationComposer a) f) {
+    final $$PersonItemsTableAnnotationComposer composer = $composerBuilder(
+        composer: this,
+        getCurrentColumn: (t) => t.id,
+        referencedTable: $db.personItems,
+        getReferencedColumn: (t) => t.person_id,
+        builder: (joinBuilder,
+                {$addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer}) =>
+            $$PersonItemsTableAnnotationComposer(
+              $db: $db,
+              $table: $db.personItems,
+              $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+              joinBuilder: joinBuilder,
+              $removeJoinBuilderFromRootComposer:
+                  $removeJoinBuilderFromRootComposer,
+            ));
+    return f(composer);
+  }
 }
 
 class $$PersonsTableTableManager extends RootTableManager<
@@ -2825,7 +3982,8 @@ class $$PersonsTableTableManager extends RootTableManager<
     $$PersonsTableUpdateCompanionBuilder,
     (Person, $$PersonsTableReferences),
     Person,
-    PrefetchHooks Function({bool user_id, bool groupPersonsRefs})> {
+    PrefetchHooks Function(
+        {bool user_id, bool groupPersonsRefs, bool personItemsRefs})> {
   $$PersonsTableTableManager(_$AuthDatabase db, $PersonsTable table)
       : super(TableManagerState(
           db: db,
@@ -2876,10 +4034,16 @@ class $$PersonsTableTableManager extends RootTableManager<
               .map((e) =>
                   (e.readTable(table), $$PersonsTableReferences(db, table, e)))
               .toList(),
-          prefetchHooksCallback: ({user_id = false, groupPersonsRefs = false}) {
+          prefetchHooksCallback: (
+              {user_id = false,
+              groupPersonsRefs = false,
+              personItemsRefs = false}) {
             return PrefetchHooks(
               db: db,
-              explicitlyWatchedTables: [if (groupPersonsRefs) db.groupPersons],
+              explicitlyWatchedTables: [
+                if (groupPersonsRefs) db.groupPersons,
+                if (personItemsRefs) db.personItems
+              ],
               addJoins: <
                   T extends TableManagerState<
                       dynamic,
@@ -2919,6 +4083,19 @@ class $$PersonsTableTableManager extends RootTableManager<
                         referencedItemsForCurrentItem:
                             (item, referencedItems) => referencedItems
                                 .where((e) => e.person_id == item.id),
+                        typedResults: items),
+                  if (personItemsRefs)
+                    await $_getPrefetchedData<Person, $PersonsTable,
+                            PersonItem>(
+                        currentTable: table,
+                        referencedTable:
+                            $$PersonsTableReferences._personItemsRefsTable(db),
+                        managerFromTypedResult: (p0) =>
+                            $$PersonsTableReferences(db, table, p0)
+                                .personItemsRefs,
+                        referencedItemsForCurrentItem:
+                            (item, referencedItems) => referencedItems
+                                .where((e) => e.person_id == item.id),
                         typedResults: items)
                 ];
               },
@@ -2938,7 +4115,8 @@ typedef $$PersonsTableProcessedTableManager = ProcessedTableManager<
     $$PersonsTableUpdateCompanionBuilder,
     (Person, $$PersonsTableReferences),
     Person,
-    PrefetchHooks Function({bool user_id, bool groupPersonsRefs})>;
+    PrefetchHooks Function(
+        {bool user_id, bool groupPersonsRefs, bool personItemsRefs})>;
 typedef $$GroupPersonsTableCreateCompanionBuilder = GroupPersonsCompanion
     Function({
   Value<int> id,
@@ -3318,6 +4496,20 @@ final class $$EventsTableReferences
     return ProcessedTableManager(
         manager.$state.copyWith(prefetchedData: cache));
   }
+
+  static MultiTypedResultKey<$TicketsTable, List<Ticket>> _ticketsRefsTable(
+          _$AuthDatabase db) =>
+      MultiTypedResultKey.fromTable(db.tickets,
+          aliasName: $_aliasNameGenerator(db.events.id, db.tickets.event_id));
+
+  $$TicketsTableProcessedTableManager get ticketsRefs {
+    final manager = $$TicketsTableTableManager($_db, $_db.tickets)
+        .filter((f) => f.event_id.id.sqlEquals($_itemColumn<int>('id')!));
+
+    final cache = $_typedResult.readTableOrNull(_ticketsRefsTable($_db));
+    return ProcessedTableManager(
+        manager.$state.copyWith(prefetchedData: cache));
+  }
 }
 
 class $$EventsTableFilterComposer
@@ -3397,6 +4589,27 @@ class $$EventsTableFilterComposer
             $$ImagesTableFilterComposer(
               $db: $db,
               $table: $db.images,
+              $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+              joinBuilder: joinBuilder,
+              $removeJoinBuilderFromRootComposer:
+                  $removeJoinBuilderFromRootComposer,
+            ));
+    return f(composer);
+  }
+
+  Expression<bool> ticketsRefs(
+      Expression<bool> Function($$TicketsTableFilterComposer f) f) {
+    final $$TicketsTableFilterComposer composer = $composerBuilder(
+        composer: this,
+        getCurrentColumn: (t) => t.id,
+        referencedTable: $db.tickets,
+        getReferencedColumn: (t) => t.event_id,
+        builder: (joinBuilder,
+                {$addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer}) =>
+            $$TicketsTableFilterComposer(
+              $db: $db,
+              $table: $db.tickets,
               $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
               joinBuilder: joinBuilder,
               $removeJoinBuilderFromRootComposer:
@@ -3555,6 +4768,27 @@ class $$EventsTableAnnotationComposer
             ));
     return f(composer);
   }
+
+  Expression<T> ticketsRefs<T extends Object>(
+      Expression<T> Function($$TicketsTableAnnotationComposer a) f) {
+    final $$TicketsTableAnnotationComposer composer = $composerBuilder(
+        composer: this,
+        getCurrentColumn: (t) => t.id,
+        referencedTable: $db.tickets,
+        getReferencedColumn: (t) => t.event_id,
+        builder: (joinBuilder,
+                {$addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer}) =>
+            $$TicketsTableAnnotationComposer(
+              $db: $db,
+              $table: $db.tickets,
+              $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+              joinBuilder: joinBuilder,
+              $removeJoinBuilderFromRootComposer:
+                  $removeJoinBuilderFromRootComposer,
+            ));
+    return f(composer);
+  }
 }
 
 class $$EventsTableTableManager extends RootTableManager<
@@ -3568,7 +4802,8 @@ class $$EventsTableTableManager extends RootTableManager<
     $$EventsTableUpdateCompanionBuilder,
     (Event, $$EventsTableReferences),
     Event,
-    PrefetchHooks Function({bool user_id, bool group_id, bool imagesRefs})> {
+    PrefetchHooks Function(
+        {bool user_id, bool group_id, bool imagesRefs, bool ticketsRefs})> {
   $$EventsTableTableManager(_$AuthDatabase db, $EventsTable table)
       : super(TableManagerState(
           db: db,
@@ -3620,10 +4855,16 @@ class $$EventsTableTableManager extends RootTableManager<
                   (e.readTable(table), $$EventsTableReferences(db, table, e)))
               .toList(),
           prefetchHooksCallback: (
-              {user_id = false, group_id = false, imagesRefs = false}) {
+              {user_id = false,
+              group_id = false,
+              imagesRefs = false,
+              ticketsRefs = false}) {
             return PrefetchHooks(
               db: db,
-              explicitlyWatchedTables: [if (imagesRefs) db.images],
+              explicitlyWatchedTables: [
+                if (imagesRefs) db.images,
+                if (ticketsRefs) db.tickets
+              ],
               addJoins: <
                   T extends TableManagerState<
                       dynamic,
@@ -3670,6 +4911,17 @@ class $$EventsTableTableManager extends RootTableManager<
                         referencedItemsForCurrentItem: (item,
                                 referencedItems) =>
                             referencedItems.where((e) => e.event_id == item.id),
+                        typedResults: items),
+                  if (ticketsRefs)
+                    await $_getPrefetchedData<Event, $EventsTable, Ticket>(
+                        currentTable: table,
+                        referencedTable:
+                            $$EventsTableReferences._ticketsRefsTable(db),
+                        managerFromTypedResult: (p0) =>
+                            $$EventsTableReferences(db, table, p0).ticketsRefs,
+                        referencedItemsForCurrentItem: (item,
+                                referencedItems) =>
+                            referencedItems.where((e) => e.event_id == item.id),
                         typedResults: items)
                 ];
               },
@@ -3689,7 +4941,8 @@ typedef $$EventsTableProcessedTableManager = ProcessedTableManager<
     $$EventsTableUpdateCompanionBuilder,
     (Event, $$EventsTableReferences),
     Event,
-    PrefetchHooks Function({bool user_id, bool group_id, bool imagesRefs})>;
+    PrefetchHooks Function(
+        {bool user_id, bool group_id, bool imagesRefs, bool ticketsRefs})>;
 typedef $$ImagesTableCreateCompanionBuilder = ImagesCompanion Function({
   Value<int> id,
   required String imagePath,
@@ -3923,6 +5176,1076 @@ typedef $$ImagesTableProcessedTableManager = ProcessedTableManager<
     (Image, $$ImagesTableReferences),
     Image,
     PrefetchHooks Function({bool event_id})>;
+typedef $$TicketsTableCreateCompanionBuilder = TicketsCompanion Function({
+  Value<int> id,
+  required int event_id,
+  Value<double> tipInDollars,
+  Value<double> tipInPercent,
+  Value<String> tipType,
+  Value<double> taxes,
+  Value<String> taxType,
+  Value<double> subtotal,
+  Value<double> total,
+  Value<bool> isScanned,
+});
+typedef $$TicketsTableUpdateCompanionBuilder = TicketsCompanion Function({
+  Value<int> id,
+  Value<int> event_id,
+  Value<double> tipInDollars,
+  Value<double> tipInPercent,
+  Value<String> tipType,
+  Value<double> taxes,
+  Value<String> taxType,
+  Value<double> subtotal,
+  Value<double> total,
+  Value<bool> isScanned,
+});
+
+final class $$TicketsTableReferences
+    extends BaseReferences<_$AuthDatabase, $TicketsTable, Ticket> {
+  $$TicketsTableReferences(super.$_db, super.$_table, super.$_typedResult);
+
+  static $EventsTable _event_idTable(_$AuthDatabase db) => db.events
+      .createAlias($_aliasNameGenerator(db.tickets.event_id, db.events.id));
+
+  $$EventsTableProcessedTableManager get event_id {
+    final $_column = $_itemColumn<int>('event_id')!;
+
+    final manager = $$EventsTableTableManager($_db, $_db.events)
+        .filter((f) => f.id.sqlEquals($_column));
+    final item = $_typedResult.readTableOrNull(_event_idTable($_db));
+    if (item == null) return manager;
+    return ProcessedTableManager(
+        manager.$state.copyWith(prefetchedData: [item]));
+  }
+
+  static MultiTypedResultKey<$ItemsTable, List<Item>> _itemsRefsTable(
+          _$AuthDatabase db) =>
+      MultiTypedResultKey.fromTable(db.items,
+          aliasName: $_aliasNameGenerator(db.tickets.id, db.items.ticket_id));
+
+  $$ItemsTableProcessedTableManager get itemsRefs {
+    final manager = $$ItemsTableTableManager($_db, $_db.items)
+        .filter((f) => f.ticket_id.id.sqlEquals($_itemColumn<int>('id')!));
+
+    final cache = $_typedResult.readTableOrNull(_itemsRefsTable($_db));
+    return ProcessedTableManager(
+        manager.$state.copyWith(prefetchedData: cache));
+  }
+}
+
+class $$TicketsTableFilterComposer
+    extends Composer<_$AuthDatabase, $TicketsTable> {
+  $$TicketsTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<int> get id => $composableBuilder(
+      column: $table.id, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<double> get tipInDollars => $composableBuilder(
+      column: $table.tipInDollars, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<double> get tipInPercent => $composableBuilder(
+      column: $table.tipInPercent, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<String> get tipType => $composableBuilder(
+      column: $table.tipType, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<double> get taxes => $composableBuilder(
+      column: $table.taxes, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<String> get taxType => $composableBuilder(
+      column: $table.taxType, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<double> get subtotal => $composableBuilder(
+      column: $table.subtotal, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<double> get total => $composableBuilder(
+      column: $table.total, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<bool> get isScanned => $composableBuilder(
+      column: $table.isScanned, builder: (column) => ColumnFilters(column));
+
+  $$EventsTableFilterComposer get event_id {
+    final $$EventsTableFilterComposer composer = $composerBuilder(
+        composer: this,
+        getCurrentColumn: (t) => t.event_id,
+        referencedTable: $db.events,
+        getReferencedColumn: (t) => t.id,
+        builder: (joinBuilder,
+                {$addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer}) =>
+            $$EventsTableFilterComposer(
+              $db: $db,
+              $table: $db.events,
+              $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+              joinBuilder: joinBuilder,
+              $removeJoinBuilderFromRootComposer:
+                  $removeJoinBuilderFromRootComposer,
+            ));
+    return composer;
+  }
+
+  Expression<bool> itemsRefs(
+      Expression<bool> Function($$ItemsTableFilterComposer f) f) {
+    final $$ItemsTableFilterComposer composer = $composerBuilder(
+        composer: this,
+        getCurrentColumn: (t) => t.id,
+        referencedTable: $db.items,
+        getReferencedColumn: (t) => t.ticket_id,
+        builder: (joinBuilder,
+                {$addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer}) =>
+            $$ItemsTableFilterComposer(
+              $db: $db,
+              $table: $db.items,
+              $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+              joinBuilder: joinBuilder,
+              $removeJoinBuilderFromRootComposer:
+                  $removeJoinBuilderFromRootComposer,
+            ));
+    return f(composer);
+  }
+}
+
+class $$TicketsTableOrderingComposer
+    extends Composer<_$AuthDatabase, $TicketsTable> {
+  $$TicketsTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<int> get id => $composableBuilder(
+      column: $table.id, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<double> get tipInDollars => $composableBuilder(
+      column: $table.tipInDollars,
+      builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<double> get tipInPercent => $composableBuilder(
+      column: $table.tipInPercent,
+      builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<String> get tipType => $composableBuilder(
+      column: $table.tipType, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<double> get taxes => $composableBuilder(
+      column: $table.taxes, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<String> get taxType => $composableBuilder(
+      column: $table.taxType, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<double> get subtotal => $composableBuilder(
+      column: $table.subtotal, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<double> get total => $composableBuilder(
+      column: $table.total, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<bool> get isScanned => $composableBuilder(
+      column: $table.isScanned, builder: (column) => ColumnOrderings(column));
+
+  $$EventsTableOrderingComposer get event_id {
+    final $$EventsTableOrderingComposer composer = $composerBuilder(
+        composer: this,
+        getCurrentColumn: (t) => t.event_id,
+        referencedTable: $db.events,
+        getReferencedColumn: (t) => t.id,
+        builder: (joinBuilder,
+                {$addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer}) =>
+            $$EventsTableOrderingComposer(
+              $db: $db,
+              $table: $db.events,
+              $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+              joinBuilder: joinBuilder,
+              $removeJoinBuilderFromRootComposer:
+                  $removeJoinBuilderFromRootComposer,
+            ));
+    return composer;
+  }
+}
+
+class $$TicketsTableAnnotationComposer
+    extends Composer<_$AuthDatabase, $TicketsTable> {
+  $$TicketsTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<int> get id =>
+      $composableBuilder(column: $table.id, builder: (column) => column);
+
+  GeneratedColumn<double> get tipInDollars => $composableBuilder(
+      column: $table.tipInDollars, builder: (column) => column);
+
+  GeneratedColumn<double> get tipInPercent => $composableBuilder(
+      column: $table.tipInPercent, builder: (column) => column);
+
+  GeneratedColumn<String> get tipType =>
+      $composableBuilder(column: $table.tipType, builder: (column) => column);
+
+  GeneratedColumn<double> get taxes =>
+      $composableBuilder(column: $table.taxes, builder: (column) => column);
+
+  GeneratedColumn<String> get taxType =>
+      $composableBuilder(column: $table.taxType, builder: (column) => column);
+
+  GeneratedColumn<double> get subtotal =>
+      $composableBuilder(column: $table.subtotal, builder: (column) => column);
+
+  GeneratedColumn<double> get total =>
+      $composableBuilder(column: $table.total, builder: (column) => column);
+
+  GeneratedColumn<bool> get isScanned =>
+      $composableBuilder(column: $table.isScanned, builder: (column) => column);
+
+  $$EventsTableAnnotationComposer get event_id {
+    final $$EventsTableAnnotationComposer composer = $composerBuilder(
+        composer: this,
+        getCurrentColumn: (t) => t.event_id,
+        referencedTable: $db.events,
+        getReferencedColumn: (t) => t.id,
+        builder: (joinBuilder,
+                {$addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer}) =>
+            $$EventsTableAnnotationComposer(
+              $db: $db,
+              $table: $db.events,
+              $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+              joinBuilder: joinBuilder,
+              $removeJoinBuilderFromRootComposer:
+                  $removeJoinBuilderFromRootComposer,
+            ));
+    return composer;
+  }
+
+  Expression<T> itemsRefs<T extends Object>(
+      Expression<T> Function($$ItemsTableAnnotationComposer a) f) {
+    final $$ItemsTableAnnotationComposer composer = $composerBuilder(
+        composer: this,
+        getCurrentColumn: (t) => t.id,
+        referencedTable: $db.items,
+        getReferencedColumn: (t) => t.ticket_id,
+        builder: (joinBuilder,
+                {$addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer}) =>
+            $$ItemsTableAnnotationComposer(
+              $db: $db,
+              $table: $db.items,
+              $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+              joinBuilder: joinBuilder,
+              $removeJoinBuilderFromRootComposer:
+                  $removeJoinBuilderFromRootComposer,
+            ));
+    return f(composer);
+  }
+}
+
+class $$TicketsTableTableManager extends RootTableManager<
+    _$AuthDatabase,
+    $TicketsTable,
+    Ticket,
+    $$TicketsTableFilterComposer,
+    $$TicketsTableOrderingComposer,
+    $$TicketsTableAnnotationComposer,
+    $$TicketsTableCreateCompanionBuilder,
+    $$TicketsTableUpdateCompanionBuilder,
+    (Ticket, $$TicketsTableReferences),
+    Ticket,
+    PrefetchHooks Function({bool event_id, bool itemsRefs})> {
+  $$TicketsTableTableManager(_$AuthDatabase db, $TicketsTable table)
+      : super(TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$TicketsTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$TicketsTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$TicketsTableAnnotationComposer($db: db, $table: table),
+          updateCompanionCallback: ({
+            Value<int> id = const Value.absent(),
+            Value<int> event_id = const Value.absent(),
+            Value<double> tipInDollars = const Value.absent(),
+            Value<double> tipInPercent = const Value.absent(),
+            Value<String> tipType = const Value.absent(),
+            Value<double> taxes = const Value.absent(),
+            Value<String> taxType = const Value.absent(),
+            Value<double> subtotal = const Value.absent(),
+            Value<double> total = const Value.absent(),
+            Value<bool> isScanned = const Value.absent(),
+          }) =>
+              TicketsCompanion(
+            id: id,
+            event_id: event_id,
+            tipInDollars: tipInDollars,
+            tipInPercent: tipInPercent,
+            tipType: tipType,
+            taxes: taxes,
+            taxType: taxType,
+            subtotal: subtotal,
+            total: total,
+            isScanned: isScanned,
+          ),
+          createCompanionCallback: ({
+            Value<int> id = const Value.absent(),
+            required int event_id,
+            Value<double> tipInDollars = const Value.absent(),
+            Value<double> tipInPercent = const Value.absent(),
+            Value<String> tipType = const Value.absent(),
+            Value<double> taxes = const Value.absent(),
+            Value<String> taxType = const Value.absent(),
+            Value<double> subtotal = const Value.absent(),
+            Value<double> total = const Value.absent(),
+            Value<bool> isScanned = const Value.absent(),
+          }) =>
+              TicketsCompanion.insert(
+            id: id,
+            event_id: event_id,
+            tipInDollars: tipInDollars,
+            tipInPercent: tipInPercent,
+            tipType: tipType,
+            taxes: taxes,
+            taxType: taxType,
+            subtotal: subtotal,
+            total: total,
+            isScanned: isScanned,
+          ),
+          withReferenceMapper: (p0) => p0
+              .map((e) =>
+                  (e.readTable(table), $$TicketsTableReferences(db, table, e)))
+              .toList(),
+          prefetchHooksCallback: ({event_id = false, itemsRefs = false}) {
+            return PrefetchHooks(
+              db: db,
+              explicitlyWatchedTables: [if (itemsRefs) db.items],
+              addJoins: <
+                  T extends TableManagerState<
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic>>(state) {
+                if (event_id) {
+                  state = state.withJoin(
+                    currentTable: table,
+                    currentColumn: table.event_id,
+                    referencedTable:
+                        $$TicketsTableReferences._event_idTable(db),
+                    referencedColumn:
+                        $$TicketsTableReferences._event_idTable(db).id,
+                  ) as T;
+                }
+
+                return state;
+              },
+              getPrefetchedDataCallback: (items) async {
+                return [
+                  if (itemsRefs)
+                    await $_getPrefetchedData<Ticket, $TicketsTable, Item>(
+                        currentTable: table,
+                        referencedTable:
+                            $$TicketsTableReferences._itemsRefsTable(db),
+                        managerFromTypedResult: (p0) =>
+                            $$TicketsTableReferences(db, table, p0).itemsRefs,
+                        referencedItemsForCurrentItem:
+                            (item, referencedItems) => referencedItems
+                                .where((e) => e.ticket_id == item.id),
+                        typedResults: items)
+                ];
+              },
+            );
+          },
+        ));
+}
+
+typedef $$TicketsTableProcessedTableManager = ProcessedTableManager<
+    _$AuthDatabase,
+    $TicketsTable,
+    Ticket,
+    $$TicketsTableFilterComposer,
+    $$TicketsTableOrderingComposer,
+    $$TicketsTableAnnotationComposer,
+    $$TicketsTableCreateCompanionBuilder,
+    $$TicketsTableUpdateCompanionBuilder,
+    (Ticket, $$TicketsTableReferences),
+    Ticket,
+    PrefetchHooks Function({bool event_id, bool itemsRefs})>;
+typedef $$ItemsTableCreateCompanionBuilder = ItemsCompanion Function({
+  Value<int> id,
+  required int ticket_id,
+  required String name,
+  required double amount,
+  Value<String> currency,
+});
+typedef $$ItemsTableUpdateCompanionBuilder = ItemsCompanion Function({
+  Value<int> id,
+  Value<int> ticket_id,
+  Value<String> name,
+  Value<double> amount,
+  Value<String> currency,
+});
+
+final class $$ItemsTableReferences
+    extends BaseReferences<_$AuthDatabase, $ItemsTable, Item> {
+  $$ItemsTableReferences(super.$_db, super.$_table, super.$_typedResult);
+
+  static $TicketsTable _ticket_idTable(_$AuthDatabase db) => db.tickets
+      .createAlias($_aliasNameGenerator(db.items.ticket_id, db.tickets.id));
+
+  $$TicketsTableProcessedTableManager get ticket_id {
+    final $_column = $_itemColumn<int>('ticket_id')!;
+
+    final manager = $$TicketsTableTableManager($_db, $_db.tickets)
+        .filter((f) => f.id.sqlEquals($_column));
+    final item = $_typedResult.readTableOrNull(_ticket_idTable($_db));
+    if (item == null) return manager;
+    return ProcessedTableManager(
+        manager.$state.copyWith(prefetchedData: [item]));
+  }
+
+  static MultiTypedResultKey<$PersonItemsTable, List<PersonItem>>
+      _personItemsRefsTable(_$AuthDatabase db) => MultiTypedResultKey.fromTable(
+          db.personItems,
+          aliasName: $_aliasNameGenerator(db.items.id, db.personItems.item_id));
+
+  $$PersonItemsTableProcessedTableManager get personItemsRefs {
+    final manager = $$PersonItemsTableTableManager($_db, $_db.personItems)
+        .filter((f) => f.item_id.id.sqlEquals($_itemColumn<int>('id')!));
+
+    final cache = $_typedResult.readTableOrNull(_personItemsRefsTable($_db));
+    return ProcessedTableManager(
+        manager.$state.copyWith(prefetchedData: cache));
+  }
+}
+
+class $$ItemsTableFilterComposer extends Composer<_$AuthDatabase, $ItemsTable> {
+  $$ItemsTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<int> get id => $composableBuilder(
+      column: $table.id, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<String> get name => $composableBuilder(
+      column: $table.name, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<double> get amount => $composableBuilder(
+      column: $table.amount, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<String> get currency => $composableBuilder(
+      column: $table.currency, builder: (column) => ColumnFilters(column));
+
+  $$TicketsTableFilterComposer get ticket_id {
+    final $$TicketsTableFilterComposer composer = $composerBuilder(
+        composer: this,
+        getCurrentColumn: (t) => t.ticket_id,
+        referencedTable: $db.tickets,
+        getReferencedColumn: (t) => t.id,
+        builder: (joinBuilder,
+                {$addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer}) =>
+            $$TicketsTableFilterComposer(
+              $db: $db,
+              $table: $db.tickets,
+              $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+              joinBuilder: joinBuilder,
+              $removeJoinBuilderFromRootComposer:
+                  $removeJoinBuilderFromRootComposer,
+            ));
+    return composer;
+  }
+
+  Expression<bool> personItemsRefs(
+      Expression<bool> Function($$PersonItemsTableFilterComposer f) f) {
+    final $$PersonItemsTableFilterComposer composer = $composerBuilder(
+        composer: this,
+        getCurrentColumn: (t) => t.id,
+        referencedTable: $db.personItems,
+        getReferencedColumn: (t) => t.item_id,
+        builder: (joinBuilder,
+                {$addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer}) =>
+            $$PersonItemsTableFilterComposer(
+              $db: $db,
+              $table: $db.personItems,
+              $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+              joinBuilder: joinBuilder,
+              $removeJoinBuilderFromRootComposer:
+                  $removeJoinBuilderFromRootComposer,
+            ));
+    return f(composer);
+  }
+}
+
+class $$ItemsTableOrderingComposer
+    extends Composer<_$AuthDatabase, $ItemsTable> {
+  $$ItemsTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<int> get id => $composableBuilder(
+      column: $table.id, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<String> get name => $composableBuilder(
+      column: $table.name, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<double> get amount => $composableBuilder(
+      column: $table.amount, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<String> get currency => $composableBuilder(
+      column: $table.currency, builder: (column) => ColumnOrderings(column));
+
+  $$TicketsTableOrderingComposer get ticket_id {
+    final $$TicketsTableOrderingComposer composer = $composerBuilder(
+        composer: this,
+        getCurrentColumn: (t) => t.ticket_id,
+        referencedTable: $db.tickets,
+        getReferencedColumn: (t) => t.id,
+        builder: (joinBuilder,
+                {$addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer}) =>
+            $$TicketsTableOrderingComposer(
+              $db: $db,
+              $table: $db.tickets,
+              $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+              joinBuilder: joinBuilder,
+              $removeJoinBuilderFromRootComposer:
+                  $removeJoinBuilderFromRootComposer,
+            ));
+    return composer;
+  }
+}
+
+class $$ItemsTableAnnotationComposer
+    extends Composer<_$AuthDatabase, $ItemsTable> {
+  $$ItemsTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<int> get id =>
+      $composableBuilder(column: $table.id, builder: (column) => column);
+
+  GeneratedColumn<String> get name =>
+      $composableBuilder(column: $table.name, builder: (column) => column);
+
+  GeneratedColumn<double> get amount =>
+      $composableBuilder(column: $table.amount, builder: (column) => column);
+
+  GeneratedColumn<String> get currency =>
+      $composableBuilder(column: $table.currency, builder: (column) => column);
+
+  $$TicketsTableAnnotationComposer get ticket_id {
+    final $$TicketsTableAnnotationComposer composer = $composerBuilder(
+        composer: this,
+        getCurrentColumn: (t) => t.ticket_id,
+        referencedTable: $db.tickets,
+        getReferencedColumn: (t) => t.id,
+        builder: (joinBuilder,
+                {$addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer}) =>
+            $$TicketsTableAnnotationComposer(
+              $db: $db,
+              $table: $db.tickets,
+              $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+              joinBuilder: joinBuilder,
+              $removeJoinBuilderFromRootComposer:
+                  $removeJoinBuilderFromRootComposer,
+            ));
+    return composer;
+  }
+
+  Expression<T> personItemsRefs<T extends Object>(
+      Expression<T> Function($$PersonItemsTableAnnotationComposer a) f) {
+    final $$PersonItemsTableAnnotationComposer composer = $composerBuilder(
+        composer: this,
+        getCurrentColumn: (t) => t.id,
+        referencedTable: $db.personItems,
+        getReferencedColumn: (t) => t.item_id,
+        builder: (joinBuilder,
+                {$addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer}) =>
+            $$PersonItemsTableAnnotationComposer(
+              $db: $db,
+              $table: $db.personItems,
+              $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+              joinBuilder: joinBuilder,
+              $removeJoinBuilderFromRootComposer:
+                  $removeJoinBuilderFromRootComposer,
+            ));
+    return f(composer);
+  }
+}
+
+class $$ItemsTableTableManager extends RootTableManager<
+    _$AuthDatabase,
+    $ItemsTable,
+    Item,
+    $$ItemsTableFilterComposer,
+    $$ItemsTableOrderingComposer,
+    $$ItemsTableAnnotationComposer,
+    $$ItemsTableCreateCompanionBuilder,
+    $$ItemsTableUpdateCompanionBuilder,
+    (Item, $$ItemsTableReferences),
+    Item,
+    PrefetchHooks Function({bool ticket_id, bool personItemsRefs})> {
+  $$ItemsTableTableManager(_$AuthDatabase db, $ItemsTable table)
+      : super(TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$ItemsTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$ItemsTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$ItemsTableAnnotationComposer($db: db, $table: table),
+          updateCompanionCallback: ({
+            Value<int> id = const Value.absent(),
+            Value<int> ticket_id = const Value.absent(),
+            Value<String> name = const Value.absent(),
+            Value<double> amount = const Value.absent(),
+            Value<String> currency = const Value.absent(),
+          }) =>
+              ItemsCompanion(
+            id: id,
+            ticket_id: ticket_id,
+            name: name,
+            amount: amount,
+            currency: currency,
+          ),
+          createCompanionCallback: ({
+            Value<int> id = const Value.absent(),
+            required int ticket_id,
+            required String name,
+            required double amount,
+            Value<String> currency = const Value.absent(),
+          }) =>
+              ItemsCompanion.insert(
+            id: id,
+            ticket_id: ticket_id,
+            name: name,
+            amount: amount,
+            currency: currency,
+          ),
+          withReferenceMapper: (p0) => p0
+              .map((e) =>
+                  (e.readTable(table), $$ItemsTableReferences(db, table, e)))
+              .toList(),
+          prefetchHooksCallback: (
+              {ticket_id = false, personItemsRefs = false}) {
+            return PrefetchHooks(
+              db: db,
+              explicitlyWatchedTables: [if (personItemsRefs) db.personItems],
+              addJoins: <
+                  T extends TableManagerState<
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic>>(state) {
+                if (ticket_id) {
+                  state = state.withJoin(
+                    currentTable: table,
+                    currentColumn: table.ticket_id,
+                    referencedTable: $$ItemsTableReferences._ticket_idTable(db),
+                    referencedColumn:
+                        $$ItemsTableReferences._ticket_idTable(db).id,
+                  ) as T;
+                }
+
+                return state;
+              },
+              getPrefetchedDataCallback: (items) async {
+                return [
+                  if (personItemsRefs)
+                    await $_getPrefetchedData<Item, $ItemsTable, PersonItem>(
+                        currentTable: table,
+                        referencedTable:
+                            $$ItemsTableReferences._personItemsRefsTable(db),
+                        managerFromTypedResult: (p0) =>
+                            $$ItemsTableReferences(db, table, p0)
+                                .personItemsRefs,
+                        referencedItemsForCurrentItem: (item,
+                                referencedItems) =>
+                            referencedItems.where((e) => e.item_id == item.id),
+                        typedResults: items)
+                ];
+              },
+            );
+          },
+        ));
+}
+
+typedef $$ItemsTableProcessedTableManager = ProcessedTableManager<
+    _$AuthDatabase,
+    $ItemsTable,
+    Item,
+    $$ItemsTableFilterComposer,
+    $$ItemsTableOrderingComposer,
+    $$ItemsTableAnnotationComposer,
+    $$ItemsTableCreateCompanionBuilder,
+    $$ItemsTableUpdateCompanionBuilder,
+    (Item, $$ItemsTableReferences),
+    Item,
+    PrefetchHooks Function({bool ticket_id, bool personItemsRefs})>;
+typedef $$PersonItemsTableCreateCompanionBuilder = PersonItemsCompanion
+    Function({
+  Value<int> id,
+  required int person_id,
+  required int item_id,
+  required double splitRatio,
+});
+typedef $$PersonItemsTableUpdateCompanionBuilder = PersonItemsCompanion
+    Function({
+  Value<int> id,
+  Value<int> person_id,
+  Value<int> item_id,
+  Value<double> splitRatio,
+});
+
+final class $$PersonItemsTableReferences
+    extends BaseReferences<_$AuthDatabase, $PersonItemsTable, PersonItem> {
+  $$PersonItemsTableReferences(super.$_db, super.$_table, super.$_typedResult);
+
+  static $PersonsTable _person_idTable(_$AuthDatabase db) =>
+      db.persons.createAlias(
+          $_aliasNameGenerator(db.personItems.person_id, db.persons.id));
+
+  $$PersonsTableProcessedTableManager get person_id {
+    final $_column = $_itemColumn<int>('person_id')!;
+
+    final manager = $$PersonsTableTableManager($_db, $_db.persons)
+        .filter((f) => f.id.sqlEquals($_column));
+    final item = $_typedResult.readTableOrNull(_person_idTable($_db));
+    if (item == null) return manager;
+    return ProcessedTableManager(
+        manager.$state.copyWith(prefetchedData: [item]));
+  }
+
+  static $ItemsTable _item_idTable(_$AuthDatabase db) => db.items
+      .createAlias($_aliasNameGenerator(db.personItems.item_id, db.items.id));
+
+  $$ItemsTableProcessedTableManager get item_id {
+    final $_column = $_itemColumn<int>('item_id')!;
+
+    final manager = $$ItemsTableTableManager($_db, $_db.items)
+        .filter((f) => f.id.sqlEquals($_column));
+    final item = $_typedResult.readTableOrNull(_item_idTable($_db));
+    if (item == null) return manager;
+    return ProcessedTableManager(
+        manager.$state.copyWith(prefetchedData: [item]));
+  }
+}
+
+class $$PersonItemsTableFilterComposer
+    extends Composer<_$AuthDatabase, $PersonItemsTable> {
+  $$PersonItemsTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<int> get id => $composableBuilder(
+      column: $table.id, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<double> get splitRatio => $composableBuilder(
+      column: $table.splitRatio, builder: (column) => ColumnFilters(column));
+
+  $$PersonsTableFilterComposer get person_id {
+    final $$PersonsTableFilterComposer composer = $composerBuilder(
+        composer: this,
+        getCurrentColumn: (t) => t.person_id,
+        referencedTable: $db.persons,
+        getReferencedColumn: (t) => t.id,
+        builder: (joinBuilder,
+                {$addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer}) =>
+            $$PersonsTableFilterComposer(
+              $db: $db,
+              $table: $db.persons,
+              $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+              joinBuilder: joinBuilder,
+              $removeJoinBuilderFromRootComposer:
+                  $removeJoinBuilderFromRootComposer,
+            ));
+    return composer;
+  }
+
+  $$ItemsTableFilterComposer get item_id {
+    final $$ItemsTableFilterComposer composer = $composerBuilder(
+        composer: this,
+        getCurrentColumn: (t) => t.item_id,
+        referencedTable: $db.items,
+        getReferencedColumn: (t) => t.id,
+        builder: (joinBuilder,
+                {$addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer}) =>
+            $$ItemsTableFilterComposer(
+              $db: $db,
+              $table: $db.items,
+              $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+              joinBuilder: joinBuilder,
+              $removeJoinBuilderFromRootComposer:
+                  $removeJoinBuilderFromRootComposer,
+            ));
+    return composer;
+  }
+}
+
+class $$PersonItemsTableOrderingComposer
+    extends Composer<_$AuthDatabase, $PersonItemsTable> {
+  $$PersonItemsTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<int> get id => $composableBuilder(
+      column: $table.id, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<double> get splitRatio => $composableBuilder(
+      column: $table.splitRatio, builder: (column) => ColumnOrderings(column));
+
+  $$PersonsTableOrderingComposer get person_id {
+    final $$PersonsTableOrderingComposer composer = $composerBuilder(
+        composer: this,
+        getCurrentColumn: (t) => t.person_id,
+        referencedTable: $db.persons,
+        getReferencedColumn: (t) => t.id,
+        builder: (joinBuilder,
+                {$addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer}) =>
+            $$PersonsTableOrderingComposer(
+              $db: $db,
+              $table: $db.persons,
+              $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+              joinBuilder: joinBuilder,
+              $removeJoinBuilderFromRootComposer:
+                  $removeJoinBuilderFromRootComposer,
+            ));
+    return composer;
+  }
+
+  $$ItemsTableOrderingComposer get item_id {
+    final $$ItemsTableOrderingComposer composer = $composerBuilder(
+        composer: this,
+        getCurrentColumn: (t) => t.item_id,
+        referencedTable: $db.items,
+        getReferencedColumn: (t) => t.id,
+        builder: (joinBuilder,
+                {$addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer}) =>
+            $$ItemsTableOrderingComposer(
+              $db: $db,
+              $table: $db.items,
+              $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+              joinBuilder: joinBuilder,
+              $removeJoinBuilderFromRootComposer:
+                  $removeJoinBuilderFromRootComposer,
+            ));
+    return composer;
+  }
+}
+
+class $$PersonItemsTableAnnotationComposer
+    extends Composer<_$AuthDatabase, $PersonItemsTable> {
+  $$PersonItemsTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<int> get id =>
+      $composableBuilder(column: $table.id, builder: (column) => column);
+
+  GeneratedColumn<double> get splitRatio => $composableBuilder(
+      column: $table.splitRatio, builder: (column) => column);
+
+  $$PersonsTableAnnotationComposer get person_id {
+    final $$PersonsTableAnnotationComposer composer = $composerBuilder(
+        composer: this,
+        getCurrentColumn: (t) => t.person_id,
+        referencedTable: $db.persons,
+        getReferencedColumn: (t) => t.id,
+        builder: (joinBuilder,
+                {$addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer}) =>
+            $$PersonsTableAnnotationComposer(
+              $db: $db,
+              $table: $db.persons,
+              $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+              joinBuilder: joinBuilder,
+              $removeJoinBuilderFromRootComposer:
+                  $removeJoinBuilderFromRootComposer,
+            ));
+    return composer;
+  }
+
+  $$ItemsTableAnnotationComposer get item_id {
+    final $$ItemsTableAnnotationComposer composer = $composerBuilder(
+        composer: this,
+        getCurrentColumn: (t) => t.item_id,
+        referencedTable: $db.items,
+        getReferencedColumn: (t) => t.id,
+        builder: (joinBuilder,
+                {$addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer}) =>
+            $$ItemsTableAnnotationComposer(
+              $db: $db,
+              $table: $db.items,
+              $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+              joinBuilder: joinBuilder,
+              $removeJoinBuilderFromRootComposer:
+                  $removeJoinBuilderFromRootComposer,
+            ));
+    return composer;
+  }
+}
+
+class $$PersonItemsTableTableManager extends RootTableManager<
+    _$AuthDatabase,
+    $PersonItemsTable,
+    PersonItem,
+    $$PersonItemsTableFilterComposer,
+    $$PersonItemsTableOrderingComposer,
+    $$PersonItemsTableAnnotationComposer,
+    $$PersonItemsTableCreateCompanionBuilder,
+    $$PersonItemsTableUpdateCompanionBuilder,
+    (PersonItem, $$PersonItemsTableReferences),
+    PersonItem,
+    PrefetchHooks Function({bool person_id, bool item_id})> {
+  $$PersonItemsTableTableManager(_$AuthDatabase db, $PersonItemsTable table)
+      : super(TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$PersonItemsTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$PersonItemsTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$PersonItemsTableAnnotationComposer($db: db, $table: table),
+          updateCompanionCallback: ({
+            Value<int> id = const Value.absent(),
+            Value<int> person_id = const Value.absent(),
+            Value<int> item_id = const Value.absent(),
+            Value<double> splitRatio = const Value.absent(),
+          }) =>
+              PersonItemsCompanion(
+            id: id,
+            person_id: person_id,
+            item_id: item_id,
+            splitRatio: splitRatio,
+          ),
+          createCompanionCallback: ({
+            Value<int> id = const Value.absent(),
+            required int person_id,
+            required int item_id,
+            required double splitRatio,
+          }) =>
+              PersonItemsCompanion.insert(
+            id: id,
+            person_id: person_id,
+            item_id: item_id,
+            splitRatio: splitRatio,
+          ),
+          withReferenceMapper: (p0) => p0
+              .map((e) => (
+                    e.readTable(table),
+                    $$PersonItemsTableReferences(db, table, e)
+                  ))
+              .toList(),
+          prefetchHooksCallback: ({person_id = false, item_id = false}) {
+            return PrefetchHooks(
+              db: db,
+              explicitlyWatchedTables: [],
+              addJoins: <
+                  T extends TableManagerState<
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic>>(state) {
+                if (person_id) {
+                  state = state.withJoin(
+                    currentTable: table,
+                    currentColumn: table.person_id,
+                    referencedTable:
+                        $$PersonItemsTableReferences._person_idTable(db),
+                    referencedColumn:
+                        $$PersonItemsTableReferences._person_idTable(db).id,
+                  ) as T;
+                }
+                if (item_id) {
+                  state = state.withJoin(
+                    currentTable: table,
+                    currentColumn: table.item_id,
+                    referencedTable:
+                        $$PersonItemsTableReferences._item_idTable(db),
+                    referencedColumn:
+                        $$PersonItemsTableReferences._item_idTable(db).id,
+                  ) as T;
+                }
+
+                return state;
+              },
+              getPrefetchedDataCallback: (items) async {
+                return [];
+              },
+            );
+          },
+        ));
+}
+
+typedef $$PersonItemsTableProcessedTableManager = ProcessedTableManager<
+    _$AuthDatabase,
+    $PersonItemsTable,
+    PersonItem,
+    $$PersonItemsTableFilterComposer,
+    $$PersonItemsTableOrderingComposer,
+    $$PersonItemsTableAnnotationComposer,
+    $$PersonItemsTableCreateCompanionBuilder,
+    $$PersonItemsTableUpdateCompanionBuilder,
+    (PersonItem, $$PersonItemsTableReferences),
+    PersonItem,
+    PrefetchHooks Function({bool person_id, bool item_id})>;
 
 class $AuthDatabaseManager {
   final _$AuthDatabase _db;
@@ -3939,4 +6262,10 @@ class $AuthDatabaseManager {
       $$EventsTableTableManager(_db, _db.events);
   $$ImagesTableTableManager get images =>
       $$ImagesTableTableManager(_db, _db.images);
+  $$TicketsTableTableManager get tickets =>
+      $$TicketsTableTableManager(_db, _db.tickets);
+  $$ItemsTableTableManager get items =>
+      $$ItemsTableTableManager(_db, _db.items);
+  $$PersonItemsTableTableManager get personItems =>
+      $$PersonItemsTableTableManager(_db, _db.personItems);
 }

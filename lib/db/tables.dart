@@ -1,3 +1,5 @@
+// ignore_for_file: non_constant_identifier_names
+
 import 'package:drift/drift.dart';
 
 class Users extends Table {
@@ -51,16 +53,14 @@ class Images extends Table {
 }
 
 class Tickets extends Table {
-  /**
-   * id
-   * event_id
-   * tip
-   * tipType - to know if dollar or percentage
-   * taxes
-   * taxType - to know if dollar or percentage
-   * subtotal - total of just items
-   * total - total of everything: items, tax, and tip
-   */
+  /// id
+  /// event_id
+  /// tip
+  /// tipType - to know if dollar or percentage
+  /// taxes
+  /// taxType - to know if dollar or percentage
+  /// subtotal - total of just items
+  /// total - total of everything: items, tax, and tip
   IntColumn get id => integer().autoIncrement()();
   IntColumn get event_id => integer().references(Events, #id)();
   RealColumn get tipInDollars => real().withDefault(const Constant(0.00))();
@@ -74,13 +74,11 @@ class Tickets extends Table {
 }
 
 class Items extends Table {
-  /**
-   * id
-   * ticket_id
-   * name
-   * amount
-   * currency
-   */
+  /// id
+  /// ticket_id
+  /// name
+  /// amount
+  /// currency
   IntColumn get id => integer().autoIncrement()();
   IntColumn get ticket_id => integer().references(Tickets, #id)();
   TextColumn get name => text()();
@@ -89,12 +87,10 @@ class Items extends Table {
 }
 
 class PersonItems extends Table {
-  /**
-   * id
-   * person_id
-   * item_id
-   * splitRatio - tells how much to split the item amount for what that person owes
-   */
+  /// id
+  /// person_id
+  /// item_id
+  /// splitRatio - tells how much to split the item amount for what that person owes
   IntColumn get id => integer().autoIncrement()();
   IntColumn get person_id => integer().references(Persons, #id)();
   IntColumn get item_id => integer().references(Items, #id)();

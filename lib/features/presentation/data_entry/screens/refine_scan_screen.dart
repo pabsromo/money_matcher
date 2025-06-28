@@ -148,12 +148,12 @@ class _RefineScanScreenState extends State<RefineScanScreen> {
     final List<File> selectedImages = [];
 
     for (var image in storedImages) {
-      print('Loading image path: ${image.imagePath}');
+      // print('Loading image path: ${image.imagePath}');
       final file = File(image.imagePath);
       if (await file.exists()) {
         selectedImages.add(file);
       } else {
-        print('⚠️ File does not exist: ${image.imagePath}');
+        // print('⚠️ File does not exist: ${image.imagePath}');
       }
     }
 
@@ -183,7 +183,6 @@ class _RefineScanScreenState extends State<RefineScanScreen> {
             for (final block in recognizedText.blocks) {
               for (final line in block.lines) {
                 final rect = line.boundingBox;
-                if (rect == null) continue;
 
                 // Bucket top coordinate into 10-pixel bands to group lines roughly on same horizontal level
                 final bucket = (rect.top / 60).round();
@@ -332,8 +331,8 @@ class _RefineScanScreenState extends State<RefineScanScreen> {
     //        prompts them asking if they want to auto calculate subtotal, tax, tip, and total
     final subtotal = await _calculateSubtotal(currItems);
     double tip = currTicket!.tipInDollars;
-    if (currTicket!.tipType == 'percent') {
-      tip = await _calculateTip(subtotal, currTicket!.tipInPercent);
+    if (currTicket.tipType == 'percent') {
+      tip = await _calculateTip(subtotal, currTicket.tipInPercent);
     }
     final total = await _calculateTotal(subtotal, currTicket.taxes, tip);
 
@@ -438,7 +437,7 @@ class _RefineScanScreenState extends State<RefineScanScreen> {
           if (!mounted) return;
           final newAmt = _subtotalAmtController.doubleValue;
           if (newAmt != null) {
-            await _ticketsDao.updateSubtotal(_currTicket!.id, newAmt!);
+            await _ticketsDao.updateSubtotal(_currTicket!.id, newAmt);
             await _loadData();
             _updateControllerValues();
           }
@@ -452,7 +451,7 @@ class _RefineScanScreenState extends State<RefineScanScreen> {
           if (!mounted) return;
           final newAmt = _taxAmtController.doubleValue;
           if (newAmt != null) {
-            await _ticketsDao.updateTax(_currTicket!.id, newAmt!);
+            await _ticketsDao.updateTax(_currTicket!.id, newAmt);
             await _loadData();
             _updateControllerValues();
           }
@@ -471,7 +470,7 @@ class _RefineScanScreenState extends State<RefineScanScreen> {
               await _loadData();
               await _updateControllerValues();
             } else {
-              await _ticketsDao.updateTipInDollars(_currTicket!.id, newAmt!);
+              await _ticketsDao.updateTipInDollars(_currTicket!.id, newAmt);
               await _loadData();
               await _updateControllerValues();
             }
@@ -486,7 +485,7 @@ class _RefineScanScreenState extends State<RefineScanScreen> {
           if (!mounted) return;
           final newAmt = _totalAmtController.doubleValue;
           if (newAmt != null) {
-            await _ticketsDao.updateTotal(_currTicket!.id, newAmt!);
+            await _ticketsDao.updateTotal(_currTicket!.id, newAmt);
             await _loadData();
             _updateControllerValues();
           }

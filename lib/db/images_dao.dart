@@ -9,9 +9,9 @@ class ImagesDao extends DatabaseAccessor<AuthDatabase> with _$ImagesDaoMixin {
   ImagesDao(super.db);
 
   // Create
-  Future<int> createImage(String imagePath, int event_id) {
-    return into(images).insert(ImagesCompanion(
-        imagePath: Value(imagePath), event_id: Value(event_id)));
+  Future<int> createImage(String imagePath, int eventId) {
+    return into(images).insert(
+        ImagesCompanion(imagePath: Value(imagePath), event_id: Value(eventId)));
   }
 
   // Read

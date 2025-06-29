@@ -40,6 +40,7 @@ class _ItemResponsibilityScreenState extends State<ItemResponsibilityScreen> {
   late List<Item?> _currItems;
   Group? _chosenGroup;
   late List<Person?> _groupPersons;
+  final Set<int> _activePersonIds = {};
 
   late TicketsDao _ticketsDao;
   late ItemsDao _itemsDao;
@@ -148,7 +149,74 @@ class _ItemResponsibilityScreenState extends State<ItemResponsibilityScreen> {
           ),
         ],
       ),
-      body: Container(),
+      body: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Expanded(
+              flex: 3,
+              child: SingleChildScrollView(
+                  padding: const EdgeInsets.all(8),
+                  child: Column(
+                      // children: List.generate(),
+                      ))),
+          Container(
+              width: 70,
+              child: Column(
+                children: List.generate(_groupPersons.length, (index) {
+                  return Padding(
+                      padding: const EdgeInsets.only(right: 8.0),
+                      child: GestureDetector(
+                          onTap: () {
+                            setState(() {
+                              final personId = _groupPersons[index]!.id;
+                              if (_activePersonIds.contains(personId)) {
+                                _activePersonIds.remove(personId);
+                              } else {
+                                _activePersonIds.add(personId);
+                              }
+                            });
+                          },
+                          child: CircleAvatar(
+                              radius: 24,
+                              backgroundColor: _activePersonIds
+                                      .contains(_groupPersons[index]!.id)
+                                  ? Colors.blueAccent
+                                  : null,
+                              child: Text(_groupPersons[index]!.nickName))));
+                }),
+              ))
+        ],
+      ),
+      bottomNavigationBar: BottomNavigationBar(
+          backgroundColor: Colors.white,
+          elevation: 10,
+          selectedItemColor: Colors.green,
+          unselectedItemColor: Colors.blueAccent,
+          selectedFontSize: 14,
+          unselectedFontSize: 14,
+          items: const [
+            BottomNavigationBarItem(
+                icon: Icon(Icons.group), label: 'Change Group'),
+            BottomNavigationBarItem(
+                icon: Icon(Icons.edit), label: 'Edit Items'),
+            BottomNavigationBarItem(icon: Icon(Icons.check), label: 'Done')
+          ],
+          onTap: (index) {
+            setState(() {
+              switch (index) {
+                case 0:
+                  // change group
+                  break;
+                case 1:
+                  // edit items
+                  break;
+                case 2:
+                  // done
+                  break;
+                default:
+              }
+            });
+          }),
     );
   }
 }

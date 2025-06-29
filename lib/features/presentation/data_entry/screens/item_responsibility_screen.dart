@@ -37,7 +37,8 @@ class _ItemResponsibilityScreenState extends State<ItemResponsibilityScreen> {
   static final List<MenuEntry> menuEntries = UnmodifiableListView<MenuEntry>(
     list.map<MenuEntry>((String name) => MenuEntry(value: name, label: name)),
   );
-  String dropdownValue = list.first;
+  late Person _dropdownValue;
+  bool _everythingLoaded = false;
 
   Ticket? _currTicket;
   late List<Item?> _currItems;
@@ -78,6 +79,10 @@ class _ItemResponsibilityScreenState extends State<ItemResponsibilityScreen> {
     if (!mounted) return;
 
     await _loadData();
+
+    setState(() {
+      _everythingLoaded = true;
+    });
   }
 
   Future<void> _initializeData() async {
@@ -96,6 +101,8 @@ class _ItemResponsibilityScreenState extends State<ItemResponsibilityScreen> {
     final chosenGroup = await _groupsDao.getChosenGroupByUserId(widget.userId);
     final groupPersons =
         await _groupPersonsDao.getPersonsByGroupId(chosenGroup!.id);
+
+    _dropdownValue = groupPersons.first;
 
     final Map<int, List<Person>> itemPersons = {};
     for (var item in currItems) {
@@ -122,6 +129,11 @@ class _ItemResponsibilityScreenState extends State<ItemResponsibilityScreen> {
 
   @override
   Widget build(BuildContext context) {
+    if (!_everythingLoaded) {
+      return const Scaffold(
+        body: Center(child: CircularProgressIndicator()),
+      );
+    }
     return Scaffold(
       key: const Key('itemResponsibilitiesScreen'),
       appBar: AppBar(
@@ -136,19 +148,33 @@ class _ItemResponsibilityScreenState extends State<ItemResponsibilityScreen> {
                     style:
                         TextStyle(fontSize: 14, fontWeight: FontWeight.bold)),
                 DropdownButton<String>(
-                  value: dropdownValue,
-                  onChanged: (String? newValue) {
+                  value: _dropdownValue.nickName,
+                  onChanged: (String? newValue) async {
                     if (newValue != null) {
+                      final nonNullPersons =
+                          _groupPersons.whereType<Person>().toList();
+
+                      if (nonNullPersons.isEmpty) return;
+
+                      final newPerson = nonNullPersons.firstWhere(
+                        (p) => p.nickName == newValue,
+                        orElse: () => nonNullPersons.first,
+                      );
+
+                      await _ticketsDao.updatePrimaryPayer(
+                          widget.ticketId, newPerson.id);
+
                       setState(() {
-                        dropdownValue = newValue;
+                        _dropdownValue = newPerson;
                       });
                     }
                   },
-                  items: list.map<DropdownMenuItem<String>>((String value) {
+                  items: _groupPersons
+                      .map<DropdownMenuItem<String>>((Person? person) {
                     return DropdownMenuItem<String>(
-                      value: value,
+                      value: person!.nickName,
                       child: Text(
-                        value,
+                        person.nickName,
                         style: const TextStyle(fontSize: 12),
                       ),
                     );

@@ -21,13 +21,12 @@ class GroupsDao extends DatabaseAccessor<AuthDatabase> with _$GroupsDaoMixin {
     return (select(groups)..where((g) => g.user_id.equals(userId))).get();
   }
 
-  Future<int?> getChosenGroupByUserId(int userId) async {
-    final query = select(groups)
-      ..where((g) => g.user_id.equals(userId) & g.isChosenGroup.equals(true))
-      ..limit(1);
-
-    final result = await query.getSingleOrNull();
-    return result?.id;
+  Future<Group?> getChosenGroupByUserId(int userId) async {
+    return (select(groups)
+          ..where(
+              (g) => g.user_id.equals(userId) & g.isChosenGroup.equals(true))
+          ..limit(1))
+        .getSingleOrNull();
   }
 
   // Update

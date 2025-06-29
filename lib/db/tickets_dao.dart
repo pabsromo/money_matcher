@@ -12,6 +12,7 @@ class TicketsDao extends DatabaseAccessor<AuthDatabase> with _$TicketsDaoMixin {
   Future<int?> createEmptyTicket(int eventId) {
     return into(tickets).insert(TicketsCompanion(
       event_id: Value(eventId),
+      primary_payer_id: const Value.absent(),
       tipInDollars: const Value.absent(),
       tipInPercent: const Value.absent(),
       tipType: const Value.absent(),
@@ -33,6 +34,11 @@ class TicketsDao extends DatabaseAccessor<AuthDatabase> with _$TicketsDaoMixin {
   }
 
   // Update
+  Future<int> updatePrimaryPayer(int id, int person_id) {
+    return (update(tickets)..where((t) => t.id.equals(id)))
+        .write(TicketsCompanion(primary_payer_id: Value(person_id)));
+  }
+
   Future<int> updateSubtotal(int id, double amt) {
     return (update(tickets)..where((t) => t.id.equals(id)))
         .write(TicketsCompanion(subtotal: Value(amt)));

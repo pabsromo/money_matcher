@@ -54,15 +54,20 @@ class Images extends Table {
 
 class Tickets extends Table {
   /// id
-  /// event_id
-  /// tip
-  /// tipType - to know if dollar or percentage
-  /// taxes
-  /// taxType - to know if dollar or percentage
+  /// event_id - fk to event in Events table
+  /// paid_by_person_id - fk to Person table to know who paid ticket
+  /// tipInDollars - tip amt in dollars
+  /// tipInPercent - tip percentage to use
+  /// tipType - to know if dollar or percent
+  /// taxes - dollar amt of taxes
+  /// taxType - not really necessary anymore, might be used later
   /// subtotal - total of just items
   /// total - total of everything: items, tax, and tip
+  /// isScanned - toggle to know if ticket images have been scanned yet
   IntColumn get id => integer().autoIncrement()();
   IntColumn get event_id => integer().references(Events, #id)();
+  IntColumn get primary_payer_id =>
+      integer().withDefault(const Constant(0)).references(Persons, #id)();
   RealColumn get tipInDollars => real().withDefault(const Constant(0.00))();
   RealColumn get tipInPercent => real().withDefault(const Constant(0.00))();
   TextColumn get tipType => text().withDefault(const Constant('percent'))();

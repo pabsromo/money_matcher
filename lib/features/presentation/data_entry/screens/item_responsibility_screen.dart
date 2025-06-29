@@ -1,5 +1,14 @@
+import 'dart:collection';
+
 import 'package:flutter/material.dart';
 import 'package:money_matcher/db/auth_database.dart';
+import 'package:money_matcher/db/events_dao.dart';
+import 'package:money_matcher/db/group_persons_dao.dart';
+import 'package:money_matcher/db/groups_dao.dart';
+import 'package:money_matcher/db/items_dao.dart';
+import 'package:money_matcher/db/tickets_dao.dart';
+
+const List<String> list = <String>['One', 'Two', 'Three', 'Four'];
 
 class ItemResponsibilityScreen extends StatefulWidget {
   final AuthDatabase db;
@@ -19,12 +28,125 @@ class ItemResponsibilityScreen extends StatefulWidget {
       _ItemResponsibilityScreenState();
 }
 
+typedef MenuEntry = DropdownMenuEntry<String>;
+
 class _ItemResponsibilityScreenState extends State<ItemResponsibilityScreen> {
+  static final List<MenuEntry> menuEntries = UnmodifiableListView<MenuEntry>(
+    list.map<MenuEntry>((String name) => MenuEntry(value: name, label: name)),
+  );
+  String dropdownValue = list.first;
+
+  Ticket? _currTicket;
+  late List<Item?> _currItems;
+  Group? _chosenGroup;
+  late List<Person?> _groupPersons;
+
+  late TicketsDao _ticketsDao;
+  late ItemsDao _itemsDao;
+  late EventsDao _eventsDao;
+  late GroupsDao _groupsDao;
+  late GroupPersonsDao _groupPersonsDao;
+
+  @override
+  void initState() {
+    super.initState();
+    _ticketsDao = TicketsDao(widget.db);
+    _itemsDao = ItemsDao(widget.db);
+    _eventsDao = EventsDao(widget.db);
+    _groupsDao = GroupsDao(widget.db);
+    _groupPersonsDao = GroupPersonsDao(widget.db);
+
+    _initAsync();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+  }
+
+  Future<void> _initAsync() async {
+    await _initializeData();
+    if (!mounted) return;
+
+    await _loadData();
+  }
+
+  Future<void> _initializeData() async {
+    final tempTicket = await _ticketsDao.getTicketById(widget.ticketId);
+
+    setState(
+      () {
+        _currTicket = tempTicket;
+      },
+    );
+  }
+
+  Future<void> _loadData() async {
+    final currItems = await _itemsDao.getItemsByTicketId(widget.ticketId);
+    // final currEvent = await _eventsDao.getEventById(widget.eventId);
+    final chosenGroup = await _groupsDao.getChosenGroupByUserId(widget.userId);
+    final groupPersons =
+        await _groupPersonsDao.getPersonsByGroupId(chosenGroup!.id);
+
+    print('------------------------------------------------------------------');
+    print('CURRENT ITEMS::');
+    print(currItems);
+    print('------------------------------------------------------------------');
+    print('CHOSEN GROUP::');
+    print(chosenGroup);
+    print('------------------------------------------------------------------');
+    print('GROUP PERSONS::');
+    print(groupPersons);
+
+    setState(() {
+      _currItems = currItems;
+      _chosenGroup = chosenGroup;
+      _groupPersons = groupPersons;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: const Key('itemResponsibilitiesScreen'),
       appBar: AppBar(
-        title: const Text('Item Responsibilies'),
+        title: const Text('Responsibilities'),
+        actions: [
+          Padding(
+            padding: const EdgeInsets.only(right: 8.0),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const Text('Paid By',
+                    style:
+                        TextStyle(fontSize: 14, fontWeight: FontWeight.bold)),
+                DropdownButton<String>(
+                  value: dropdownValue,
+                  onChanged: (String? newValue) {
+                    if (newValue != null) {
+                      setState(() {
+                        dropdownValue = newValue;
+                      });
+                    }
+                  },
+                  items: list.map<DropdownMenuItem<String>>((String value) {
+                    return DropdownMenuItem<String>(
+                      value: value,
+                      child: Text(
+                        value,
+                        style: const TextStyle(fontSize: 12),
+                      ),
+                    );
+                  }).toList(),
+                  underline: Container(), // removes default underline
+                  isDense: true,
+                  style: const TextStyle(color: Colors.black),
+                  dropdownColor: Colors.white,
+                ),
+              ],
+            ),
+          ),
+        ],
       ),
       body: Container(),
     );

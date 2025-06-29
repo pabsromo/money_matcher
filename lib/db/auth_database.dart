@@ -10,12 +10,32 @@ import 'groups_dao.dart';
 import 'persons_dao.dart';
 import 'events_dao.dart';
 import 'images_dao.dart';
+import 'tickets_dao.dart';
+import 'items_dao.dart';
+import 'person_items_dao.dart';
 
 part 'auth_database.g.dart';
 
-@DriftDatabase(
-    tables: [Users, Groups, Persons, GroupPersons, Events, Images],
-    daos: [UsersDao, PersonsDao, GroupsDao, EventsDao, ImagesDao])
+@DriftDatabase(tables: [
+  Users,
+  Groups,
+  Persons,
+  GroupPersons,
+  Events,
+  Images,
+  Tickets,
+  Items,
+  PersonItems
+], daos: [
+  UsersDao,
+  PersonsDao,
+  GroupsDao,
+  EventsDao,
+  ImagesDao,
+  TicketsDao,
+  ItemsDao,
+  PersonItemsDao
+])
 class AuthDatabase extends _$AuthDatabase {
   AuthDatabase() : super(_openConnection());
 

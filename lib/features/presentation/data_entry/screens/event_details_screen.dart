@@ -3,6 +3,7 @@ import 'package:intl/intl.dart';
 import 'package:money_matcher/db/events_dao.dart';
 import 'package:money_matcher/db/groups_dao.dart';
 import 'package:money_matcher/db/persons_dao.dart';
+import 'package:money_matcher/db/tickets_dao.dart';
 import 'package:money_matcher/features/presentation/data_entry/screens/scanning_screen.dart';
 import 'package:money_matcher/features/presentation/edit/screens/groups_screen.dart';
 import '../../../../db/auth_database.dart';
@@ -27,10 +28,12 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
   // final _eventTimeCtrl = TextEditingController();
 
   Event? _currEvent;
+  Ticket? _currTicket;
 
   late GroupsDao _groupsDao;
   late PersonsDao _personsDao;
   late EventsDao _eventsDao;
+  late TicketsDao _ticketsDao;
 
   // ignore: unused_field
   bool _isLoading = true;
@@ -43,6 +46,7 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
     _groupsDao = GroupsDao(widget.db);
     _personsDao = PersonsDao(widget.db);
     _eventsDao = EventsDao(widget.db);
+    _ticketsDao = TicketsDao(widget.db);
     _initializeData();
   }
 
@@ -52,6 +56,7 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
     await _loadChosenGroup();
 
     Event? currEvent;
+    Ticket? currTicket;
 
     // find event that has isEditing if possible for user
     currEvent = await _eventsDao.getEditingEventByUserId(widget.userId);
@@ -63,10 +68,19 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
       currEvent = await _eventsDao.getEventById(currEventId);
     }
 
+    // find ticket associated with event
+    currTicket = await _ticketsDao.getTicketByEventId(currEvent!.id);
+
+    if (currTicket == null) {
+      final currTicketId = await _ticketsDao.createEmptyTicket(currEvent.id);
+      currTicket = await _ticketsDao.getTicketById(currTicketId!);
+    }
+
     setState(() {
       _isLoading = false;
       _errorText = null;
       _currEvent = currEvent;
+      _currTicket = currTicket;
       _eventNameCtrl.text = _currEvent!.eventName;
       _eventLocationCtrl.text = _currEvent!.location;
       _selectedDate = _currEvent!.date;
@@ -123,7 +137,10 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
           context,
           MaterialPageRoute(
             builder: (_) => ScanningScreen(
-                db: widget.db, userId: widget.userId, eventId: _currEvent!.id),
+                db: widget.db,
+                userId: widget.userId,
+                eventId: _currEvent!.id,
+                ticketId: _currTicket!.id),
           ),
         );
       }

@@ -9,10 +9,10 @@ class GroupsDao extends DatabaseAccessor<AuthDatabase> with _$GroupsDaoMixin {
   GroupsDao(super.db);
 
   // Create
-  Future<int> createGroup(String? groupName, int? user_id) {
+  Future<int> createGroup(String? groupName, int? userId) {
     return into(groups).insert(GroupsCompanion(
       groupName: groupName != null ? Value(groupName) : const Value.absent(),
-      user_id: user_id != null ? Value(user_id) : const Value.absent(),
+      user_id: userId != null ? Value(userId) : const Value.absent(),
     ));
   }
 

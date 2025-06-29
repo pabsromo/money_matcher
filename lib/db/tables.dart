@@ -91,7 +91,7 @@ class Items extends Table {
   TextColumn get currency => text().withDefault(const Constant('USD'))();
 }
 
-class PersonItems extends Table {
+class ItemPersons extends Table {
   /// id
   /// person_id
   /// item_id

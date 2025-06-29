@@ -1,11 +1,14 @@
 import 'dart:collection';
 
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:money_matcher/db/auth_database.dart';
 import 'package:money_matcher/db/events_dao.dart';
 import 'package:money_matcher/db/group_persons_dao.dart';
 import 'package:money_matcher/db/groups_dao.dart';
 import 'package:money_matcher/db/items_dao.dart';
+import 'package:money_matcher/db/item_persons_dao.dart';
+import 'package:money_matcher/db/persons_dao.dart';
 import 'package:money_matcher/db/tickets_dao.dart';
 
 const List<String> list = <String>['One', 'Two', 'Three', 'Four'];
@@ -40,13 +43,16 @@ class _ItemResponsibilityScreenState extends State<ItemResponsibilityScreen> {
   late List<Item?> _currItems;
   Group? _chosenGroup;
   late List<Person?> _groupPersons;
+  Map<int, List<Person>>? _itemPersons;
   final Set<int> _activePersonIds = {};
 
   late TicketsDao _ticketsDao;
   late ItemsDao _itemsDao;
   late EventsDao _eventsDao;
+  late PersonsDao _personsDao;
   late GroupsDao _groupsDao;
   late GroupPersonsDao _groupPersonsDao;
+  late ItemPersonsDao _itemPersonsDao;
 
   @override
   void initState() {
@@ -54,8 +60,10 @@ class _ItemResponsibilityScreenState extends State<ItemResponsibilityScreen> {
     _ticketsDao = TicketsDao(widget.db);
     _itemsDao = ItemsDao(widget.db);
     _eventsDao = EventsDao(widget.db);
+    _personsDao = PersonsDao(widget.db);
     _groupsDao = GroupsDao(widget.db);
     _groupPersonsDao = GroupPersonsDao(widget.db);
+    _itemPersonsDao = ItemPersonsDao(widget.db);
 
     _initAsync();
   }
@@ -89,6 +97,11 @@ class _ItemResponsibilityScreenState extends State<ItemResponsibilityScreen> {
     final groupPersons =
         await _groupPersonsDao.getPersonsByGroupId(chosenGroup!.id);
 
+    final Map<int, List<Person>> itemPersons = {};
+    for (var item in currItems) {
+      itemPersons[item.id] = await _itemPersonsDao.getPersonsByItemId(item.id);
+    }
+
     print('------------------------------------------------------------------');
     print('CURRENT ITEMS::');
     print(currItems);
@@ -103,6 +116,7 @@ class _ItemResponsibilityScreenState extends State<ItemResponsibilityScreen> {
       _currItems = currItems;
       _chosenGroup = chosenGroup;
       _groupPersons = groupPersons;
+      _itemPersons = itemPersons;
     });
   }
 
@@ -157,8 +171,98 @@ class _ItemResponsibilityScreenState extends State<ItemResponsibilityScreen> {
               child: SingleChildScrollView(
                   padding: const EdgeInsets.all(8),
                   child: Column(
-                      // children: List.generate(),
-                      ))),
+                      children: List.generate(_currItems.length, (index) {
+                    return GestureDetector(
+                        onTap: () async {
+                          final itemId = _currItems[index]!.id;
+
+                          for (var personId in _activePersonIds) {
+                            await _itemPersonsDao.addPersonToItem(
+                                itemId, personId, 0.00);
+                          }
+
+                          final updatedPersons =
+                              await _itemPersonsDao.getPersonsByItemId(itemId);
+
+                          final defaultSplitRatio = 1 / updatedPersons.length;
+
+                          _itemPersonsDao.updateSplitRatiosByItemId(
+                              itemId, defaultSplitRatio);
+
+                          if (!mounted) return;
+                          setState(() {
+                            _itemPersons![itemId] = updatedPersons;
+                          });
+                        },
+                        child: Card(
+                            child: Column(
+                          children: [
+                            Row(
+                              children: [
+                                Text(_currItems[index]!.name),
+                                Text(_currItems[index]!
+                                    .amount
+                                    .toStringAsFixed(2)),
+                              ],
+                            ),
+                            Row(children: [
+                              Expanded(
+                                  flex: 1,
+                                  child: SingleChildScrollView(
+                                    child: _itemPersons![
+                                                    _currItems[index]!.id] !=
+                                                null &&
+                                            _itemPersons![
+                                                    _currItems[index]!.id]!
+                                                .isNotEmpty
+                                        ? Row(
+                                            children: _itemPersons![
+                                                    _currItems[index]!.id]!
+                                                .map((person) {
+                                            return GestureDetector(
+                                              onLongPress: () async {
+                                                final itemId =
+                                                    _currItems[index]!.id;
+                                                await _itemPersonsDao
+                                                    .removePersonFromItem(
+                                                        itemId, person.id);
+                                                final updatedPersons =
+                                                    await _itemPersonsDao
+                                                        .getPersonsByItemId(
+                                                            itemId);
+
+                                                if (!mounted) return;
+                                                setState(() {
+                                                  _itemPersons![itemId] =
+                                                      updatedPersons;
+                                                });
+
+                                                Fluttertoast.showToast(
+                                                  msg:
+                                                      '${person.nickName} removed from item.',
+                                                  toastLength:
+                                                      Toast.LENGTH_SHORT,
+                                                  gravity: ToastGravity.TOP,
+                                                  backgroundColor:
+                                                      Colors.black87,
+                                                  textColor: Colors.white,
+                                                  fontSize: 16.0,
+                                                );
+                                              },
+                                              child: Chip(
+                                                label: Text(person.nickName),
+                                              ),
+                                            );
+                                          }).toList())
+                                        : Text(
+                                            'Click person(s) then here to add'),
+                                  )),
+                              IconButton(
+                                  onPressed: () {}, icon: Icon(Icons.percent)),
+                            ]),
+                          ],
+                        )));
+                  })))),
           Container(
               width: 70,
               child: Column(

@@ -2631,12 +2631,12 @@ class ItemsCompanion extends UpdateCompanion<Item> {
   }
 }
 
-class $PersonItemsTable extends PersonItems
-    with TableInfo<$PersonItemsTable, PersonItem> {
+class $ItemPersonsTable extends ItemPersons
+    with TableInfo<$ItemPersonsTable, ItemPerson> {
   @override
   final GeneratedDatabase attachedDatabase;
   final String? _alias;
-  $PersonItemsTable(this.attachedDatabase, [this._alias]);
+  $ItemPersonsTable(this.attachedDatabase, [this._alias]);
   static const VerificationMeta _idMeta = const VerificationMeta('id');
   @override
   late final GeneratedColumn<int> id = GeneratedColumn<int>(
@@ -2676,9 +2676,9 @@ class $PersonItemsTable extends PersonItems
   String get aliasedName => _alias ?? actualTableName;
   @override
   String get actualTableName => $name;
-  static const String $name = 'person_items';
+  static const String $name = 'item_persons';
   @override
-  VerificationContext validateIntegrity(Insertable<PersonItem> instance,
+  VerificationContext validateIntegrity(Insertable<ItemPerson> instance,
       {bool isInserting = false}) {
     final context = VerificationContext();
     final data = instance.toColumns(true);
@@ -2711,9 +2711,9 @@ class $PersonItemsTable extends PersonItems
   @override
   Set<GeneratedColumn> get $primaryKey => {id};
   @override
-  PersonItem map(Map<String, dynamic> data, {String? tablePrefix}) {
+  ItemPerson map(Map<String, dynamic> data, {String? tablePrefix}) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
-    return PersonItem(
+    return ItemPerson(
       id: attachedDatabase.typeMapping
           .read(DriftSqlType.int, data['${effectivePrefix}id'])!,
       person_id: attachedDatabase.typeMapping
@@ -2726,12 +2726,12 @@ class $PersonItemsTable extends PersonItems
   }
 
   @override
-  $PersonItemsTable createAlias(String alias) {
-    return $PersonItemsTable(attachedDatabase, alias);
+  $ItemPersonsTable createAlias(String alias) {
+    return $ItemPersonsTable(attachedDatabase, alias);
   }
 }
 
-class PersonItem extends DataClass implements Insertable<PersonItem> {
+class ItemPerson extends DataClass implements Insertable<ItemPerson> {
   /// id
   /// person_id
   /// item_id
@@ -2740,7 +2740,7 @@ class PersonItem extends DataClass implements Insertable<PersonItem> {
   final int person_id;
   final int item_id;
   final double splitRatio;
-  const PersonItem(
+  const ItemPerson(
       {required this.id,
       required this.person_id,
       required this.item_id,
@@ -2755,8 +2755,8 @@ class PersonItem extends DataClass implements Insertable<PersonItem> {
     return map;
   }
 
-  PersonItemsCompanion toCompanion(bool nullToAbsent) {
-    return PersonItemsCompanion(
+  ItemPersonsCompanion toCompanion(bool nullToAbsent) {
+    return ItemPersonsCompanion(
       id: Value(id),
       person_id: Value(person_id),
       item_id: Value(item_id),
@@ -2764,10 +2764,10 @@ class PersonItem extends DataClass implements Insertable<PersonItem> {
     );
   }
 
-  factory PersonItem.fromJson(Map<String, dynamic> json,
+  factory ItemPerson.fromJson(Map<String, dynamic> json,
       {ValueSerializer? serializer}) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
-    return PersonItem(
+    return ItemPerson(
       id: serializer.fromJson<int>(json['id']),
       person_id: serializer.fromJson<int>(json['person_id']),
       item_id: serializer.fromJson<int>(json['item_id']),
@@ -2785,16 +2785,16 @@ class PersonItem extends DataClass implements Insertable<PersonItem> {
     };
   }
 
-  PersonItem copyWith(
+  ItemPerson copyWith(
           {int? id, int? person_id, int? item_id, double? splitRatio}) =>
-      PersonItem(
+      ItemPerson(
         id: id ?? this.id,
         person_id: person_id ?? this.person_id,
         item_id: item_id ?? this.item_id,
         splitRatio: splitRatio ?? this.splitRatio,
       );
-  PersonItem copyWithCompanion(PersonItemsCompanion data) {
-    return PersonItem(
+  ItemPerson copyWithCompanion(ItemPersonsCompanion data) {
+    return ItemPerson(
       id: data.id.present ? data.id.value : this.id,
       person_id: data.person_id.present ? data.person_id.value : this.person_id,
       item_id: data.item_id.present ? data.item_id.value : this.item_id,
@@ -2805,7 +2805,7 @@ class PersonItem extends DataClass implements Insertable<PersonItem> {
 
   @override
   String toString() {
-    return (StringBuffer('PersonItem(')
+    return (StringBuffer('ItemPerson(')
           ..write('id: $id, ')
           ..write('person_id: $person_id, ')
           ..write('item_id: $item_id, ')
@@ -2819,25 +2819,25 @@ class PersonItem extends DataClass implements Insertable<PersonItem> {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      (other is PersonItem &&
+      (other is ItemPerson &&
           other.id == this.id &&
           other.person_id == this.person_id &&
           other.item_id == this.item_id &&
           other.splitRatio == this.splitRatio);
 }
 
-class PersonItemsCompanion extends UpdateCompanion<PersonItem> {
+class ItemPersonsCompanion extends UpdateCompanion<ItemPerson> {
   final Value<int> id;
   final Value<int> person_id;
   final Value<int> item_id;
   final Value<double> splitRatio;
-  const PersonItemsCompanion({
+  const ItemPersonsCompanion({
     this.id = const Value.absent(),
     this.person_id = const Value.absent(),
     this.item_id = const Value.absent(),
     this.splitRatio = const Value.absent(),
   });
-  PersonItemsCompanion.insert({
+  ItemPersonsCompanion.insert({
     this.id = const Value.absent(),
     required int person_id,
     required int item_id,
@@ -2845,7 +2845,7 @@ class PersonItemsCompanion extends UpdateCompanion<PersonItem> {
   })  : person_id = Value(person_id),
         item_id = Value(item_id),
         splitRatio = Value(splitRatio);
-  static Insertable<PersonItem> custom({
+  static Insertable<ItemPerson> custom({
     Expression<int>? id,
     Expression<int>? person_id,
     Expression<int>? item_id,
@@ -2859,12 +2859,12 @@ class PersonItemsCompanion extends UpdateCompanion<PersonItem> {
     });
   }
 
-  PersonItemsCompanion copyWith(
+  ItemPersonsCompanion copyWith(
       {Value<int>? id,
       Value<int>? person_id,
       Value<int>? item_id,
       Value<double>? splitRatio}) {
-    return PersonItemsCompanion(
+    return ItemPersonsCompanion(
       id: id ?? this.id,
       person_id: person_id ?? this.person_id,
       item_id: item_id ?? this.item_id,
@@ -2892,7 +2892,7 @@ class PersonItemsCompanion extends UpdateCompanion<PersonItem> {
 
   @override
   String toString() {
-    return (StringBuffer('PersonItemsCompanion(')
+    return (StringBuffer('ItemPersonsCompanion(')
           ..write('id: $id, ')
           ..write('person_id: $person_id, ')
           ..write('item_id: $item_id, ')
@@ -2913,7 +2913,7 @@ abstract class _$AuthDatabase extends GeneratedDatabase {
   late final $ImagesTable images = $ImagesTable(this);
   late final $TicketsTable tickets = $TicketsTable(this);
   late final $ItemsTable items = $ItemsTable(this);
-  late final $PersonItemsTable personItems = $PersonItemsTable(this);
+  late final $ItemPersonsTable itemPersons = $ItemPersonsTable(this);
   late final UsersDao usersDao = UsersDao(this as AuthDatabase);
   late final PersonsDao personsDao = PersonsDao(this as AuthDatabase);
   late final GroupsDao groupsDao = GroupsDao(this as AuthDatabase);
@@ -2921,8 +2921,8 @@ abstract class _$AuthDatabase extends GeneratedDatabase {
   late final ImagesDao imagesDao = ImagesDao(this as AuthDatabase);
   late final TicketsDao ticketsDao = TicketsDao(this as AuthDatabase);
   late final ItemsDao itemsDao = ItemsDao(this as AuthDatabase);
-  late final PersonItemsDao personItemsDao =
-      PersonItemsDao(this as AuthDatabase);
+  late final ItemPersonsDao itemPersonsDao =
+      ItemPersonsDao(this as AuthDatabase);
   @override
   Iterable<TableInfo<Table, Object?>> get allTables =>
       allSchemaEntities.whereType<TableInfo<Table, Object?>>();
@@ -2936,7 +2936,7 @@ abstract class _$AuthDatabase extends GeneratedDatabase {
         images,
         tickets,
         items,
-        personItems
+        itemPersons
       ];
 }
 
@@ -3782,17 +3782,17 @@ final class $$PersonsTableReferences
         manager.$state.copyWith(prefetchedData: cache));
   }
 
-  static MultiTypedResultKey<$PersonItemsTable, List<PersonItem>>
-      _personItemsRefsTable(_$AuthDatabase db) => MultiTypedResultKey.fromTable(
-          db.personItems,
+  static MultiTypedResultKey<$ItemPersonsTable, List<ItemPerson>>
+      _itemPersonsRefsTable(_$AuthDatabase db) => MultiTypedResultKey.fromTable(
+          db.itemPersons,
           aliasName:
-              $_aliasNameGenerator(db.persons.id, db.personItems.person_id));
+              $_aliasNameGenerator(db.persons.id, db.itemPersons.person_id));
 
-  $$PersonItemsTableProcessedTableManager get personItemsRefs {
-    final manager = $$PersonItemsTableTableManager($_db, $_db.personItems)
+  $$ItemPersonsTableProcessedTableManager get itemPersonsRefs {
+    final manager = $$ItemPersonsTableTableManager($_db, $_db.itemPersons)
         .filter((f) => f.person_id.id.sqlEquals($_itemColumn<int>('id')!));
 
-    final cache = $_typedResult.readTableOrNull(_personItemsRefsTable($_db));
+    final cache = $_typedResult.readTableOrNull(_itemPersonsRefsTable($_db));
     return ProcessedTableManager(
         manager.$state.copyWith(prefetchedData: cache));
   }
@@ -3887,19 +3887,19 @@ class $$PersonsTableFilterComposer
     return f(composer);
   }
 
-  Expression<bool> personItemsRefs(
-      Expression<bool> Function($$PersonItemsTableFilterComposer f) f) {
-    final $$PersonItemsTableFilterComposer composer = $composerBuilder(
+  Expression<bool> itemPersonsRefs(
+      Expression<bool> Function($$ItemPersonsTableFilterComposer f) f) {
+    final $$ItemPersonsTableFilterComposer composer = $composerBuilder(
         composer: this,
         getCurrentColumn: (t) => t.id,
-        referencedTable: $db.personItems,
+        referencedTable: $db.itemPersons,
         getReferencedColumn: (t) => t.person_id,
         builder: (joinBuilder,
                 {$addJoinBuilderToRootComposer,
                 $removeJoinBuilderFromRootComposer}) =>
-            $$PersonItemsTableFilterComposer(
+            $$ItemPersonsTableFilterComposer(
               $db: $db,
-              $table: $db.personItems,
+              $table: $db.itemPersons,
               $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
               joinBuilder: joinBuilder,
               $removeJoinBuilderFromRootComposer:
@@ -4046,19 +4046,19 @@ class $$PersonsTableAnnotationComposer
     return f(composer);
   }
 
-  Expression<T> personItemsRefs<T extends Object>(
-      Expression<T> Function($$PersonItemsTableAnnotationComposer a) f) {
-    final $$PersonItemsTableAnnotationComposer composer = $composerBuilder(
+  Expression<T> itemPersonsRefs<T extends Object>(
+      Expression<T> Function($$ItemPersonsTableAnnotationComposer a) f) {
+    final $$ItemPersonsTableAnnotationComposer composer = $composerBuilder(
         composer: this,
         getCurrentColumn: (t) => t.id,
-        referencedTable: $db.personItems,
+        referencedTable: $db.itemPersons,
         getReferencedColumn: (t) => t.person_id,
         builder: (joinBuilder,
                 {$addJoinBuilderToRootComposer,
                 $removeJoinBuilderFromRootComposer}) =>
-            $$PersonItemsTableAnnotationComposer(
+            $$ItemPersonsTableAnnotationComposer(
               $db: $db,
-              $table: $db.personItems,
+              $table: $db.itemPersons,
               $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
               joinBuilder: joinBuilder,
               $removeJoinBuilderFromRootComposer:
@@ -4083,7 +4083,7 @@ class $$PersonsTableTableManager extends RootTableManager<
         {bool user_id,
         bool groupPersonsRefs,
         bool ticketsRefs,
-        bool personItemsRefs})> {
+        bool itemPersonsRefs})> {
   $$PersonsTableTableManager(_$AuthDatabase db, $PersonsTable table)
       : super(TableManagerState(
           db: db,
@@ -4138,13 +4138,13 @@ class $$PersonsTableTableManager extends RootTableManager<
               {user_id = false,
               groupPersonsRefs = false,
               ticketsRefs = false,
-              personItemsRefs = false}) {
+              itemPersonsRefs = false}) {
             return PrefetchHooks(
               db: db,
               explicitlyWatchedTables: [
                 if (groupPersonsRefs) db.groupPersons,
                 if (ticketsRefs) db.tickets,
-                if (personItemsRefs) db.personItems
+                if (itemPersonsRefs) db.itemPersons
               ],
               addJoins: <
                   T extends TableManagerState<
@@ -4197,15 +4197,15 @@ class $$PersonsTableTableManager extends RootTableManager<
                             (item, referencedItems) => referencedItems
                                 .where((e) => e.primary_payer_id == item.id),
                         typedResults: items),
-                  if (personItemsRefs)
+                  if (itemPersonsRefs)
                     await $_getPrefetchedData<Person, $PersonsTable,
-                            PersonItem>(
+                            ItemPerson>(
                         currentTable: table,
                         referencedTable:
-                            $$PersonsTableReferences._personItemsRefsTable(db),
+                            $$PersonsTableReferences._itemPersonsRefsTable(db),
                         managerFromTypedResult: (p0) =>
                             $$PersonsTableReferences(db, table, p0)
-                                .personItemsRefs,
+                                .itemPersonsRefs,
                         referencedItemsForCurrentItem:
                             (item, referencedItems) => referencedItems
                                 .where((e) => e.person_id == item.id),
@@ -4232,7 +4232,7 @@ typedef $$PersonsTableProcessedTableManager = ProcessedTableManager<
         {bool user_id,
         bool groupPersonsRefs,
         bool ticketsRefs,
-        bool personItemsRefs})>;
+        bool itemPersonsRefs})>;
 typedef $$GroupPersonsTableCreateCompanionBuilder = GroupPersonsCompanion
     Function({
   Value<int> id,
@@ -5828,16 +5828,16 @@ final class $$ItemsTableReferences
         manager.$state.copyWith(prefetchedData: [item]));
   }
 
-  static MultiTypedResultKey<$PersonItemsTable, List<PersonItem>>
-      _personItemsRefsTable(_$AuthDatabase db) => MultiTypedResultKey.fromTable(
-          db.personItems,
-          aliasName: $_aliasNameGenerator(db.items.id, db.personItems.item_id));
+  static MultiTypedResultKey<$ItemPersonsTable, List<ItemPerson>>
+      _itemPersonsRefsTable(_$AuthDatabase db) => MultiTypedResultKey.fromTable(
+          db.itemPersons,
+          aliasName: $_aliasNameGenerator(db.items.id, db.itemPersons.item_id));
 
-  $$PersonItemsTableProcessedTableManager get personItemsRefs {
-    final manager = $$PersonItemsTableTableManager($_db, $_db.personItems)
+  $$ItemPersonsTableProcessedTableManager get itemPersonsRefs {
+    final manager = $$ItemPersonsTableTableManager($_db, $_db.itemPersons)
         .filter((f) => f.item_id.id.sqlEquals($_itemColumn<int>('id')!));
 
-    final cache = $_typedResult.readTableOrNull(_personItemsRefsTable($_db));
+    final cache = $_typedResult.readTableOrNull(_itemPersonsRefsTable($_db));
     return ProcessedTableManager(
         manager.$state.copyWith(prefetchedData: cache));
   }
@@ -5883,19 +5883,19 @@ class $$ItemsTableFilterComposer extends Composer<_$AuthDatabase, $ItemsTable> {
     return composer;
   }
 
-  Expression<bool> personItemsRefs(
-      Expression<bool> Function($$PersonItemsTableFilterComposer f) f) {
-    final $$PersonItemsTableFilterComposer composer = $composerBuilder(
+  Expression<bool> itemPersonsRefs(
+      Expression<bool> Function($$ItemPersonsTableFilterComposer f) f) {
+    final $$ItemPersonsTableFilterComposer composer = $composerBuilder(
         composer: this,
         getCurrentColumn: (t) => t.id,
-        referencedTable: $db.personItems,
+        referencedTable: $db.itemPersons,
         getReferencedColumn: (t) => t.item_id,
         builder: (joinBuilder,
                 {$addJoinBuilderToRootComposer,
                 $removeJoinBuilderFromRootComposer}) =>
-            $$PersonItemsTableFilterComposer(
+            $$ItemPersonsTableFilterComposer(
               $db: $db,
-              $table: $db.personItems,
+              $table: $db.itemPersons,
               $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
               joinBuilder: joinBuilder,
               $removeJoinBuilderFromRootComposer:
@@ -5988,19 +5988,19 @@ class $$ItemsTableAnnotationComposer
     return composer;
   }
 
-  Expression<T> personItemsRefs<T extends Object>(
-      Expression<T> Function($$PersonItemsTableAnnotationComposer a) f) {
-    final $$PersonItemsTableAnnotationComposer composer = $composerBuilder(
+  Expression<T> itemPersonsRefs<T extends Object>(
+      Expression<T> Function($$ItemPersonsTableAnnotationComposer a) f) {
+    final $$ItemPersonsTableAnnotationComposer composer = $composerBuilder(
         composer: this,
         getCurrentColumn: (t) => t.id,
-        referencedTable: $db.personItems,
+        referencedTable: $db.itemPersons,
         getReferencedColumn: (t) => t.item_id,
         builder: (joinBuilder,
                 {$addJoinBuilderToRootComposer,
                 $removeJoinBuilderFromRootComposer}) =>
-            $$PersonItemsTableAnnotationComposer(
+            $$ItemPersonsTableAnnotationComposer(
               $db: $db,
-              $table: $db.personItems,
+              $table: $db.itemPersons,
               $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
               joinBuilder: joinBuilder,
               $removeJoinBuilderFromRootComposer:
@@ -6021,7 +6021,7 @@ class $$ItemsTableTableManager extends RootTableManager<
     $$ItemsTableUpdateCompanionBuilder,
     (Item, $$ItemsTableReferences),
     Item,
-    PrefetchHooks Function({bool ticket_id, bool personItemsRefs})> {
+    PrefetchHooks Function({bool ticket_id, bool itemPersonsRefs})> {
   $$ItemsTableTableManager(_$AuthDatabase db, $ItemsTable table)
       : super(TableManagerState(
           db: db,
@@ -6065,10 +6065,10 @@ class $$ItemsTableTableManager extends RootTableManager<
                   (e.readTable(table), $$ItemsTableReferences(db, table, e)))
               .toList(),
           prefetchHooksCallback: (
-              {ticket_id = false, personItemsRefs = false}) {
+              {ticket_id = false, itemPersonsRefs = false}) {
             return PrefetchHooks(
               db: db,
-              explicitlyWatchedTables: [if (personItemsRefs) db.personItems],
+              explicitlyWatchedTables: [if (itemPersonsRefs) db.itemPersons],
               addJoins: <
                   T extends TableManagerState<
                       dynamic,
@@ -6096,14 +6096,14 @@ class $$ItemsTableTableManager extends RootTableManager<
               },
               getPrefetchedDataCallback: (items) async {
                 return [
-                  if (personItemsRefs)
-                    await $_getPrefetchedData<Item, $ItemsTable, PersonItem>(
+                  if (itemPersonsRefs)
+                    await $_getPrefetchedData<Item, $ItemsTable, ItemPerson>(
                         currentTable: table,
                         referencedTable:
-                            $$ItemsTableReferences._personItemsRefsTable(db),
+                            $$ItemsTableReferences._itemPersonsRefsTable(db),
                         managerFromTypedResult: (p0) =>
                             $$ItemsTableReferences(db, table, p0)
-                                .personItemsRefs,
+                                .itemPersonsRefs,
                         referencedItemsForCurrentItem: (item,
                                 referencedItems) =>
                             referencedItems.where((e) => e.item_id == item.id),
@@ -6126,15 +6126,15 @@ typedef $$ItemsTableProcessedTableManager = ProcessedTableManager<
     $$ItemsTableUpdateCompanionBuilder,
     (Item, $$ItemsTableReferences),
     Item,
-    PrefetchHooks Function({bool ticket_id, bool personItemsRefs})>;
-typedef $$PersonItemsTableCreateCompanionBuilder = PersonItemsCompanion
+    PrefetchHooks Function({bool ticket_id, bool itemPersonsRefs})>;
+typedef $$ItemPersonsTableCreateCompanionBuilder = ItemPersonsCompanion
     Function({
   Value<int> id,
   required int person_id,
   required int item_id,
   required double splitRatio,
 });
-typedef $$PersonItemsTableUpdateCompanionBuilder = PersonItemsCompanion
+typedef $$ItemPersonsTableUpdateCompanionBuilder = ItemPersonsCompanion
     Function({
   Value<int> id,
   Value<int> person_id,
@@ -6142,13 +6142,13 @@ typedef $$PersonItemsTableUpdateCompanionBuilder = PersonItemsCompanion
   Value<double> splitRatio,
 });
 
-final class $$PersonItemsTableReferences
-    extends BaseReferences<_$AuthDatabase, $PersonItemsTable, PersonItem> {
-  $$PersonItemsTableReferences(super.$_db, super.$_table, super.$_typedResult);
+final class $$ItemPersonsTableReferences
+    extends BaseReferences<_$AuthDatabase, $ItemPersonsTable, ItemPerson> {
+  $$ItemPersonsTableReferences(super.$_db, super.$_table, super.$_typedResult);
 
   static $PersonsTable _person_idTable(_$AuthDatabase db) =>
       db.persons.createAlias(
-          $_aliasNameGenerator(db.personItems.person_id, db.persons.id));
+          $_aliasNameGenerator(db.itemPersons.person_id, db.persons.id));
 
   $$PersonsTableProcessedTableManager get person_id {
     final $_column = $_itemColumn<int>('person_id')!;
@@ -6162,7 +6162,7 @@ final class $$PersonItemsTableReferences
   }
 
   static $ItemsTable _item_idTable(_$AuthDatabase db) => db.items
-      .createAlias($_aliasNameGenerator(db.personItems.item_id, db.items.id));
+      .createAlias($_aliasNameGenerator(db.itemPersons.item_id, db.items.id));
 
   $$ItemsTableProcessedTableManager get item_id {
     final $_column = $_itemColumn<int>('item_id')!;
@@ -6176,9 +6176,9 @@ final class $$PersonItemsTableReferences
   }
 }
 
-class $$PersonItemsTableFilterComposer
-    extends Composer<_$AuthDatabase, $PersonItemsTable> {
-  $$PersonItemsTableFilterComposer({
+class $$ItemPersonsTableFilterComposer
+    extends Composer<_$AuthDatabase, $ItemPersonsTable> {
+  $$ItemPersonsTableFilterComposer({
     required super.$db,
     required super.$table,
     super.joinBuilder,
@@ -6232,9 +6232,9 @@ class $$PersonItemsTableFilterComposer
   }
 }
 
-class $$PersonItemsTableOrderingComposer
-    extends Composer<_$AuthDatabase, $PersonItemsTable> {
-  $$PersonItemsTableOrderingComposer({
+class $$ItemPersonsTableOrderingComposer
+    extends Composer<_$AuthDatabase, $ItemPersonsTable> {
+  $$ItemPersonsTableOrderingComposer({
     required super.$db,
     required super.$table,
     super.joinBuilder,
@@ -6288,9 +6288,9 @@ class $$PersonItemsTableOrderingComposer
   }
 }
 
-class $$PersonItemsTableAnnotationComposer
-    extends Composer<_$AuthDatabase, $PersonItemsTable> {
-  $$PersonItemsTableAnnotationComposer({
+class $$ItemPersonsTableAnnotationComposer
+    extends Composer<_$AuthDatabase, $ItemPersonsTable> {
+  $$ItemPersonsTableAnnotationComposer({
     required super.$db,
     required super.$table,
     super.joinBuilder,
@@ -6344,35 +6344,35 @@ class $$PersonItemsTableAnnotationComposer
   }
 }
 
-class $$PersonItemsTableTableManager extends RootTableManager<
+class $$ItemPersonsTableTableManager extends RootTableManager<
     _$AuthDatabase,
-    $PersonItemsTable,
-    PersonItem,
-    $$PersonItemsTableFilterComposer,
-    $$PersonItemsTableOrderingComposer,
-    $$PersonItemsTableAnnotationComposer,
-    $$PersonItemsTableCreateCompanionBuilder,
-    $$PersonItemsTableUpdateCompanionBuilder,
-    (PersonItem, $$PersonItemsTableReferences),
-    PersonItem,
+    $ItemPersonsTable,
+    ItemPerson,
+    $$ItemPersonsTableFilterComposer,
+    $$ItemPersonsTableOrderingComposer,
+    $$ItemPersonsTableAnnotationComposer,
+    $$ItemPersonsTableCreateCompanionBuilder,
+    $$ItemPersonsTableUpdateCompanionBuilder,
+    (ItemPerson, $$ItemPersonsTableReferences),
+    ItemPerson,
     PrefetchHooks Function({bool person_id, bool item_id})> {
-  $$PersonItemsTableTableManager(_$AuthDatabase db, $PersonItemsTable table)
+  $$ItemPersonsTableTableManager(_$AuthDatabase db, $ItemPersonsTable table)
       : super(TableManagerState(
           db: db,
           table: table,
           createFilteringComposer: () =>
-              $$PersonItemsTableFilterComposer($db: db, $table: table),
+              $$ItemPersonsTableFilterComposer($db: db, $table: table),
           createOrderingComposer: () =>
-              $$PersonItemsTableOrderingComposer($db: db, $table: table),
+              $$ItemPersonsTableOrderingComposer($db: db, $table: table),
           createComputedFieldComposer: () =>
-              $$PersonItemsTableAnnotationComposer($db: db, $table: table),
+              $$ItemPersonsTableAnnotationComposer($db: db, $table: table),
           updateCompanionCallback: ({
             Value<int> id = const Value.absent(),
             Value<int> person_id = const Value.absent(),
             Value<int> item_id = const Value.absent(),
             Value<double> splitRatio = const Value.absent(),
           }) =>
-              PersonItemsCompanion(
+              ItemPersonsCompanion(
             id: id,
             person_id: person_id,
             item_id: item_id,
@@ -6384,7 +6384,7 @@ class $$PersonItemsTableTableManager extends RootTableManager<
             required int item_id,
             required double splitRatio,
           }) =>
-              PersonItemsCompanion.insert(
+              ItemPersonsCompanion.insert(
             id: id,
             person_id: person_id,
             item_id: item_id,
@@ -6393,7 +6393,7 @@ class $$PersonItemsTableTableManager extends RootTableManager<
           withReferenceMapper: (p0) => p0
               .map((e) => (
                     e.readTable(table),
-                    $$PersonItemsTableReferences(db, table, e)
+                    $$ItemPersonsTableReferences(db, table, e)
                   ))
               .toList(),
           prefetchHooksCallback: ({person_id = false, item_id = false}) {
@@ -6418,9 +6418,9 @@ class $$PersonItemsTableTableManager extends RootTableManager<
                     currentTable: table,
                     currentColumn: table.person_id,
                     referencedTable:
-                        $$PersonItemsTableReferences._person_idTable(db),
+                        $$ItemPersonsTableReferences._person_idTable(db),
                     referencedColumn:
-                        $$PersonItemsTableReferences._person_idTable(db).id,
+                        $$ItemPersonsTableReferences._person_idTable(db).id,
                   ) as T;
                 }
                 if (item_id) {
@@ -6428,9 +6428,9 @@ class $$PersonItemsTableTableManager extends RootTableManager<
                     currentTable: table,
                     currentColumn: table.item_id,
                     referencedTable:
-                        $$PersonItemsTableReferences._item_idTable(db),
+                        $$ItemPersonsTableReferences._item_idTable(db),
                     referencedColumn:
-                        $$PersonItemsTableReferences._item_idTable(db).id,
+                        $$ItemPersonsTableReferences._item_idTable(db).id,
                   ) as T;
                 }
 
@@ -6444,17 +6444,17 @@ class $$PersonItemsTableTableManager extends RootTableManager<
         ));
 }
 
-typedef $$PersonItemsTableProcessedTableManager = ProcessedTableManager<
+typedef $$ItemPersonsTableProcessedTableManager = ProcessedTableManager<
     _$AuthDatabase,
-    $PersonItemsTable,
-    PersonItem,
-    $$PersonItemsTableFilterComposer,
-    $$PersonItemsTableOrderingComposer,
-    $$PersonItemsTableAnnotationComposer,
-    $$PersonItemsTableCreateCompanionBuilder,
-    $$PersonItemsTableUpdateCompanionBuilder,
-    (PersonItem, $$PersonItemsTableReferences),
-    PersonItem,
+    $ItemPersonsTable,
+    ItemPerson,
+    $$ItemPersonsTableFilterComposer,
+    $$ItemPersonsTableOrderingComposer,
+    $$ItemPersonsTableAnnotationComposer,
+    $$ItemPersonsTableCreateCompanionBuilder,
+    $$ItemPersonsTableUpdateCompanionBuilder,
+    (ItemPerson, $$ItemPersonsTableReferences),
+    ItemPerson,
     PrefetchHooks Function({bool person_id, bool item_id})>;
 
 class $AuthDatabaseManager {
@@ -6476,6 +6476,6 @@ class $AuthDatabaseManager {
       $$TicketsTableTableManager(_db, _db.tickets);
   $$ItemsTableTableManager get items =>
       $$ItemsTableTableManager(_db, _db.items);
-  $$PersonItemsTableTableManager get personItems =>
-      $$PersonItemsTableTableManager(_db, _db.personItems);
+  $$ItemPersonsTableTableManager get itemPersons =>
+      $$ItemPersonsTableTableManager(_db, _db.itemPersons);
 }

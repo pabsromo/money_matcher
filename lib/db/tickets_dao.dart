@@ -34,9 +34,9 @@ class TicketsDao extends DatabaseAccessor<AuthDatabase> with _$TicketsDaoMixin {
   }
 
   // Update
-  Future<int> updatePrimaryPayer(int id, int person_id) {
+  Future<int> updatePrimaryPayer(int id, int personId) {
     return (update(tickets)..where((t) => t.id.equals(id)))
-        .write(TicketsCompanion(primary_payer_id: Value(person_id)));
+        .write(TicketsCompanion(primary_payer_id: Value(personId)));
   }
 
   Future<int> updateSubtotal(int id, double amt) {

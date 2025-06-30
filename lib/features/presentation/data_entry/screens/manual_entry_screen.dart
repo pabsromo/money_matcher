@@ -4,7 +4,7 @@ class ManualEntryScreen extends StatefulWidget {
   const ManualEntryScreen({super.key});
 
   @override
-  _ManualEntryScreenState createState() => _ManualEntryScreenState();
+  State<ManualEntryScreen> createState() => _ManualEntryScreenState();
 }
 
 class _ManualEntryScreenState extends State<ManualEntryScreen> {

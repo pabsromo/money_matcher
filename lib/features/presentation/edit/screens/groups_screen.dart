@@ -335,7 +335,7 @@ class _GroupsScreenState extends State<GroupsScreen> {
                         ),
                       ),
                     )),
-                Container(
+                SizedBox(
                   width: 70,
                   child: Column(
                     children: [

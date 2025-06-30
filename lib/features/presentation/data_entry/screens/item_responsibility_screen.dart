@@ -1,16 +1,12 @@
-import 'dart:collection';
-
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:money_matcher/db/auth_database.dart';
-import 'package:money_matcher/db/events_dao.dart';
 import 'package:money_matcher/db/group_persons_dao.dart';
 import 'package:money_matcher/db/groups_dao.dart';
 import 'package:money_matcher/db/items_dao.dart';
 import 'package:money_matcher/db/item_persons_dao.dart';
 import 'package:money_matcher/db/persons_dao.dart';
 import 'package:money_matcher/db/tickets_dao.dart';
-import 'package:money_matcher/features/presentation/data_entry/screens/manual_entry_screen.dart';
 import 'package:money_matcher/features/presentation/edit/screens/groups_screen.dart';
 import 'package:money_matcher/features/presentation/summary/screens/ticket_info_screen.dart';
 
@@ -37,9 +33,6 @@ class ItemResponsibilityScreen extends StatefulWidget {
 typedef MenuEntry = DropdownMenuEntry<String>;
 
 class _ItemResponsibilityScreenState extends State<ItemResponsibilityScreen> {
-  static final List<MenuEntry> menuEntries = UnmodifiableListView<MenuEntry>(
-    list.map<MenuEntry>((String name) => MenuEntry(value: name, label: name)),
-  );
   late Person _dropdownValue;
   bool _everythingLoaded = false;
 
@@ -52,7 +45,6 @@ class _ItemResponsibilityScreenState extends State<ItemResponsibilityScreen> {
 
   late TicketsDao _ticketsDao;
   late ItemsDao _itemsDao;
-  late EventsDao _eventsDao;
   late PersonsDao _personsDao;
   late GroupsDao _groupsDao;
   late GroupPersonsDao _groupPersonsDao;
@@ -63,7 +55,6 @@ class _ItemResponsibilityScreenState extends State<ItemResponsibilityScreen> {
     super.initState();
     _ticketsDao = TicketsDao(widget.db);
     _itemsDao = ItemsDao(widget.db);
-    _eventsDao = EventsDao(widget.db);
     _personsDao = PersonsDao(widget.db);
     _groupsDao = GroupsDao(widget.db);
     _groupPersonsDao = GroupPersonsDao(widget.db);
@@ -112,16 +103,6 @@ class _ItemResponsibilityScreenState extends State<ItemResponsibilityScreen> {
     for (var item in currItems) {
       itemPersons[item.id] = await _itemPersonsDao.getPersonsByItemId(item.id);
     }
-
-    print('------------------------------------------------------------------');
-    print('CURRENT ITEMS::');
-    print(currItems);
-    print('------------------------------------------------------------------');
-    print('CHOSEN GROUP::');
-    print(chosenGroup);
-    print('------------------------------------------------------------------');
-    print('GROUP PERSONS::');
-    print(groupPersons);
 
     setState(() {
       _currItems = currItems;
@@ -253,7 +234,7 @@ class _ItemResponsibilityScreenState extends State<ItemResponsibilityScreen> {
                             child: Column(
                           children: [
                             Padding(
-                              padding: EdgeInsets.all(8.0),
+                              padding: const EdgeInsets.all(8.0),
                               child: Row(
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceBetween,
@@ -309,8 +290,9 @@ class _ItemResponsibilityScreenState extends State<ItemResponsibilityScreen> {
                                                                 await _itemPersonsDao
                                                                     .getPersonsByItemId(
                                                                         itemId);
-                                                            if (!mounted)
+                                                            if (!mounted) {
                                                               return;
+                                                            }
                                                             setState(() {
                                                               _itemPersons![
                                                                       itemId] =
@@ -340,7 +322,7 @@ class _ItemResponsibilityScreenState extends State<ItemResponsibilityScreen> {
                                                                 Text(person
                                                                     .nickName),
                                                                 const Text(
-                                                                    '100%'), // TODO: dynamic
+                                                                    '100%'), // TODO: make this dynamic from value set in db
                                                               ],
                                                             ),
                                                           ),
@@ -367,7 +349,7 @@ class _ItemResponsibilityScreenState extends State<ItemResponsibilityScreen> {
                           ],
                         )));
                   })))),
-          Container(
+          SizedBox(
               width: 70,
               child: Column(
                 children: List.generate(_groupPersons.length, (index) {
@@ -418,6 +400,7 @@ class _ItemResponsibilityScreenState extends State<ItemResponsibilityScreen> {
                   break;
                 case 1:
                   // edit items
+                  // TODO: when the manually edit items screen is done
                   break;
                 case 2:
                   // done

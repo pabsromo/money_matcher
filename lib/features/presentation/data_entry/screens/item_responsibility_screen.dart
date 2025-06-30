@@ -10,6 +10,9 @@ import 'package:money_matcher/db/items_dao.dart';
 import 'package:money_matcher/db/item_persons_dao.dart';
 import 'package:money_matcher/db/persons_dao.dart';
 import 'package:money_matcher/db/tickets_dao.dart';
+import 'package:money_matcher/features/presentation/data_entry/screens/manual_entry_screen.dart';
+import 'package:money_matcher/features/presentation/edit/screens/groups_screen.dart';
+import 'package:money_matcher/features/presentation/summary/screens/ticket_info_screen.dart';
 
 const List<String> list = <String>['One', 'Two', 'Three', 'Four'];
 
@@ -102,7 +105,8 @@ class _ItemResponsibilityScreenState extends State<ItemResponsibilityScreen> {
     final groupPersons =
         await _groupPersonsDao.getPersonsByGroupId(chosenGroup!.id);
 
-    _dropdownValue = groupPersons.first;
+    _dropdownValue =
+        await _personsDao.getPersonById(_currTicket!.primary_payer_id);
 
     final Map<int, List<Person>> itemPersons = {};
     for (var item in currItems) {
@@ -125,6 +129,31 @@ class _ItemResponsibilityScreenState extends State<ItemResponsibilityScreen> {
       _groupPersons = groupPersons;
       _itemPersons = itemPersons;
     });
+  }
+
+  void _changeGroup() {
+    Navigator.push(
+        context,
+        MaterialPageRoute(
+            builder: (_) =>
+                GroupsScreen(db: widget.db, userId: widget.userId)));
+  }
+
+  // void _editItems() {
+  //   Navigator.push(
+  //     context,
+  //     MaterialPageRoute(builder: (_) =>)
+  // }
+
+  void _done() async {
+    Navigator.push(
+        context,
+        MaterialPageRoute(
+            builder: (_) => TicketInfoScreen(
+                db: widget.db,
+                userId: widget.userId,
+                eventId: widget.eventId,
+                ticketId: widget.ticketId)));
   }
 
   @override
@@ -223,69 +252,118 @@ class _ItemResponsibilityScreenState extends State<ItemResponsibilityScreen> {
                         child: Card(
                             child: Column(
                           children: [
-                            Row(
-                              children: [
-                                Text(_currItems[index]!.name),
-                                Text(_currItems[index]!
-                                    .amount
-                                    .toStringAsFixed(2)),
-                              ],
+                            Padding(
+                              padding: EdgeInsets.all(8.0),
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Text(
+                                    _currItems[index]!.name,
+                                    style: const TextStyle(
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.bold),
+                                  ),
+                                  Text(
+                                    '\$${_currItems[index]!.amount.toStringAsFixed(2)}',
+                                    style: const TextStyle(
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.bold),
+                                  ),
+                                ],
+                              ),
                             ),
-                            Row(children: [
-                              Expanded(
-                                  flex: 1,
-                                  child: SingleChildScrollView(
+                            Padding(
+                              padding: const EdgeInsets.only(left: 8),
+                              child: Row(
+                                children: [
+                                  Expanded(
                                     child: _itemPersons![
                                                     _currItems[index]!.id] !=
                                                 null &&
                                             _itemPersons![
                                                     _currItems[index]!.id]!
                                                 .isNotEmpty
-                                        ? Row(
-                                            children: _itemPersons![
-                                                    _currItems[index]!.id]!
-                                                .map((person) {
-                                            return GestureDetector(
-                                              onLongPress: () async {
-                                                final itemId =
-                                                    _currItems[index]!.id;
-                                                await _itemPersonsDao
-                                                    .removePersonFromItem(
-                                                        itemId, person.id);
-                                                final updatedPersons =
-                                                    await _itemPersonsDao
-                                                        .getPersonsByItemId(
-                                                            itemId);
+                                        ? SingleChildScrollView(
+                                            scrollDirection: Axis.horizontal,
+                                            child: Row(
+                                              children: _itemPersons![
+                                                      _currItems[index]!.id]!
+                                                  .map((person) => Padding(
+                                                        padding:
+                                                            const EdgeInsets
+                                                                .only(
+                                                                right: 8.0),
+                                                        child: GestureDetector(
+                                                          onLongPress:
+                                                              () async {
+                                                            final itemId =
+                                                                _currItems[
+                                                                        index]!
+                                                                    .id;
+                                                            await _itemPersonsDao
+                                                                .removePersonFromItem(
+                                                                    itemId,
+                                                                    person.id);
+                                                            final updatedPersons =
+                                                                await _itemPersonsDao
+                                                                    .getPersonsByItemId(
+                                                                        itemId);
+                                                            if (!mounted)
+                                                              return;
+                                                            setState(() {
+                                                              _itemPersons![
+                                                                      itemId] =
+                                                                  updatedPersons;
+                                                            });
 
-                                                if (!mounted) return;
-                                                setState(() {
-                                                  _itemPersons![itemId] =
-                                                      updatedPersons;
-                                                });
-
-                                                Fluttertoast.showToast(
-                                                  msg:
-                                                      '${person.nickName} removed from item.',
-                                                  toastLength:
-                                                      Toast.LENGTH_SHORT,
-                                                  gravity: ToastGravity.TOP,
-                                                  backgroundColor:
-                                                      Colors.black87,
-                                                  textColor: Colors.white,
-                                                  fontSize: 16.0,
-                                                );
-                                              },
-                                              child: Chip(
-                                                label: Text(person.nickName),
-                                              ),
-                                            );
-                                          }).toList())
-                                        : Text(
-                                            'Click person(s) then here to add'),
-                                  )),
-                              IconButton(
-                                  onPressed: () {}, icon: Icon(Icons.percent)),
-                            ]),
+                                                            Fluttertoast
+                                                                .showToast(
+                                                              msg:
+                                                                  '${person.nickName} removed from item.',
+                                                              toastLength: Toast
+                                                                  .LENGTH_SHORT,
+                                                              gravity:
+                                                                  ToastGravity
+                                                                      .TOP,
+                                                              backgroundColor:
+                                                                  Colors
+                                                                      .black87,
+                                                              textColor:
+                                                                  Colors.white,
+                                                              fontSize: 16.0,
+                                                            );
+                                                          },
+                                                          child: Chip(
+                                                            label: Column(
+                                                              children: [
+                                                                Text(person
+                                                                    .nickName),
+                                                                const Text(
+                                                                    '100%'), // TODO: dynamic
+                                                              ],
+                                                            ),
+                                                          ),
+                                                        ),
+                                                      ))
+                                                  .toList(),
+                                            ),
+                                          )
+                                        : const Text(
+                                            'Click person(s) then here to assign'),
+                                  ),
+                                  IconButton(
+                                    onPressed: () {},
+                                    icon: const Column(
+                                      children: [
+                                        Icon(Icons.percent),
+                                        Text('Adjust')
+                                      ],
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
                           ],
                         )));
                   })))),
@@ -336,12 +414,14 @@ class _ItemResponsibilityScreenState extends State<ItemResponsibilityScreen> {
               switch (index) {
                 case 0:
                   // change group
+                  _changeGroup();
                   break;
                 case 1:
                   // edit items
                   break;
                 case 2:
                   // done
+                  _done();
                   break;
                 default:
               }

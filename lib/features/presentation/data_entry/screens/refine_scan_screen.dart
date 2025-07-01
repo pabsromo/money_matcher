@@ -283,7 +283,10 @@ class _RefineScanScreenState extends State<RefineScanScreen> {
     for (var refinedText in _refinedTexts) {
       final splitLines = refinedText.split('\n');
       for (var line in splitLines) {
-        final splitLine = line.split('|\$');
+        var splitLine = line.split('|\$');
+        if (splitLine.length != 2) {
+          splitLine = line.split('\$');
+        }
         if (!_totalOrTaxRX.hasMatch(splitLine[0])) {
           localItems.add(Item(
               id: 0,
@@ -306,14 +309,17 @@ class _RefineScanScreenState extends State<RefineScanScreen> {
     for (var refinedText in _refinedTexts) {
       final splitLines = refinedText.split('\n');
       for (var line in splitLines) {
-        final lineAmt = double.parse(line.split('|\$')[1]);
-        if (_totalRX.hasMatch(line) && lineAmt == calculatedSubtotal) {
+        final splitLine = line.split('|\$').length != 2
+            ? line.split('\$')
+            : line.split('|\$');
+        final lineAmt = double.parse(splitLine[1]);
+        if (_totalRX.hasMatch(splitLine[0]) && lineAmt == calculatedSubtotal) {
           _ticketsDao.updateSubtotal(widget.ticketId, lineAmt);
         }
-        if (_totalRX.hasMatch(line) && lineAmt != calculatedSubtotal) {
+        if (_totalRX.hasMatch(splitLine[0]) && lineAmt != calculatedSubtotal) {
           _ticketsDao.updateTotal(widget.ticketId, lineAmt);
         }
-        if (_taxRX.hasMatch(line) && lineAmt != calculatedSubtotal) {
+        if (_taxRX.hasMatch(splitLine[0]) && lineAmt != calculatedSubtotal) {
           _ticketsDao.updateTax(widget.ticketId, lineAmt);
         }
       }

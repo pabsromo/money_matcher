@@ -91,13 +91,16 @@ class _ItemResponsibilityScreenState extends State<ItemResponsibilityScreen> {
 
   Future<void> _loadData() async {
     final currItems = await _itemsDao.getItemsByTicketId(widget.ticketId);
-    // final currEvent = await _eventsDao.getEventById(widget.eventId);
     final chosenGroup = await _groupsDao.getChosenGroupByUserId(widget.userId);
     final groupPersons =
         await _groupPersonsDao.getPersonsByGroupId(chosenGroup!.id);
 
-    _dropdownValue =
-        await _personsDao.getPersonById(_currTicket!.primary_payer_id);
+    if (_currTicket!.primary_payer_id == 0) {
+      _dropdownValue = groupPersons.first;
+    } else {
+      _dropdownValue =
+          await _personsDao.getPersonById(_currTicket!.primary_payer_id);
+    }
 
     final Map<int, List<Person>> itemPersons = {};
     for (var item in currItems) {
@@ -118,6 +121,12 @@ class _ItemResponsibilityScreenState extends State<ItemResponsibilityScreen> {
         MaterialPageRoute(
             builder: (_) =>
                 GroupsScreen(db: widget.db, userId: widget.userId)));
+  }
+
+  String _calculateResponsibilityPercent(Person person, Item? item) {
+    final person_count = _itemPersons![item!.id]!.length;
+    final person_percent = (1 / person_count) * 100;
+    return '${person_percent.toStringAsFixed(0)}%';
   }
 
   // void _editItems() {
@@ -321,8 +330,10 @@ class _ItemResponsibilityScreenState extends State<ItemResponsibilityScreen> {
                                                               children: [
                                                                 Text(person
                                                                     .nickName),
-                                                                const Text(
-                                                                    '100%'), // TODO: make this dynamic from value set in db
+                                                                Text(_calculateResponsibilityPercent(
+                                                                    person,
+                                                                    _currItems![
+                                                                        index])), // TODO: make this dynamic from value set in db
                                                               ],
                                                             ),
                                                           ),

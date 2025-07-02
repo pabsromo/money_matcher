@@ -171,51 +171,134 @@ class _TicketInfoScreenState extends State<TicketInfoScreen> {
             ],
           ),
           SingleChildScrollView(
-              // Person list
-              child: Column(
-            children: List.generate(_ticketPersons.length, (index) {
-              final ticketPerson = _ticketPersons[index];
-              return Card(
-                child: Column(children: [
-                  Row(
-                    children: [
-                      Text(ticketPerson.nickName),
-                      Text('Paid Ticket'),
-                    ],
-                  ),
-                  Column(children: [
-                    Column(
-                        children: List.generate(
-                            _personItems![_ticketPersons[index].id]!.length,
-                            (jindex) {
-                      final personId = _ticketPersons[index].id;
-                      final items = _personItems![personId];
-                      final currItem = items![jindex];
-                      final ratio = _splitRatios!['${currItem.id}:$personId'];
-                      final amt = currItem.amount * ratio!;
+            child: Column(
+              children: List.generate(_ticketPersons.length, (index) {
+                final ticketPerson = _ticketPersons[index];
+                final personId = ticketPerson.id;
+                final items = _personItems![personId]!;
+                final total = _personTotals?[personId] ?? 0.0;
 
-                      return Row(children: [
-                        Text(currItem.name),
-                        Text('.....${ratio.toStringAsFixed(2)}%'),
-                        Text('........\$'),
-                        Text(amt.toStringAsFixed(2))
-                      ]);
-                    })),
-                    Text(
-                        'Total: \$${_personTotals?[ticketPerson.id]!.toStringAsFixed(2)}')
-                  ]),
-                ]),
-              );
-            }),
-          )
-              // Floating button to Edit Items
-              ),
-          Row(
-              // Subtotal
-              // Tax
-              // Tip - Only thing that can be edited here
-              // Total
-              )
+                return Card(
+                  margin: const EdgeInsets.all(8.0),
+                  child: Padding(
+                    padding: const EdgeInsets.all(12.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        // Top row with nickname and "Paid Ticket"
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              ticketPerson.nickName,
+                              style:
+                                  const TextStyle(fontWeight: FontWeight.bold),
+                            ),
+                            const Text('Paid Ticket'),
+                          ],
+                        ),
+                        const SizedBox(height: 8),
+
+                        // Table-like layout of item rows
+                        Column(
+                          children: List.generate(items.length, (jindex) {
+                            final currItem = items[jindex];
+                            final ratio =
+                                _splitRatios!['${currItem.id}:$personId'];
+                            final amt = currItem.amount * ratio!;
+
+                            return Padding(
+                              padding:
+                                  const EdgeInsets.symmetric(vertical: 4.0),
+                              child: Row(
+                                children: [
+                                  Expanded(
+                                    flex: 4,
+                                    child: Text(currItem.name),
+                                  ),
+                                  Expanded(
+                                    flex: 3,
+                                    child: Text(
+                                        '${(ratio * 100).toStringAsFixed(2)}%'),
+                                  ),
+                                  Expanded(
+                                    flex: 2,
+                                    child: Text(
+                                      '\$${amt.toStringAsFixed(2)}',
+                                      textAlign: TextAlign.right,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            );
+                          }),
+                        ),
+
+                        const SizedBox(height: 12),
+                        const Divider(),
+
+                        // Total aligned bottom right
+                        Align(
+                          alignment: Alignment.bottomRight,
+                          child: Text(
+                            'Total: \$${total.toStringAsFixed(2)}',
+                            style: const TextStyle(fontWeight: FontWeight.bold),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                );
+              }),
+            ),
+          ),
+          // SingleChildScrollView(
+          //     // Person list
+          //     child: Column(
+          //   children: List.generate(_ticketPersons.length, (index) {
+          //     final ticketPerson = _ticketPersons[index];
+          //     return Card(
+          //       child: Column(children: [
+          //         Row(
+          //           children: [
+          //             Text(ticketPerson.nickName),
+          //             Text('Paid Ticket'),
+          //           ],
+          //         ),
+          //         Column(children: [
+          //           Column(
+          //               children: List.generate(
+          //                   _personItems![_ticketPersons[index].id]!.length,
+          //                   (jindex) {
+          //             final personId = _ticketPersons[index].id;
+          //             final items = _personItems![personId];
+          //             final currItem = items![jindex];
+          //             final ratio = _splitRatios!['${currItem.id}:$personId'];
+          //             final amt = currItem.amount * ratio!;
+
+          //             return Row(children: [
+          //               Text(currItem.name),
+          //               Text('.....${ratio.toStringAsFixed(2)}%'),
+          //               Text('........\$'),
+          //               Text(amt.toStringAsFixed(2))
+          //             ]);
+          //           })),
+          //           Text(
+          //               'Total: \$${_personTotals?[ticketPerson.id]!.toStringAsFixed(2)}')
+          //         ]),
+          //       ]),
+          //     );
+          //   }),
+          // )
+          //     // Floating button to Edit Items
+          //     ),
+
+          // Row(
+          //     // Subtotal
+          //     // Tax
+          //     // Tip - Only thing that can be edited here
+          //     // Total
+          //     )
         ],
       ),
       bottomNavigationBar: BottomNavigationBar(items: [

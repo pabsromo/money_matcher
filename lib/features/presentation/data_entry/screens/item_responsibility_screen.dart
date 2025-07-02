@@ -7,6 +7,7 @@ import 'package:money_matcher/db/items_dao.dart';
 import 'package:money_matcher/db/item_persons_dao.dart';
 import 'package:money_matcher/db/persons_dao.dart';
 import 'package:money_matcher/db/tickets_dao.dart';
+import 'package:money_matcher/features/presentation/data_entry/widgets/animated_bottom_nav_bar.dart';
 import 'package:money_matcher/features/presentation/edit/screens/groups_screen.dart';
 import 'package:money_matcher/features/presentation/summary/screens/ticket_info_screen.dart';
 
@@ -157,56 +158,62 @@ class _ItemResponsibilityScreenState extends State<ItemResponsibilityScreen> {
       key: const Key('itemResponsibilitiesScreen'),
       appBar: AppBar(
         title: const Text('Responsibilities'),
-        actions: [
-          Padding(
-            padding: const EdgeInsets.only(right: 8.0),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                const Text('Paid By',
-                    style:
-                        TextStyle(fontSize: 14, fontWeight: FontWeight.bold)),
-                DropdownButton<String>(
-                  value: _dropdownValue.nickName,
-                  onChanged: (String? newValue) async {
-                    if (newValue != null) {
-                      final nonNullPersons =
-                          _groupPersons.whereType<Person>().toList();
+        // actions: [
+        //   Container(
+        //       decoration: BoxDecoration(
+        //           color: const Color.fromARGB(255, 245, 245, 105)),
+        //       child: Padding(
+        //           padding: const EdgeInsets.only(right: 8.0),
+        //           child: Text('Paid By:',
+        //               style:
+        //                   TextStyle(fontSize: 16, fontWeight: FontWeight.bold)))
+        //       // child: Column(
+        //       //   mainAxisAlignment: MainAxisAlignment.center,
+        //       //   children: [
+        //       //     // const Text('Paid By',
+        //       //     //     style:
+        //       //     //         TextStyle(fontSize: 14, fontWeight: FontWeight.bold)),
+        //       //     // DropdownButton<String>(
+        //       //     //   value: _dropdownValue.nickName,
+        //       //     //   onChanged: (String? newValue) async {
+        //       //     //     if (newValue != null) {
+        //       //     //       final nonNullPersons =
+        //       //     //           _groupPersons.whereType<Person>().toList();
 
-                      if (nonNullPersons.isEmpty) return;
+        //       //     //       if (nonNullPersons.isEmpty) return;
 
-                      final newPerson = nonNullPersons.firstWhere(
-                        (p) => p.nickName == newValue,
-                        orElse: () => nonNullPersons.first,
-                      );
+        //       //     //       final newPerson = nonNullPersons.firstWhere(
+        //       //     //         (p) => p.nickName == newValue,
+        //       //     //         orElse: () => nonNullPersons.first,
+        //       //     //       );
 
-                      await _ticketsDao.updatePrimaryPayer(
-                          widget.ticketId, newPerson.id);
+        //       //     //       await _ticketsDao.updatePrimaryPayer(
+        //       //     //           widget.ticketId, newPerson.id);
 
-                      setState(() {
-                        _dropdownValue = newPerson;
-                      });
-                    }
-                  },
-                  items: _groupPersons
-                      .map<DropdownMenuItem<String>>((Person? person) {
-                    return DropdownMenuItem<String>(
-                      value: person!.nickName,
-                      child: Text(
-                        person.nickName,
-                        style: const TextStyle(fontSize: 12),
-                      ),
-                    );
-                  }).toList(),
-                  underline: Container(), // removes default underline
-                  isDense: true,
-                  style: const TextStyle(color: Colors.black),
-                  dropdownColor: Colors.white,
-                ),
-              ],
-            ),
-          ),
-        ],
+        //       //     //       setState(() {
+        //       //     //         _dropdownValue = newPerson;
+        //       //     //       });
+        //       //     //     }
+        //       //     //   },
+        //       //     //   items: _groupPersons
+        //       //     //       .map<DropdownMenuItem<String>>((Person? person) {
+        //       //     //     return DropdownMenuItem<String>(
+        //       //     //       value: person!.nickName,
+        //       //     //       child: Text(
+        //       //     //         person.nickName,
+        //       //     //         style: const TextStyle(fontSize: 12),
+        //       //     //       ),
+        //       //     //     );
+        //       //     //   }).toList(),
+        //       //     //   underline: Container(), // removes default underline
+        //       //     //   isDense: true,
+        //       //     //   style: const TextStyle(color: Colors.black),
+        //       //     //   dropdownColor: Colors.white,
+        //       //     // ),
+        //       //   ],
+        //       // ),
+        //       ),
+        // ],
       ),
       body: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -282,8 +289,7 @@ class _ItemResponsibilityScreenState extends State<ItemResponsibilityScreen> {
                                                   .map((person) => Padding(
                                                         padding:
                                                             const EdgeInsets
-                                                                .only(
-                                                                right: 8.0),
+                                                                .all(5.0),
                                                         child: GestureDetector(
                                                           onLongPress:
                                                               () async {
@@ -345,15 +351,16 @@ class _ItemResponsibilityScreenState extends State<ItemResponsibilityScreen> {
                                         : const Text(
                                             'Click person(s) then here to assign'),
                                   ),
-                                  IconButton(
-                                    onPressed: () {},
-                                    icon: const Column(
-                                      children: [
-                                        Icon(Icons.percent),
-                                        Text('Adjust')
-                                      ],
-                                    ),
-                                  ),
+                                  // TODO: add the adjust dialog later. Just split evenly for everyone for now
+                                  // IconButton(
+                                  //   onPressed: () {},
+                                  //   icon: const Column(
+                                  //     children: [
+                                  //       Icon(Icons.percent),
+                                  //       Text('Adjust')
+                                  //     ],
+                                  //   ),
+                                  // ),
                                 ],
                               ),
                             ),
@@ -388,39 +395,51 @@ class _ItemResponsibilityScreenState extends State<ItemResponsibilityScreen> {
               ))
         ],
       ),
-      bottomNavigationBar: BottomNavigationBar(
-          backgroundColor: Colors.white,
-          elevation: 10,
-          selectedItemColor: Colors.green,
-          unselectedItemColor: Colors.blueAccent,
-          selectedFontSize: 14,
-          unselectedFontSize: 14,
-          items: const [
-            BottomNavigationBarItem(
-                icon: Icon(Icons.group), label: 'Change Group'),
-            BottomNavigationBarItem(
-                icon: Icon(Icons.edit), label: 'Edit Items'),
-            BottomNavigationBarItem(icon: Icon(Icons.check), label: 'Done')
-          ],
-          onTap: (index) {
-            setState(() {
-              switch (index) {
-                case 0:
-                  // change group
-                  _changeGroup();
-                  break;
-                case 1:
-                  // edit items
-                  // TODO: when the manually edit items screen is done
-                  break;
-                case 2:
-                  // done
-                  _done();
-                  break;
-                default:
-              }
-            });
-          }),
+      bottomNavigationBar: AnimatedBottomNavBar(onTap: _done),
+
+      // bottomNavigationBar: BottomNavigationBar(
+      //     backgroundColor: Colors.white,
+      //     elevation: 10,
+      //     selectedItemColor: Colors.green,
+      //     unselectedItemColor: Colors.blueAccent,
+      //     selectedFontSize: 14,
+      //     unselectedFontSize: 14,
+      //     items: const [
+      //       BottomNavigationBarItem(
+      //           icon: Icon(Icons.group), label: 'Change Group'),
+      //       // BottomNavigationBarItem(
+      //       //     icon: Icon(Icons.edit), label: 'Edit Items'),
+      //       BottomNavigationBarItem(icon: Icon(Icons.check), label: 'Done')
+      //     ],
+      //     onTap: (i) {
+      //       setState(() {
+      //         switch (i) {
+      //           case 0:
+      //             _done();
+      //             break;
+      //           case 1:
+      //             // edit items
+      //             // TODO: when the manually edit items screen is done
+      //             break;
+      //           default:
+      //         }
+      //         // switch (index) {
+      //         //   case 0:
+      //         //     // change group
+      //         //     _changeGroup();
+      //         //     break;
+      //         //   case 1:
+      //         //     // edit items
+      //         //     // TODO: when the manually edit items screen is done
+      //         //     break;
+      //         //   case 2:
+      //         //     // done
+      //         //     _done();
+      //         //     break;
+      //         //   default:
+      //         // }
+      //       });
+      //     }),
     );
   }
 }

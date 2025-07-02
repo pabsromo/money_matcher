@@ -36,6 +36,17 @@ class ItemPersonsDao extends DatabaseAccessor<AuthDatabase>
     return results.map((row) => row.readTable(persons)).toList();
   }
 
+  Future<double> getSplitRatioByItemIdAndPersonId(
+      int itemId, int personId) async {
+    final query = select(itemPersons)
+      ..where((ip) =>
+          itemPersons.item_id.equals(itemId) &
+          itemPersons.person_id.equals(personId));
+
+    final result = await query.getSingle();
+    return result.splitRatio;
+  }
+
   // Update
   // Future<int> updateSplitRatioById(int id) async {
 

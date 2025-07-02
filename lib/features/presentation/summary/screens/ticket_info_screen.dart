@@ -24,10 +24,58 @@ class _TicketInfoScreenState extends State<TicketInfoScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       key: const Key('ticketInfoScreen'),
-      appBar: AppBar(
-        title: const Text('Ticket Summary'),
+      appBar: AppBar(title: const Text('Summary'), actions: [
+        Row(
+          children: [
+            TextButton.icon(
+              label: Text('Export'),
+              icon: const Icon(Icons.outbox),
+              onPressed: () {},
+            ),
+            TextButton.icon(
+              label: Text('Send'),
+              icon: const Icon(Icons.share),
+              onPressed: () {},
+            )
+          ],
+        )
+      ]),
+      body: Column(
+        children: [
+          Row(
+            children: [
+              Column(
+                children: [
+                  // Event Name Text Field
+                  // Event Location Text Field
+                  // Date input field
+                ],
+              ),
+              Column(
+                children: [
+                  // Status Badge
+                  // Paid By selection Dropdown
+                ],
+              )
+            ],
+          ),
+          SingleChildScrollView(
+              // Person list
+              // Floating button to Edit Items
+              ),
+          Row(
+              // Subtotal
+              // Tax
+              // Tip - Only thing that can be edited here
+              // Total
+              )
+        ],
       ),
-      body: Container(),
+      bottomNavigationBar: BottomNavigationBar(items: [
+        const BottomNavigationBarItem(
+            icon: Icon(Icons.image_sharp), label: 'Open/Add Images'),
+        const BottomNavigationBarItem(icon: Icon(Icons.check), label: 'Done')
+      ]),
     );
   }
 }

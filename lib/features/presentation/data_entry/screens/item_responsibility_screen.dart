@@ -5,10 +5,7 @@ import 'package:money_matcher/db/group_persons_dao.dart';
 import 'package:money_matcher/db/groups_dao.dart';
 import 'package:money_matcher/db/items_dao.dart';
 import 'package:money_matcher/db/item_persons_dao.dart';
-import 'package:money_matcher/db/persons_dao.dart';
-import 'package:money_matcher/db/tickets_dao.dart';
 import 'package:money_matcher/features/presentation/data_entry/widgets/animated_bottom_nav_bar.dart';
-import 'package:money_matcher/features/presentation/edit/screens/groups_screen.dart';
 import 'package:money_matcher/features/presentation/summary/screens/ticket_info_screen.dart';
 
 const List<String> list = <String>['One', 'Two', 'Three', 'Four'];
@@ -34,19 +31,14 @@ class ItemResponsibilityScreen extends StatefulWidget {
 typedef MenuEntry = DropdownMenuEntry<String>;
 
 class _ItemResponsibilityScreenState extends State<ItemResponsibilityScreen> {
-  late Person _dropdownValue;
   bool _everythingLoaded = false;
 
-  Ticket? _currTicket;
   late List<Item?> _currItems;
-  Group? _chosenGroup;
   late List<Person?> _groupPersons;
   Map<int, List<Person>>? _itemPersons;
   final Set<int> _activePersonIds = {};
 
-  late TicketsDao _ticketsDao;
   late ItemsDao _itemsDao;
-  late PersonsDao _personsDao;
   late GroupsDao _groupsDao;
   late GroupPersonsDao _groupPersonsDao;
   late ItemPersonsDao _itemPersonsDao;
@@ -54,9 +46,7 @@ class _ItemResponsibilityScreenState extends State<ItemResponsibilityScreen> {
   @override
   void initState() {
     super.initState();
-    _ticketsDao = TicketsDao(widget.db);
     _itemsDao = ItemsDao(widget.db);
-    _personsDao = PersonsDao(widget.db);
     _groupsDao = GroupsDao(widget.db);
     _groupPersonsDao = GroupPersonsDao(widget.db);
     _itemPersonsDao = ItemPersonsDao(widget.db);
@@ -70,7 +60,6 @@ class _ItemResponsibilityScreenState extends State<ItemResponsibilityScreen> {
   }
 
   Future<void> _initAsync() async {
-    await _initializeData();
     if (!mounted) return;
 
     await _loadData();
@@ -80,28 +69,11 @@ class _ItemResponsibilityScreenState extends State<ItemResponsibilityScreen> {
     });
   }
 
-  Future<void> _initializeData() async {
-    final tempTicket = await _ticketsDao.getTicketById(widget.ticketId);
-
-    setState(
-      () {
-        _currTicket = tempTicket;
-      },
-    );
-  }
-
   Future<void> _loadData() async {
     final currItems = await _itemsDao.getItemsByTicketId(widget.ticketId);
     final chosenGroup = await _groupsDao.getChosenGroupByUserId(widget.userId);
     final groupPersons =
         await _groupPersonsDao.getPersonsByGroupId(chosenGroup!.id);
-
-    if (_currTicket!.primary_payer_id == 0) {
-      _dropdownValue = groupPersons.first;
-    } else {
-      _dropdownValue =
-          await _personsDao.getPersonById(_currTicket!.primary_payer_id);
-    }
 
     final Map<int, List<Person>> itemPersons = {};
     for (var item in currItems) {
@@ -110,31 +82,16 @@ class _ItemResponsibilityScreenState extends State<ItemResponsibilityScreen> {
 
     setState(() {
       _currItems = currItems;
-      _chosenGroup = chosenGroup;
       _groupPersons = groupPersons;
       _itemPersons = itemPersons;
     });
   }
 
-  void _changeGroup() {
-    Navigator.push(
-        context,
-        MaterialPageRoute(
-            builder: (_) =>
-                GroupsScreen(db: widget.db, userId: widget.userId)));
-  }
-
   String _calculateResponsibilityPercent(Person person, Item? item) {
-    final person_count = _itemPersons![item!.id]!.length;
-    final person_percent = (1 / person_count) * 100;
-    return '${person_percent.toStringAsFixed(0)}%';
+    final personCount = _itemPersons![item!.id]!.length;
+    final personPercent = (1 / personCount) * 100;
+    return '${personPercent.toStringAsFixed(0)}%';
   }
-
-  // void _editItems() {
-  //   Navigator.push(
-  //     context,
-  //     MaterialPageRoute(builder: (_) =>)
-  // }
 
   void _done() async {
     Navigator.push(
@@ -338,7 +295,7 @@ class _ItemResponsibilityScreenState extends State<ItemResponsibilityScreen> {
                                                                     .nickName),
                                                                 Text(_calculateResponsibilityPercent(
                                                                     person,
-                                                                    _currItems![
+                                                                    _currItems[
                                                                         index])), // TODO: make this dynamic from value set in db
                                                               ],
                                                             ),

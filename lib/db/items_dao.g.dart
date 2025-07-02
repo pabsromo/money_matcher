@@ -7,6 +7,7 @@ mixin _$ItemsDaoMixin on DatabaseAccessor<AuthDatabase> {
   $UsersTable get users => attachedDatabase.users;
   $GroupsTable get groups => attachedDatabase.groups;
   $EventsTable get events => attachedDatabase.events;
+  $PersonsTable get persons => attachedDatabase.persons;
   $TicketsTable get tickets => attachedDatabase.tickets;
   $ItemsTable get items => attachedDatabase.items;
 }

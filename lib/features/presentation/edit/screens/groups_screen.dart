@@ -146,11 +146,11 @@ class _GroupsScreenState extends State<GroupsScreen> {
   }
 
   Future<void> _changeChosenGroup(int index) async {
-    int? unchosenGroupId =
+    Group? unchosenGroup =
         await _groupsDao.getChosenGroupByUserId(widget.userId);
 
-    if (unchosenGroupId != null) {
-      await _groupsDao.setChosenGroupById(unchosenGroupId, false);
+    if (unchosenGroup != null) {
+      await _groupsDao.setChosenGroupById(unchosenGroup.id, false);
     }
 
     int chosenGroupId = _userGroups![index].id;
@@ -335,7 +335,7 @@ class _GroupsScreenState extends State<GroupsScreen> {
                         ),
                       ),
                     )),
-                Container(
+                SizedBox(
                   width: 70,
                   child: Column(
                     children: [

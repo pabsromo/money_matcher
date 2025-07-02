@@ -25,7 +25,7 @@ class _TicketInfoScreenState extends State<TicketInfoScreen> {
     return Scaffold(
       key: const Key('ticketInfoScreen'),
       appBar: AppBar(
-        title: const Text(''),
+        title: const Text('Ticket Summary'),
       ),
       body: Container(),
     );

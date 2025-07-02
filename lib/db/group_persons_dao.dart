@@ -27,6 +27,15 @@ class GroupPersonsDao extends DatabaseAccessor<AuthDatabase>
   }
 
   // Read
+  Future<List<Person>> getPersonsByGroupId(int groupId) async {
+    final query = select(groupPersons).join([
+      innerJoin(persons, persons.id.equalsExp(groupPersons.person_id)),
+    ])
+      ..where(groupPersons.group_id.equals(groupId));
+
+    final results = await query.get();
+    return results.map((row) => row.readTable(persons)).toList();
+  }
 
   // Update
 

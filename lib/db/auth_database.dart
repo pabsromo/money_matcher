@@ -12,7 +12,7 @@ import 'events_dao.dart';
 import 'images_dao.dart';
 import 'tickets_dao.dart';
 import 'items_dao.dart';
-import 'person_items_dao.dart';
+import 'item_persons_dao.dart';
 
 part 'auth_database.g.dart';
 
@@ -25,7 +25,7 @@ part 'auth_database.g.dart';
   Images,
   Tickets,
   Items,
-  PersonItems
+  ItemPersons
 ], daos: [
   UsersDao,
   PersonsDao,
@@ -34,7 +34,7 @@ part 'auth_database.g.dart';
   ImagesDao,
   TicketsDao,
   ItemsDao,
-  PersonItemsDao
+  ItemPersonsDao
 ])
 class AuthDatabase extends _$AuthDatabase {
   AuthDatabase() : super(_openConnection());

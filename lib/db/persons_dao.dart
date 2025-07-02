@@ -22,6 +22,10 @@ class PersonsDao extends DatabaseAccessor<AuthDatabase> with _$PersonsDaoMixin {
   }
 
   // Read
+  Future<Person> getPersonById(int id) {
+    return (select(persons)..where((p) => p.id.equals(id))).getSingle();
+  }
+
   Future<Person?> getPersonByUserId(int userId) {
     return (select(persons)..where((p) => p.user_id.equals(userId)))
         .getSingleOrNull();

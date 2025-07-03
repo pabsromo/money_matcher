@@ -506,19 +506,6 @@ class _RefineScanScreenState extends State<RefineScanScreen> {
   }
 
   Future<void> _updateControllerValues() async {
-    // for (int i = 0; i < _currItems.length; i++) {
-    //   final item = _currItems[i]!;
-
-    //   final nameController = TextEditingController(text: item.name);
-    //   final amtController = DoubleEditingController(value: item.amount);
-
-    //   setState(
-    //     () {
-    //       _itemNameControllers.add(nameController);
-    //       _itemAmtControllers.add(amtController);
-    //     },
-    //   );
-    // }
     setState(() {
       for (int i = 0; i < _currItems.length; i++) {
         _itemNameControllers[i].text = _currItems[i]!.name;

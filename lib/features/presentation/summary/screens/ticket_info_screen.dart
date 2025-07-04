@@ -64,6 +64,7 @@ class _TicketInfoScreenState extends State<TicketInfoScreen> {
     _itemPersonsDao = ItemPersonsDao(widget.db);
 
     _initAsync();
+  }
 
   @override
   void dispose() {
@@ -281,7 +282,11 @@ class _TicketInfoScreenState extends State<TicketInfoScreen> {
                   final ticketPerson = _ticketPersons[index];
                   final personId = ticketPerson.id;
                   final items = _personItems![personId]!;
-                  final total = _personTotals?[personId] ?? 0.0;
+                  final taxPerPerson = _currTicket.taxes / _personItems!.length;
+                  final tipPerPerson =
+                      _currTicket.tipInDollars / _personItems!.length;
+                  final total =
+                      _personTotals![personId]! + taxPerPerson + tipPerPerson;
 
                   return Card(
                     margin: const EdgeInsets.all(8.0),
@@ -345,11 +350,24 @@ class _TicketInfoScreenState extends State<TicketInfoScreen> {
                           // Total aligned bottom right
                           Align(
                             alignment: Alignment.bottomRight,
-                            child: Text(
-                              'Total: \$${total.toStringAsFixed(2)}',
-                              style:
-                                  const TextStyle(fontWeight: FontWeight.bold),
-                            ),
+                            child: Column(children: [
+                              Text(
+                                'Tax: \$${taxPerPerson.toStringAsFixed(2)}',
+                                style: const TextStyle(
+                                    fontWeight: FontWeight.bold),
+                              ),
+                              Text(
+                                'Tip: \$${tipPerPerson.toStringAsFixed(2)}',
+                                style: const TextStyle(
+                                    fontWeight: FontWeight.bold),
+                              ),
+                              Text(
+                                'Total: \$${total.toStringAsFixed(2)}',
+                                style: const TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.green),
+                              ),
+                            ]),
                           ),
                         ],
                       ),

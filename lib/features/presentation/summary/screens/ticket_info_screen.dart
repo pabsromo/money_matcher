@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:money_matcher/db/auth_database.dart';
 import 'package:money_matcher/db/events_dao.dart';
 import 'package:money_matcher/db/group_persons_dao.dart';
@@ -37,7 +38,12 @@ class _TicketInfoScreenState extends State<TicketInfoScreen> {
   Map<int, List<Item>>? _personItems;
   Map<String, double>? _splitRatios;
   Map<int, double>? _personTotals;
+  DateTime? _selectedDate;
+  late Person _dropdownValue;
 
+  late TextEditingController _eventNameController;
+  late TextEditingController _eventLocationController;
+  late TextEditingController _eventDateController;
   late DoubleEditingController _taxAmtController;
   late DoubleEditingController _tipAmtController;
 
@@ -144,6 +150,14 @@ class _TicketInfoScreenState extends State<TicketInfoScreen> {
 
     currTicket = await _ticketsDao.getTicketById(widget.ticketId);
 
+    final Person primaryPayer;
+    if (currTicket!.primary_payer_id == 0) {
+      primaryPayer = ticketPersons.first;
+    } else {
+      primaryPayer =
+          await _personsDao.getPersonById(currTicket.primary_payer_id);
+    }
+
     setState(() {
       _currEvent = currEvent;
       _currTicket = currTicket!;
@@ -151,16 +165,22 @@ class _TicketInfoScreenState extends State<TicketInfoScreen> {
       _personItems = personItems;
       _splitRatios = splitRatios;
       _personTotals = personTotals;
+      _selectedDate = _currEvent!.date;
+      _dropdownValue = primaryPayer;
     });
 
     // await _updateControllerValues();
   }
 
-  // TODO: Initialize controllers and focus nodes
   Future<void> _initControllers() async {
     if (!mounted) return;
 
     // Controller Setting
+    _eventNameController = TextEditingController(text: _currEvent!.eventName);
+    _eventLocationController =
+        TextEditingController(text: _currEvent!.location);
+    _eventDateController =
+        TextEditingController(text: formatDateWithSuffix(_currEvent!.date));
     _taxAmtController = DoubleEditingController(value: _currTicket.taxes);
     _tipAmtController =
         DoubleEditingController(value: _currTicket.tipInDollars);
@@ -230,6 +250,21 @@ class _TicketInfoScreenState extends State<TicketInfoScreen> {
     return subtotal * tip / 100;
   }
 
+  String formatDateWithSuffix(DateTime? date) {
+    final day = date!.day;
+    final suffix = (day >= 11 && day <= 13)
+        ? 'th'
+        : {
+              1: 'st',
+              2: 'nd',
+              3: 'rd',
+            }[day % 10] ??
+            'th';
+
+    final formatted = DateFormat('EEEE, MMMM d').format(date);
+    return '$formatted$suffix ${date.year}'; // e.g., "Wednesday, June 26th 2025"
+  }
+
   @override
   Widget build(BuildContext context) {
     if (!_everythingLoaded) {
@@ -257,19 +292,108 @@ class _TicketInfoScreenState extends State<TicketInfoScreen> {
       ]),
       body: Column(
         children: [
-          const Row(
+          Row(
             children: [
-              Column(
-                children: [
-                  // Event Name Text Field
-                  // Event Location Text Field
-                  // Date input field
-                ],
+              Expanded(
+                child: Padding(
+                  padding: EdgeInsets.all(5.0),
+                  child: Column(
+                    children: [
+                      TextFormField(
+                        key: const Key("eventNameInput"),
+                        controller: _eventNameController,
+                        decoration:
+                            const InputDecoration(labelText: 'Event Name'),
+                        validator: (val) => (val == null || val.trim().isEmpty)
+                            ? 'Enter event name'
+                            : null,
+                      ),
+                      TextFormField(
+                        key: const Key("eventLocationInput"),
+                        controller: _eventLocationController,
+                        decoration:
+                            const InputDecoration(labelText: 'Event Location'),
+                        validator: (val) => (val == null || val.trim().isEmpty)
+                            ? 'Enter event location'
+                            : null,
+                      ),
+                      TextFormField(
+                        key: const Key("eventDateInput"),
+                        controller: _eventDateController,
+                        decoration:
+                            const InputDecoration(labelText: 'Event Date'),
+                        onTap: () async {
+                          FocusScope.of(context).requestFocus(FocusNode());
+
+                          final now = DateTime.now();
+                          final picked = await showDatePicker(
+                            context: context,
+                            initialDate: _selectedDate ?? now,
+                            firstDate: DateTime(now.year - 5),
+                            lastDate: DateTime(now.year + 5),
+                          );
+                          if (picked != null) {
+                            setState(() {
+                              _selectedDate = picked;
+                              _eventDateController.text =
+                                  formatDateWithSuffix(picked);
+                            });
+                          }
+                        },
+                        validator: (val) => (_selectedDate == null)
+                            ? 'Choose an event date'
+                            : null,
+                      ),
+                    ],
+                  ),
+                ),
               ),
               Column(
                 children: [
                   // Status Badge
                   // Paid By selection Dropdown
+                  Column(
+                    children: [
+                      Text('Paid By:'),
+                      DropdownButton<String>(
+                        value: _dropdownValue.nickName,
+                        onChanged: (String? newValue) async {
+                          if (newValue != null) {
+                            final nonNullPersons =
+                                _ticketPersons.whereType<Person>().toList();
+
+                            if (nonNullPersons.isEmpty) return;
+
+                            final newPerson = nonNullPersons.firstWhere(
+                              (p) => p.nickName == newValue,
+                              orElse: () => nonNullPersons.first,
+                            );
+
+                            await _ticketsDao.updatePrimaryPayer(
+                                widget.ticketId, newPerson.id);
+
+                            setState(() {
+                              _dropdownValue = newPerson;
+                            });
+                          }
+                        },
+                        items: _ticketPersons
+                            .map<DropdownMenuItem<String>>((Person? person) {
+                          return DropdownMenuItem<String>(
+                            value: person!.nickName,
+                            child: Text(
+                              person.nickName,
+                              style: const TextStyle(fontSize: 12),
+                            ),
+                          );
+                        }).toList(),
+                        underline: Container(), // removes default underline
+                        isDense: true,
+                        style: const TextStyle(color: Colors.black),
+                        dropdownColor: Colors.white,
+                      ),
+                    ],
+                  )
                 ],
               )
             ],
